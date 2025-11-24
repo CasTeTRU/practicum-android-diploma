@@ -2,6 +2,9 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("ru.practicum.android.diploma.plugins.developproperties")
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -17,15 +20,23 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(type = "String", name = "API_ACCESS_TOKEN", value = "\"${developProperties.apiAccessToken}\"")
+        buildConfigField(
+            type = "String",
+            name = "API_ACCESS_TOKEN",
+            value = "\"${developProperties.apiAccessToken}\""
+        )
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -36,23 +47,57 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
     }
 }
 
 dependencies {
+    // AndroidX
     implementation(libs.androidX.core)
     implementation(libs.androidX.appCompat)
 
-    // UI layer libraries
+    // UI layer
     implementation(libs.ui.material)
     implementation(libs.ui.constraintLayout)
+    implementation(libs.ui.viewpager2)
+
+    // Lifecycle
+    implementation(libs.lifecycle.viewmodelKtx)
+    implementation(libs.lifecycle.runtimeKtx)
+    implementation(libs.lifecycle.livedataKtx)
+    implementation(libs.lifecycle.viewmodelSavedstate)
+
+    // UI Components
+    implementation(libs.activity.ktx)
+    implementation(libs.fragment.ktx)
+
+    // Navigation
+    implementation(libs.navigation.fragmentKtx)
+    implementation(libs.navigation.uiKtx)
+
+    // Network
+    implementation(libs.network.retrofit)
+    implementation(libs.network.converterGson)
+    implementation(libs.network.okhttp)
+    implementation(libs.network.loggingInterceptor)
+
+    // Room Database
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+
+    // Image Loading
+    implementation(libs.glide)
+    kapt(libs.glide.compiler)
+
+    // Dependency Injection
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 
     // region Unit tests
     testImplementation(libs.unitTests.junit)
-    // endregion
 
     // region UI tests
     androidTestImplementation(libs.uiTests.junitExt)
     androidTestImplementation(libs.uiTests.espressoCore)
-    // endregion
 }
