@@ -39,7 +39,6 @@ val networkModule = module {
     single<Gson> {
         GsonBuilder().create()
     }
-    
     // Retrofit
     single {
         Retrofit.Builder()
@@ -48,7 +47,6 @@ val networkModule = module {
             .addConverterFactory(get<GsonConverterFactory>())
             .build()
     }
-    
     // API Service
     single<ApiService> {
         get<Retrofit>().create(ApiService::class.java)
