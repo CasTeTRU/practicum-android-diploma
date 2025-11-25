@@ -3,25 +3,13 @@ package ru.practicum.android.diploma.di
 import org.koin.dsl.module
 
 val repositoryModule = module {
-/*  single<VacancyRepository> {
-    VacancyRepositoryImpl(get(), get())
-    }
+    // TODO: Добавить реализацию VacancyRepository
 
-    single<RegionRepository> {
-    RegionRepositoryImpl(get())
-    }
+    // TODO: Добавить реализацию RegionRepository
 
-    single<IndustryRepository> {
-    IndustryRepositoryImpl(get())
-    }
+    // TODO: Добавить реализацию IndustryRepository
 
-    single<FavoriteRepository> {
-    FavoriteRepositoryImpl(get())
-    }
+    // TODO: Добавить реализацию FavoriteRepository
 
-    single<FilterRepository> {
-    FilterRepositoryImpl(get())
-    }
-
-*/
+    // TODO: Добавить реализацию FilterRepository
 }

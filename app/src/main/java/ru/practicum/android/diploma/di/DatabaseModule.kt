@@ -13,7 +13,7 @@ val databaseModule = module {
             AppDatabase::class.java,
             "diploma_database"
         )
-            .fallbackToDestructiveMigration() // Внимание: удаляет данные при изменении схемы
+            .fallbackToDestructiveMigration(false)
             .build()
     }
 }

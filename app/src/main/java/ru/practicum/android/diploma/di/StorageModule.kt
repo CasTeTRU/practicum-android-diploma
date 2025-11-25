@@ -16,14 +16,5 @@ val storageModule = module {
             Context.MODE_PRIVATE
         )
     }
-
- /*    FilterPreferences будет добавлен после создания класса
-     single<FilterPreferences> {
-         FilterPreferencesImpl(
-             sharedPreferences = get(),
-             gson = get()
-         )
-     }
-
-  */
+    // TODO: Добавить FilterPreferences
 }

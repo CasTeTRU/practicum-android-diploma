@@ -1,50 +1,18 @@
 package ru.practicum.android.diploma.di
 
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-/*
-    viewModel {
-        SearchViewModel(
-            vacancyRepository = get(),
-            filterRepository = get(),
-            regionRepository = get()
-        )
-    }
+    // TODO: Добавить SearchViewModel
 
-    viewModel {
-        FavoritesViewModel(
-            vacancyRepository = get()
-        )
-    }
+    // TODO: Добавить FavoritesViewModel
 
-    viewModel {
-        FilterViewModel(
-            filterRepository = get(),
-            vacancyRepository = get()
-        )
-    }
+    // TODO: Добавить FilterViewModel
 
-    viewModel {
-        RegionListViewModel(
-            vacancyRepository = get()
-        )
-    }
+    // TODO: Добавить RegionListViewModel
 
-    viewModel {
-        IndustryListViewModel(
-            vacancyRepository = get()
-        )
-    }
+    // TODO: Добавить IndustryListViewModel
 
-    viewModel { (vacancyId: String) ->
-        VacancyDetailViewModel(
-            vacancyId = vacancyId,
-            vacancyRepository = get(),
-            filterRepository = get(),
-            regionRepository = get()
-        )
-    }
-
- */
+    // TODO: Добавить VacancyDetailViewModel
 }
