@@ -16,5 +16,4 @@ val storageModule = module {
             Context.MODE_PRIVATE
         )
     }
-    // TODO: Добавить FilterPreferences
 }

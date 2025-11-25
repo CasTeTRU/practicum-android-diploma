@@ -25,7 +25,6 @@ android {
             name = "API_ACCESS_TOKEN",
             value = "\"${developProperties.apiAccessToken}\""
         )
-        
         buildConfigField(
             type = "String",
             name = "BASE_URL",
