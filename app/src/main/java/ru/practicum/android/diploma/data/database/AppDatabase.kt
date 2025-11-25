@@ -11,7 +11,4 @@ import androidx.room.RoomDatabase
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
-    // TODO: Добавить DAO интерфейсы
-    // Пример: abstract fun vacancyDao(): VacancyDao
-    // Пример: abstract fun favoriteDao(): FavoriteDao
 }
