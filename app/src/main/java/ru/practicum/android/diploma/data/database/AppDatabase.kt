@@ -11,4 +11,5 @@ import androidx.room.RoomDatabase
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun vacancyDao(): VacancyDao
 }
