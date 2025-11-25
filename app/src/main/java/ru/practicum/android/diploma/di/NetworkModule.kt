@@ -9,15 +9,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.data.network.ApiService
+import ru.practicum.android.diploma.data.network.NetworkConfig
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
     // OkHttpClient с LoggingInterceptor
     single {
         OkHttpClient.Builder().apply {
-            connectTimeout(30, TimeUnit.SECONDS)
-            readTimeout(30, TimeUnit.SECONDS)
-            writeTimeout(30, TimeUnit.SECONDS)
+            connectTimeout(NetworkConfig.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            readTimeout(NetworkConfig.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            writeTimeout(NetworkConfig.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             
             // Добавляем LoggingInterceptor для отладки
             if (BuildConfig.DEBUG) {
@@ -44,7 +45,7 @@ val networkModule = module {
     // Retrofit
     single {
         Retrofit.Builder()
-            .baseUrl("https://practicum-diploma-8bc38133faba.herokuapp.com/")
+            .baseUrl(NetworkConfig.BASE_URL)
             .client(get<OkHttpClient>())
             .addConverterFactory(get<GsonConverterFactory>())
             .build()
@@ -55,4 +56,3 @@ val networkModule = module {
         get<Retrofit>().create(ApiService::class.java)
     }
 }
-

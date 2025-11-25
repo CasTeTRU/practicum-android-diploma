@@ -16,9 +16,4 @@ val databaseModule = module {
             .fallbackToDestructiveMigration() // Внимание: удаляет данные при изменении схемы
             .build()
     }
-    
-    // DAO интерфейсы будут добавлены здесь после создания
-    // Например:
-    // single { get<AppDatabase>().vacancyDao() }
 }
-
