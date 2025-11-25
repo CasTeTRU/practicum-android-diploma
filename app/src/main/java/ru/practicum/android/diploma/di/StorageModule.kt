@@ -9,7 +9,6 @@ import org.koin.dsl.module
 val storageModule = module {
     // Gson для сериализации/десериализации фильтров
     single { Gson() }
-    
     // SharedPreferences для фильтров
     single<SharedPreferences> {
         androidContext().getSharedPreferences(
