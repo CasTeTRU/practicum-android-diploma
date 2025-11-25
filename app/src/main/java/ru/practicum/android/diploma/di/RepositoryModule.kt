@@ -3,21 +3,25 @@ package ru.practicum.android.diploma.di
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    // Репозитории будут добавлены после создания классов
-    // Например:
-    // 
-    // // Поиск и детали вакансий
-    // single<VacancyRepository> {
-    //     VacancyRepositoryImpl(
-    //         api = get(),
-    //         vacancyDao = get()
-    //     )
-    // }
-    //
-    // // Фильтры
-    // single<FilterRepository> {
-    //     FilterRepositoryImpl(
-    //         filterPrefs = get()
-    //     )
-    // }
+/*  single<VacancyRepository> {
+    VacancyRepositoryImpl(get(), get())
+    }
+
+    single<RegionRepository> {
+    RegionRepositoryImpl(get())
+    }
+
+    single<IndustryRepository> {
+    IndustryRepositoryImpl(get())
+    }
+
+    single<FavoriteRepository> {
+    FavoriteRepositoryImpl(get())
+    }
+
+    single<FilterRepository> {
+    FilterRepositoryImpl(get())
+    }
+
+*/
 }

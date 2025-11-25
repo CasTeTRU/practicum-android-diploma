@@ -4,18 +4,48 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    // ViewModels будут добавлены после создания классов
-    // Например:
-    //
-    // // Основные экраны
-    // viewModel { SearchViewModel(get(), get(), get()) }
-    // viewModel { FavoritesViewModel(get()) }
-    // viewModel { FilterViewModel(get(), get()) }
-    // viewModel { RegionListViewModel(get()) }
-    // viewModel { IndustryListViewModel(get()) }
-    //
-    // // Детали вакансии (с параметром)
-    // viewModel { (vacancyId: String) ->
-    //     VacancyDetailViewModel(vacancyId, get(), get(), get())
-    // }
+/*
+    viewModel {
+        SearchViewModel(
+            vacancyRepository = get(),
+            filterRepository = get(),
+            regionRepository = get()
+        )
+    }
+
+    viewModel {
+        FavoritesViewModel(
+            vacancyRepository = get()
+        )
+    }
+
+    viewModel {
+        FilterViewModel(
+            filterRepository = get(),
+            vacancyRepository = get()
+        )
+    }
+
+    viewModel {
+        RegionListViewModel(
+            vacancyRepository = get()
+        )
+    }
+
+    viewModel {
+        IndustryListViewModel(
+            vacancyRepository = get()
+        )
+    }
+
+    viewModel { (vacancyId: String) ->
+        VacancyDetailViewModel(
+            vacancyId = vacancyId,
+            vacancyRepository = get(),
+            filterRepository = get(),
+            regionRepository = get()
+        )
+    }
+
+ */
 }

@@ -1,26 +1,36 @@
 [versions]
-
 java = "VERSION_1_8"
-
-# Build constants
 minSdk = "26"
 compileSdk = "34"
-targetSdk = "33"
-
-# Detekt
+targetSdk = "34"
+kotlin = "1.9.21"
+core = "1.12.0"
+appcompat = "1.6.1"
+material = "1.10.0"
+constraintlayout = "2.1.4"
+activity = "1.8.1"
+fragment = "1.6.2"
+viewpager2 = "1.0.0"
+lifecycle = "2.7.0"
+navigation = "2.9.6"
+room = "2.6.1"
+retrofit = "2.9.0"
+okhttp = "4.12.0"
+gson = "2.10.1"
+glide = "4.16.0"
+koin = "3.5.0"
 detekt = "1.23.3"
-detektTwitterComposeRules ="0.0.26"
+detektTwitterComposeRules = "0.0.26"
 
 [libraries]
-
 # Detekt
-staticAnalysis-detektPlugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detekt" }
-staticAnalysis-detektCli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" }
-staticAnalysis-detektApi = { module = "io.gitlab.arturbosch.detekt:detekt-api", version.ref = "detekt" }
-staticAnalysis-detektTest = { module = "io.gitlab.arturbosch.detekt:detekt-test", version.ref = "detekt" }
-staticAnalysis-detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
-staticAnalysis-detektLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
-staticAnalysis-detektTwitterComposeRules = { module = "com.twitter.compose.rules:detekt", version.ref = "detektTwitterComposeRules" }
+staticAnalysis-detektPlugin = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.3"
+staticAnalysis-detektCli = "io.gitlab.arturbosch.detekt:detekt-cli:1.23.3"
+staticAnalysis-detektApi = "io.gitlab.arturbosch.detekt:detekt-api:1.23.3"
+staticAnalysis-detektTest = "io.gitlab.arturbosch.detekt:detekt-test:1.23.3"
+staticAnalysis-detektFormatting = "io.gitlab.arturbosch.detekt:detekt-formatting:1.23.3"
+staticAnalysis-detektLibraries = "io.gitlab.arturbosch.detekt:detekt-rules-libraries:1.23.3"
+staticAnalysis-detektTwitterComposeRules = "com.twitter.compose.rules:detekt:0.0.26"
 
 # AndroidX
 androidX-core = "androidx.core:core-ktx:1.12.0"
@@ -29,6 +39,40 @@ androidX-appCompat = "androidx.appcompat:appcompat:1.6.1"
 # UI layer libraries
 ui-material = "com.google.android.material:material:1.10.0"
 ui-constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+ui-viewpager2 = "androidx.viewpager2:viewpager2:1.0.0"
+
+# Lifecycle
+lifecycle-viewmodelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"
+lifecycle-runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
+lifecycle-livedataKtx = "androidx.lifecycle:lifecycle-livedata-ktx:2.7.0"
+lifecycle-viewmodelSavedstate = "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.7.0"
+
+# UI Components
+activity-ktx = "androidx.activity:activity-ktx:1.8.1"
+fragment-ktx = "androidx.fragment:fragment-ktx:1.6.2"
+
+# Navigation
+navigation-fragmentKtx = "androidx.navigation:navigation-fragment-ktx:2.9.6"
+navigation-uiKtx = "androidx.navigation:navigation-ui-ktx:2.9.6"
+
+# Network
+network-retrofit = "com.squareup.retrofit2:retrofit:2.9.0"
+network-converterGson = "com.squareup.retrofit2:converter-gson:2.9.0"
+network-okhttp = "com.squareup.okhttp3:okhttp:4.12.0"
+network-loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:4.12.0"
+
+# Room Database
+room-runtime = "androidx.room:room-runtime:2.6.1"
+room-ktx = "androidx.room:room-ktx:2.6.1"
+room-compiler = "androidx.room:room-compiler:2.6.1"
+
+# Image Loading
+glide = "com.github.bumptech.glide:glide:4.16.0"
+glide-compiler = "com.github.bumptech.glide:compiler:4.16.0"
+
+# DI
+koin-core = "io.insert-koin:koin-core:3.5.0"
+koin-android = "io.insert-koin:koin-android:3.5.0"
 
 # Unit tests
 unitTests-junit = "junit:junit:4.13.2"
@@ -36,5 +80,3 @@ unitTests-junit = "junit:junit:4.13.2"
 # UI tests
 uiTests-junitExt = "androidx.test.ext:junit:1.1.5"
 uiTests-espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
-
-[bundles]

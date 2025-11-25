@@ -5,8 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [
-        // Здесь будут добавлены Entity классы
-        // Например: VacancyEntity::class, FavoriteEntity::class
+        VacancyEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -17,4 +16,5 @@ abstract class AppDatabase : RoomDatabase() {
     // abstract fun vacancyDao(): VacancyDao
     // abstract fun favoriteDao(): FavoriteDao
 }
+
 

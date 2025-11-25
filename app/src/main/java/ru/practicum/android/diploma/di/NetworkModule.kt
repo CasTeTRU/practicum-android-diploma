@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
@@ -34,9 +36,10 @@ val networkModule = module {
             }
         }.build()
     }
-    
-    // GsonConverterFactory
-    single { GsonConverterFactory.create() }
+
+    single<Gson> {
+        GsonBuilder().create()
+    }
     
     // Retrofit
     single {
