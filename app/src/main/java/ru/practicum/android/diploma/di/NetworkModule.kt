@@ -19,7 +19,6 @@ val networkModule = module {
             connectTimeout(NetworkConfig.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             readTimeout(NetworkConfig.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
             writeTimeout(NetworkConfig.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            
             // Добавляем LoggingInterceptor для отладки
             if (BuildConfig.DEBUG) {
                 val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -27,7 +26,6 @@ val networkModule = module {
                 }
                 addInterceptor(loggingInterceptor)
             }
-            
             // Добавляем интерцептор для авторизации
             addInterceptor { chain ->
                 val request = chain.request().newBuilder()
