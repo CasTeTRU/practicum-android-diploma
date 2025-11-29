@@ -6,6 +6,8 @@
     <string name="vacancies_search">Поиск вакансий</string>
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
+    <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="error_getting_favorites">Не удалось получить список вакансий</string>
     <string name="vacancy">Вакансия</string>
     <string name="job_description">Описание вакансии</string>
     <string name="key_skills">Ключевые навыки</string>
