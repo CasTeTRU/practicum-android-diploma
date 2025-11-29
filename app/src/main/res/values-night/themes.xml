@@ -4,9 +4,13 @@
         <item name="colorOnBackground">@color/white_day</item>
         <item name="android:colorBackground">@color/black_day</item>
         <item name="colorSurfaceVariant">@color/gray</item>
-        <item name="colorOnSurfaceVariant">@color/white_day</item>
+        <item name="colorOnSurfaceVariant">@color/white_universal</item>
         <item name="colorOnContainer">@color/gray</item>
         <item name="colorPrimary">@color/blue</item>
+
+        <item name="android:textColorPrimary">@color/white_universal</item>
+        <item name="android:textColorSecondary">@color/gray</item>
+        <item name="android:textColorHint">@color/white_universal</item>
         <item name="hintTextColor">@color/white_day</item>
     </style>
 </resources>
