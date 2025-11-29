@@ -14,6 +14,6 @@
         android:clipToOutline="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_companylogo_placeholder" />
+        tools:src="@drawable/ic_company_logo_placeholder" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
