@@ -1,80 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/android:colorBackground">
 
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        style="@style/ToolbarStyle"
-        android:background="?attr/android:colorBackground"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="@string/vacancy"
-        app:titleTextAppearance="@style/ToolbarTitle"
-        app:titleTextColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/favorite_action_container"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/toolbar">
+        android:background="?attr/android:colorBackground">
 
-        <ImageView
-            android:id="@+id/icFavoritesOn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:visibility="gone"
-            android:src="@drawable/ic_favorites_on"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/ToolbarStyle"
+            app:layout_anchor="@+id/app_bar_layout"
+            app:layout_anchorGravity="center"
+            app:menu="@menu/vacancy_details_menu"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/vacancy"
+            app:titleTextAppearance="@style/ToolbarTitle" />
 
-        <ImageView
-            android:id="@+id/icFavoritesoff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:visibility="visible"
-            android:src="@drawable/ic_favorites_off"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/ivSharing"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginEnd="@dimen/margin_large"
-        android:contentDescription="@null"
-        android:src="@drawable/ic_sharing"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        app:layout_constraintEnd_toStartOf="@id/favorite_action_container"
-        app:layout_constraintTop_toTopOf="@id/toolbar" />
-
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fillViewport="true"
         android:layout_marginHorizontal="@dimen/padding_medium"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_height="wrap_content"
@@ -88,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/padding_large"
-                tools:text="@string/name_vacancy_example"
-                />
+                tools:text="@string/name_vacancy_example" />
 
             <TextView
                 android:id="@+id/tv_salary_vacancy"
@@ -146,8 +102,7 @@
                     app:layout_constraintStart_toStartOf="@id/tv_name_company"
                     app:layout_constraintTop_toBottomOf="@id/tv_name_company"
                     tools:text="@string/company_city_example" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/experience"
@@ -156,8 +111,8 @@
                 android:layout_width="match_parent"
                 android:layout_marginTop="@dimen/padding_large"
                 android:text="@string/needed_experience"
-                android:fontFamily="@font/ys_display_bold"
-                />
+                android:fontFamily="@font/ys_display_bold" />
+
             <TextView
                 android:id="@+id/tv_title_needed_experience"
                 style="@style/RegularTextMedium"
@@ -222,47 +177,45 @@
                 android:orientation="vertical"
                 android:layout_marginTop="@dimen/padding_medium"
                 android:layout_marginStart="@dimen/padding_small"/>
-
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="@dimen/icon_size_large"
         android:layout_height="@dimen/icon_size_large"
         android:visibility="gone"
-        android:indeterminateTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/blue" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:constraint_referenced_ids="iv_error, tv_error" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/error_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
-    <ImageView
-        android:id="@+id/iv_error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/img_vacancy_not_found_placeholder" />
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_vacancy_not_found_placeholder" />
 
-    <TextView
-        android:id="@+id/tv_error"
-        style="@style/MediumTextLarge.22"
-        android:layout_width="@dimen/tv_error_layout_width"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_medium"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_error"
-        tools:text="@string/vacancy_not_found_error" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_error"
+            style="@style/MediumTextLarge.22"
+            android:layout_width="@dimen/tv_error_layout_width"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_medium"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_error"
+            tools:text="@string/vacancy_not_found_error" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
