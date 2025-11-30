@@ -12,6 +12,8 @@
     <string name="contacts">Контакты</string>
     <string name="vacancy_not_found_error">Вакансия не найдена или удалена</string>
     <string name="needed_experience">Требуемый опыт</string>
+    <string name="share">Поделиться</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
 
     <string name="name_vacancy_example">Андроид-разработчик</string>
     <string name="salary_vacancy_example">от 100 000 ₽</string>
