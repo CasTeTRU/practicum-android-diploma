@@ -12,7 +12,7 @@
         android:id="@+id/ivCompanyLogo"
         android:layout_width="@dimen/icon_size_large"
         android:layout_height="@dimen/icon_size_large"
-        android:contentDescription="@null"
+        android:contentDescription="@string/company_logo"
         android:scaleType="centerInside"
         android:src="@drawable/ic_companylogo_placeholder"
         app:layout_constraintStart_toStartOf="parent"
