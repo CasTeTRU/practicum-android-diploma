@@ -7,6 +7,7 @@
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
     <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="error_getting_favorites">Не удалось получить список вакансий</string>
     <string name="company_logo">Логотип компании</string>
     <string name="error_no_internet">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
@@ -27,7 +28,7 @@
     <string name="vacancy_with_location">%1$s, %2$s</string>
     <string name="who_worked">Над приложением работали</string>
 
-    <string name="developer_one">Константин Галкин</string>    
+    <string name="developer_one">Константин Галкин</string>
     <string name="developer_two">Айнур Тимербаев</string>
     <string name="developer_three">Рамиль Шагалиев</string>
 
