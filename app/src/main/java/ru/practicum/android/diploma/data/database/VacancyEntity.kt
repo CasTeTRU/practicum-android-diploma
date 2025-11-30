@@ -5,13 +5,12 @@ import androidx.room.PrimaryKey
 
 /**
  * Entity класс для хранения избранных вакансий в Room Database
- * Будет расширен после определения структуры данных вакансии
+ * Хранит полные данные вакансии в формате JSON для офлайн-доступа
  */
 @Entity(tableName = "favorite_vacancies")
 data class VacancyEntity(
     @PrimaryKey
     val id: String,
-    // Здесь будут добавлены остальные поля после определения структуры
-    // Например: name, salary, employer и т.д.
+    val vacancyJson: String // JSON строка с полными данными VacancyDetailDTO
 )
 
