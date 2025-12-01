@@ -38,13 +38,10 @@ class FavoriteVacancyAdapter(
         private val binding: VacancyViewBinding,
         private val onItemClick: (String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-
         fun bind(vacancy: VacancyDetailDTO) {
-
             binding.root.setOnClickListener {
                 onItemClick(vacancy.id)
             }
-
 
             binding.tvNameVacancy.text =
                 formatVacancyNameWithArea(vacancy.name, vacancy.area?.name)

@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.favorites.ui
 
+import android.database.sqlite.SQLiteException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,20 +10,27 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import retrofit2.HttpException
+import java.io.IOException
 import ru.practicum.android.diploma.databinding.FragmentFavoritesBinding
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 
 class FavoritesFragment : Fragment() {
+
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
 
     private val favoriteInteractor: FavoriteInteractor by inject()
 
     private val adapter = FavoriteVacancyAdapter { vacancyId ->
-                // findNavController().navigate(...)
+        // findNavController().navigate(...)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -38,7 +46,13 @@ class FavoritesFragment : Fragment() {
             try {
                 val favorites = favoriteInteractor.getFavorites()
                 showFavoritesList(favorites)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
+                showErrorState()
+            } catch (e: SQLiteException) {
+                showErrorState()
+            } catch (e: HttpException) {
+                showErrorState()
+            } catch (e: RuntimeException) {
                 showErrorState()
             }
         }
@@ -61,7 +75,9 @@ class FavoritesFragment : Fragment() {
         binding.recyclerViewFavorites.visibility = View.GONE
     }
 
-    private fun showFavoritesList(vacancies: List<ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO>) {
+    private fun showFavoritesList(
+        vacancies: List<ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO>
+    ) {
         if (vacancies.isEmpty()) {
             showEmptyState()
         } else {
