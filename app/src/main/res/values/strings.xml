@@ -6,6 +6,8 @@
     <string name="vacancies_search">Поиск вакансий</string>
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
+    <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="company_logo">Логотип компании</string>
     <string name="error_no_internet">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
     <string name="error_nothing_found">Не удалось получить список вакансий</string>
