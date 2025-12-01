@@ -7,6 +7,7 @@
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
     <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="error_getting_favorites">Ошибка при загрузке избранных вакансий</string>
     <string name="company_logo">Логотип компании</string>
     <string name="error_no_internet">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
@@ -30,4 +31,10 @@
     <string name="full_description_with_formatting_example">Полное описание с форматированием</string>
     <string name="key_skills_example">Знание классических алгоритмов и структуры данных Программирование для Android больше одного года Знание WebRTC</string>
 
+    <string name="who_worked">Над приложением работали</string>
+
+    <string name="developer_one">Константин Галкин</string>
+    <string name="developer_two">Елизавета Копосова</string>
+    <string name="developer_three">Айнур Тимербаев</string>
+    <string name="developer_four">Рамиль Шагалиев</string>
 </resources>

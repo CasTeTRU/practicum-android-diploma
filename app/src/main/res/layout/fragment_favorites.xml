@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+    <TextView
             android:id="@+id/tvEmptyList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,16 +85,16 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_error_getting_list"
             app:layout_constraintBottom_toTopOf="@id/tvErrorList"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvErrorList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_medium"
-            android:text="@string/error_nothing_found"
+            android:text="@string/error_getting_favorites"
             android:textAlignment="center"
             android:textSize="@dimen/text_size_large"
             android:textColor="?attr/colorOnBackground"
