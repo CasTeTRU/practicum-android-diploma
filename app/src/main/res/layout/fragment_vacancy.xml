@@ -53,6 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_very_small"
+                android:textColor="?attr/colorOnBackground"
                 tools:text="@string/salary_vacancy_example" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -132,6 +133,7 @@
             <TextView
                 android:id="@+id/tv_title_description"
                 style="@style/MediumTextLarge.22"
+                android:textColor="?attr/colorOnBackground"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_large"
@@ -167,6 +169,7 @@
                 style="@style/MediumTextLarge.22"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:textColor="?attr/colorOnBackground"
                 android:layout_marginTop="@dimen/padding_medium"
                 android:text="@string/contacts" />
 
