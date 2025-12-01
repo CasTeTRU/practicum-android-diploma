@@ -6,5 +6,5 @@ data class VacanciesSearchResponse(
     val found: Int,
     val page: Int,
     val pages: Int,
-    val vacancies: List<VacancyDetailDTO>,
+    val items: List<VacancyDetailDTO>,
 ) : NetworkResponse()
