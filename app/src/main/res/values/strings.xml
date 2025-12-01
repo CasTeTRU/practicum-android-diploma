@@ -18,6 +18,12 @@
     <string name="needed_experience">Требуемый опыт</string>
     <string name="share">Поделиться</string>
     <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="who_worked">Над приложением работали</string>
+
+    <string name="developer_one">Константин Галкин</string>
+    <string name="developer_two">Елизавета Копосова</string>
+    <string name="developer_three">Айнур Тимербаев</string>
+    <string name="developer_four">Рамиль Шагалиев</string>
 
     <string name="name_vacancy_example">Андроид-разработчик</string>
     <string name="salary_vacancy_example">от 100 000 ₽</string>
