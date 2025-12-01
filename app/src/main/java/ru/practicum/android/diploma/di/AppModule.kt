@@ -8,6 +8,7 @@ val appModule = module {
         storageModule,
         databaseModule,
         repositoryModule,
-        viewModelModule
+        viewModelModule,
+        searchModule
     )
 }
