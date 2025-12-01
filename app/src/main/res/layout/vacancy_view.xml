@@ -13,7 +13,7 @@
         android:layout_width="@dimen/icon_size_large"
         android:layout_height="@dimen/icon_size_large"
         android:clipToOutline="false"
-        android:contentDescription="@null"
+        android:contentDescription="@string/company_logo"
         android:scaleType="centerInside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

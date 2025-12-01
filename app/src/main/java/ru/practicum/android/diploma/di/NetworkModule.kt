@@ -9,7 +9,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.practicum.android.diploma.BuildConfig
 import ru.practicum.android.diploma.data.network.ApiService
+import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.data.network.NetworkConfig
+import ru.practicum.android.diploma.data.network.RetrofitNetworkClient
+import ru.practicum.android.diploma.util.NetworkManager
 import java.util.concurrent.TimeUnit
 
 val networkModule = module {
@@ -39,6 +42,9 @@ val networkModule = module {
     single<Gson> {
         GsonBuilder().create()
     }
+    single {
+        GsonConverterFactory.create(get())
+    }
     // Retrofit
     single {
         Retrofit.Builder()
@@ -50,5 +56,9 @@ val networkModule = module {
     // API Service
     single<ApiService> {
         get<Retrofit>().create(ApiService::class.java)
+    }
+    single { NetworkManager(get()) }
+    single<NetworkClient> {
+        RetrofitNetworkClient(get(), get())
     }
 }
