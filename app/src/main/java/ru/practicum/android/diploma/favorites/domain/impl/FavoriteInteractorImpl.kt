@@ -7,7 +7,6 @@ import ru.practicum.android.diploma.favorites.domain.api.FavoriteRepository
 class FavoriteInteractorImpl(
     private val favoriteRepository: FavoriteRepository
 ) : FavoriteInteractor {
-
     override suspend fun getFavorites(): List<VacancyDetailDTO> {
         return favoriteRepository.getFavorites()
     }
@@ -28,5 +27,3 @@ class FavoriteInteractorImpl(
         return favoriteRepository.getVacancyById(vacancyId)
     }
 }
-
-

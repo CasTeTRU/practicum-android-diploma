@@ -69,7 +69,11 @@ class VacancyViewModel(
 //            try {
 //                val isFavorite = favoriteInteractor.isFavorite(vacancyId)
 //                _isFavoriteState.value = isFavorite
-//            } catch (e: Exception) {
+//            } catch (e: SQLiteException) {
+//                _isFavoriteState.value = false
+//            } catch (e: IOException) {
+//                _isFavoriteState.value = false
+//            } catch (e: RuntimeException) {
 //                _isFavoriteState.value = false
 //            }
 //        }
@@ -80,7 +84,9 @@ class VacancyViewModel(
 //            try {
 //                favoriteInteractor.addToFavorites(vacancy)
 //                _isFavoriteState.value = true
-//            } catch (e: Exception) {
+//            } catch (e: SQLiteException) {
+//            } catch (e: IOException) {
+//            } catch (e: RuntimeException) {
 //            }
 //        }
 //    }
@@ -90,15 +96,20 @@ class VacancyViewModel(
 //            try {
 //                favoriteInteractor.removeFromFavorites(vacancyId)
 //                _isFavoriteState.value = false
-//            } catch (e: Exception) {
+//            } catch (e: SQLiteException) {
+//                // ignore
+//            } catch (e: IOException) {
+//                // ignore
+//            } catch (e: RuntimeException) {
+//                // ignore
 //            }
 //        }
 //    }
 
 //    fun getVacancyFromFavorites(vacancyId: String) {
 //        viewModelScope.launch {
+//            _vacancyState.value = VacancyScreenState.Loading
 //            try {
-//                _vacancyState.value = VacancyScreenState.Loading
 //                val vacancy = favoriteInteractor.getVacancyById(vacancyId)
 //                if (vacancy != null) {
 //                    _vacancyState.value = VacancyScreenState.Content(vacancy)
@@ -106,7 +117,11 @@ class VacancyViewModel(
 //                } else {
 //                    _vacancyState.value = VacancyScreenState.Error
 //                }
-//            } catch (e: Exception) {
+//            } catch (e: SQLiteException) {
+//                _vacancyState.value = VacancyScreenState.Error
+//            } catch (e: IOException) {
+//                _vacancyState.value = VacancyScreenState.Error
+//            } catch (e: RuntimeException) {
 //                _vacancyState.value = VacancyScreenState.Error
 //            }
 //        }
