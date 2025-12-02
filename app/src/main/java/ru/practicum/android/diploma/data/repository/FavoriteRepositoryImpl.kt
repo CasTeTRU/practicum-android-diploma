@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.repository
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import androidx.room.RoomDatabaseException
 import ru.practicum.android.diploma.data.database.VacancyDao
 import ru.practicum.android.diploma.data.database.VacancyEntity
@@ -49,8 +50,10 @@ class FavoriteRepositoryImpl(
         return try {
             vacancyDao.isFavorite(vacancyId)
         } catch (e: SQLiteException) {
+            Log.e(TAG, "Ошибка при проверке избранной вакансии", e)
             false
         } catch (e: RoomDatabaseException) {
+            Log.e(TAG, "Ошибка при проверке избранной вакансии", e)
             false
         }
     }
@@ -60,10 +63,16 @@ class FavoriteRepositoryImpl(
             val entity = vacancyDao.getFavoriteById(vacancyId)
             entity?.toVacancyDetailDTO()
         } catch (e: SQLiteException) {
+            Log.e(TAG, "Ошибка при получении вакансии по ID", e)
             null
         } catch (e: RoomDatabaseException) {
+            Log.e(TAG, "Ошибка при получении вакансии по ID", e)
             null
         }
+    }
+
+    companion object {
+        private const val TAG = "FavoriteRepositoryImpl"
     }
 }
 
