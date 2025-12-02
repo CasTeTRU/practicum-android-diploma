@@ -15,9 +15,8 @@ class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<FavoritesViewModel>()
-    
     private val adapter = FavoriteVacancyAdapter { vacancyId ->
-//тут нужна навигация на экран деталей вакансии
+        // тут нужна навигация на экран деталей вакансии
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -1,93 +1,104 @@
 package ru.practicum.android.diploma.data.repository
 
+import android.database.sqlite.SQLiteException
 import ru.practicum.android.diploma.data.database.VacancyDao
 import ru.practicum.android.diploma.data.database.VacancyEntity
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
+import java.io.IOException
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteRepository as FavoriteRepositoryDomain
 
 class FavoriteRepositoryImpl(
     private val vacancyDao: VacancyDao
 ) : FavoriteRepositoryDomain {
+
     override suspend fun getFavorites(): List<VacancyDetailDTO> {
         return try {
-            val entities = vacancyDao.getAllFavoritesSuspend()
-            entities.map { entity ->
-                entity.toVacancyDetailDTO()
-            }
-        } catch (e: Exception) {
-            throw Exception("Ошибка при получении избранных вакансий", e)
+            vacancyDao.getAllFavoritesSuspend()
+                .map { it.toVacancyDetailDTO() }
+        } catch (e: SQLiteException) {
+            throw DataAccessException("Database error while fetching favorites", e)
+        } catch (e: IOException) {
+            throw DataAccessException("IO error while fetching favorites", e)
         }
     }
 
     override suspend fun addToFavorites(vacancy: VacancyDetailDTO) {
         try {
-            val entity = vacancy.toVacancyEntity()
-            vacancyDao.insertFavorite(entity)
-        } catch (e: Exception) {
-            throw Exception("Ошибка при добавлении вакансии в избранное", e)
+            vacancyDao.insertFavorite(vacancy.toVacancyEntity())
+        } catch (e: SQLiteException) {
+            throw DataAccessException("Database error while adding to favorites", e)
+        } catch (e: IOException) {
+            throw DataAccessException("IO error while adding to favorites", e)
         }
     }
 
     override suspend fun removeFromFavorites(vacancyId: String) {
         try {
             vacancyDao.deleteFavorite(vacancyId)
-        } catch (e: Exception) {
-            throw Exception("Ошибка при удалении вакансии из избранного", e)
+        } catch (e: SQLiteException) {
+            throw DataAccessException("Database error while removing from favorites", e)
+        } catch (e: IOException) {
+            throw DataAccessException("IO error while removing from favorites", e)
         }
     }
 
     override suspend fun isFavorite(vacancyId: String): Boolean {
         return try {
             vacancyDao.isFavorite(vacancyId)
-        } catch (e: Exception) {
+        } catch (e: SQLiteException) {
+            false
+        } catch (e: IOException) {
             false
         }
     }
 
     override suspend fun getVacancyById(vacancyId: String): VacancyDetailDTO? {
         return try {
-            val entity = vacancyDao.getFavoriteById(vacancyId)
-            entity?.toVacancyDetailDTO()
-        } catch (e: Exception) {
+            vacancyDao.getFavoriteById(vacancyId)?.toVacancyDetailDTO()
+        } catch (e: SQLiteException) {
+            null
+        } catch (e: IOException) {
             null
         }
     }
 }
 
+class DataAccessException(message: String, cause: Throwable) : RuntimeException(message, cause)
+
 private fun VacancyDetailDTO.toVacancyEntity(): VacancyEntity {
     return VacancyEntity(
-        id = this.id,
-        name = this.name,
-        description = this.description,
-        salary = this.salary,
-        address = this.address,
-        experience = this.experience,
-        schedule = this.schedule,
-        employment = this.employment,
-        contacts = this.contacts,
-        employer = this.employer,
-        area = this.area,
-        skills = this.skills,
-        url = this.url,
-        industry = this.industry
+        id = id,
+        name = name,
+        description = description,
+        salary = salary,
+        address = address,
+        experience = experience,
+        schedule = schedule,
+        employment = employment,
+        contacts = contacts,
+        employer = employer,
+        area = area,
+        skills = skills,
+        url = url,
+        industry = industry
     )
 }
 
 private fun VacancyEntity.toVacancyDetailDTO(): VacancyDetailDTO {
     return VacancyDetailDTO(
-        id = this.id,
-        name = this.name,
-        description = this.description,
-        salary = this.salary,
-        address = this.address,
-        experience = this.experience,
-        schedule = this.schedule,
-        employment = this.employment,
-        contacts = this.contacts,
-        employer = this.employer,
-        area = this.area,
-        skills = this.skills,
-        url = this.url,
-        industry = this.industry
+        id = id,
+        name = name,
+        description = description,
+        salary = salary,
+        address = address,
+        experience = experience,
+        schedule = schedule,
+        employment = employment,
+        contacts = contacts,
+        employer = employer,
+        area = area,
+        skills = skills,
+        url = url,
+        industry = industry
     )
 }
