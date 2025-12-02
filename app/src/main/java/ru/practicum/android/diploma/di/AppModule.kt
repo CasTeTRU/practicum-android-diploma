@@ -10,6 +10,9 @@ val appModule = module {
         repositoryModule,
         viewModelModule,
         searchModule,
-        vacancyModule
+        vacancyModule,
+        //repositoryModule,
+        searchModule
+        //domainModule,
     )
 }
