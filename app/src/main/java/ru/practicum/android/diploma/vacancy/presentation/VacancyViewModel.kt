@@ -4,9 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import kotlinx.coroutines.launch
+
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
+
 import android.database.SQLException
 
 class VacancyViewModel(
@@ -19,7 +22,7 @@ class VacancyViewModel(
     private val _vacancyState = MutableLiveData<VacancyScreenState>()
     val vacancyState: LiveData<VacancyScreenState> = _vacancyState
 
-    fun checkFavoriteStatus(vacancyId: String) {
+/*    fun checkFavoriteStatus(vacancyId: String) {
         viewModelScope.launch {
             runCatching {
                 favoriteInteractor.isFavorite(vacancyId)
@@ -80,4 +83,6 @@ class VacancyViewModel(
         if (error is SQLException) {
         }
     }
+
+ */
 }
