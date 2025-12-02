@@ -1,8 +1,6 @@
 package ru.practicum.android.diploma.favorites.ui
 
-import android.database.sqlite.SQLiteException
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,21 +40,9 @@ class FavoritesFragment : Fragment() {
 
     private fun loadFavorites() {
         viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                val favorites = favoriteInteractor.getFavorites()
-                showFavoritesList(favorites)
-            } catch (e: SQLiteException) {
-                Log.e(TAG, "Ошибка базы данных при загрузке избранных вакансий", e)
-                showErrorState()
-            } catch (e: Exception) {
-                Log.e(TAG, "Ошибка при загрузке избранных вакансий", e)
-                showErrorState()
-            }
+            val favorites = favoriteInteractor.getFavorites()
+            showFavoritesList(favorites)
         }
-    }
-
-    companion object {
-        private const val TAG = "FavoritesFragment"
     }
 
     private fun setupRecyclerView() {
