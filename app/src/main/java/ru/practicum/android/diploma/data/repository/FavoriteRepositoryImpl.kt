@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.data.repository
 
 import android.database.sqlite.SQLiteException
 import android.util.Log
-import androidx.room.RoomDatabaseException
 import ru.practicum.android.diploma.data.database.VacancyDao
 import ru.practicum.android.diploma.data.database.VacancyEntity
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
@@ -19,9 +18,7 @@ class FavoriteRepositoryImpl(
                 entity.toVacancyDetailDTO()
             }
         } catch (e: SQLiteException) {
-            throw RoomDatabaseException("Ошибка при получении избранных вакансий", e)
-        } catch (e: RoomDatabaseException) {
-            throw RoomDatabaseException("Ошибка при получении избранных вакансий", e)
+            throw RuntimeException("Ошибка при получении избранных вакансий", e)
         }
     }
 
@@ -30,9 +27,7 @@ class FavoriteRepositoryImpl(
             val entity = vacancy.toVacancyEntity()
             vacancyDao.insertFavorite(entity)
         } catch (e: SQLiteException) {
-            throw RoomDatabaseException("Ошибка при добавлении вакансии в избранное", e)
-        } catch (e: RoomDatabaseException) {
-            throw RoomDatabaseException("Ошибка при добавлении вакансии в избранное", e)
+            throw RuntimeException("Ошибка при добавлении вакансии в избранное", e)
         }
     }
 
@@ -40,9 +35,7 @@ class FavoriteRepositoryImpl(
         try {
             vacancyDao.deleteFavorite(vacancyId)
         } catch (e: SQLiteException) {
-            throw RoomDatabaseException("Ошибка при удалении вакансии из избранного", e)
-        } catch (e: RoomDatabaseException) {
-            throw RoomDatabaseException("Ошибка при удалении вакансии из избранного", e)
+            throw RuntimeException("Ошибка при удалении вакансии из избранного", e)
         }
     }
 
@@ -50,9 +43,6 @@ class FavoriteRepositoryImpl(
         return try {
             vacancyDao.isFavorite(vacancyId)
         } catch (e: SQLiteException) {
-            Log.e(TAG, "Ошибка при проверке избранной вакансии", e)
-            false
-        } catch (e: RoomDatabaseException) {
             Log.e(TAG, "Ошибка при проверке избранной вакансии", e)
             false
         }
@@ -63,9 +53,6 @@ class FavoriteRepositoryImpl(
             val entity = vacancyDao.getFavoriteById(vacancyId)
             entity?.toVacancyDetailDTO()
         } catch (e: SQLiteException) {
-            Log.e(TAG, "Ошибка при получении вакансии по ID", e)
-            null
-        } catch (e: RoomDatabaseException) {
             Log.e(TAG, "Ошибка при получении вакансии по ID", e)
             null
         }
