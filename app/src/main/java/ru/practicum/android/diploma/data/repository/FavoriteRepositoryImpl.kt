@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.data.repository
 
+import android.database.sqlite.SQLiteException
+import androidx.room.RoomDatabaseException
 import ru.practicum.android.diploma.data.database.VacancyDao
 import ru.practicum.android.diploma.data.database.VacancyEntity
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
@@ -15,8 +17,10 @@ class FavoriteRepositoryImpl(
             entities.map { entity ->
                 entity.toVacancyDetailDTO()
             }
-        } catch (e: Exception) {
-            throw Exception("Ошибка при получении избранных вакансий", e)
+        } catch (e: SQLiteException) {
+            throw RoomDatabaseException("Ошибка при получении избранных вакансий", e)
+        } catch (e: RoomDatabaseException) {
+            throw RoomDatabaseException("Ошибка при получении избранных вакансий", e)
         }
     }
 
@@ -24,23 +28,29 @@ class FavoriteRepositoryImpl(
         try {
             val entity = vacancy.toVacancyEntity()
             vacancyDao.insertFavorite(entity)
-        } catch (e: Exception) {
-            throw Exception("Ошибка при добавлении вакансии в избранное", e)
+        } catch (e: SQLiteException) {
+            throw RoomDatabaseException("Ошибка при добавлении вакансии в избранное", e)
+        } catch (e: RoomDatabaseException) {
+            throw RoomDatabaseException("Ошибка при добавлении вакансии в избранное", e)
         }
     }
 
     override suspend fun removeFromFavorites(vacancyId: String) {
         try {
             vacancyDao.deleteFavorite(vacancyId)
-        } catch (e: Exception) {
-            throw Exception("Ошибка при удалении вакансии из избранного", e)
+        } catch (e: SQLiteException) {
+            throw RoomDatabaseException("Ошибка при удалении вакансии из избранного", e)
+        } catch (e: RoomDatabaseException) {
+            throw RoomDatabaseException("Ошибка при удалении вакансии из избранного", e)
         }
     }
 
     override suspend fun isFavorite(vacancyId: String): Boolean {
         return try {
             vacancyDao.isFavorite(vacancyId)
-        } catch (e: Exception) {
+        } catch (e: SQLiteException) {
+            false
+        } catch (e: RoomDatabaseException) {
             false
         }
     }
@@ -49,7 +59,9 @@ class FavoriteRepositoryImpl(
         return try {
             val entity = vacancyDao.getFavoriteById(vacancyId)
             entity?.toVacancyDetailDTO()
-        } catch (e: Exception) {
+        } catch (e: SQLiteException) {
+            null
+        } catch (e: RoomDatabaseException) {
             null
         }
     }
@@ -92,3 +104,4 @@ private fun VacancyEntity.toVacancyDetailDTO(): VacancyDetailDTO {
         industry = this.industry
     )
 }
+

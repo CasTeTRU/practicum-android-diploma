@@ -56,12 +56,6 @@ class FavoritesFragment : Fragment() {
         binding.recyclerViewFavorites.visibility = View.GONE
     }
 
-    private fun showErrorState() {
-        binding.emptyStateContainer.visibility = View.GONE
-        binding.errorStateContainer.visibility = View.VISIBLE
-        binding.recyclerViewFavorites.visibility = View.GONE
-    }
-
     private fun showFavoritesList(
         vacancies: List<ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO>
     ) {
