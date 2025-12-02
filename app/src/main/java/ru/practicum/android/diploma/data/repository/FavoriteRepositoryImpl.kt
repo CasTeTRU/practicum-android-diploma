@@ -18,7 +18,7 @@ class FavoriteRepositoryImpl(
                 entity.toVacancyDetailDTO()
             }
         } catch (e: SQLiteException) {
-            throw RuntimeException("Ошибка при получении избранных вакансий", e)
+            throw DatabaseException("Ошибка при получении избранных вакансий", e)
         }
     }
 
@@ -27,7 +27,7 @@ class FavoriteRepositoryImpl(
             val entity = vacancy.toVacancyEntity()
             vacancyDao.insertFavorite(entity)
         } catch (e: SQLiteException) {
-            throw RuntimeException("Ошибка при добавлении вакансии в избранное", e)
+            throw DatabaseException("Ошибка при добавлении вакансии в избранное", e)
         }
     }
 
@@ -35,7 +35,7 @@ class FavoriteRepositoryImpl(
         try {
             vacancyDao.deleteFavorite(vacancyId)
         } catch (e: SQLiteException) {
-            throw RuntimeException("Ошибка при удалении вакансии из избранного", e)
+            throw DatabaseException("Ошибка при удалении вакансии из избранного", e)
         }
     }
 
