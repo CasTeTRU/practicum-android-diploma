@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.repository
 
 import android.database.sqlite.SQLiteException
+import android.util.Log
 import ru.practicum.android.diploma.data.database.VacancyDao
 import ru.practicum.android.diploma.data.database.VacancyEntity
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
@@ -45,9 +46,11 @@ class FavoriteRepositoryImpl(
     override suspend fun isFavorite(vacancyId: String): Boolean {
         return try {
             vacancyDao.isFavorite(vacancyId)
-        } catch (e: SQLiteException) {
+        } catch (ignoredException: SQLiteException) {
+            Log.e("FavoriteRepository", "Database error while checking favorite status", ignoredException)
             false
-        } catch (e: IOException) {
+        } catch (ignoredException: IOException) {
+            Log.e("FavoriteRepository", "IO error while checking favorite status", ignoredException)
             false
         }
     }
@@ -55,9 +58,14 @@ class FavoriteRepositoryImpl(
     override suspend fun getVacancyById(vacancyId: String): VacancyDetailDTO? {
         return try {
             vacancyDao.getFavoriteById(vacancyId)?.toVacancyDetailDTO()
-        } catch (e: SQLiteException) {
+        } catch (ignoredException: SQLiteException) {
+            Log.e("FavoriteRepository", "Database error while fetching vacancy by id", ignoredException)
             null
-        } catch (e: IOException) {
+        } catch (ignoredException: IOException) {
+            Log.e("FavoriteRepository", "IO error while fetching vacancy by id", ignoredException)
+            null
+        } catch (ignoredException: Exception) {
+            Log.e("FavoriteRepository", "Unexpected error while fetching vacancy by id", ignoredException)
             null
         }
     }
