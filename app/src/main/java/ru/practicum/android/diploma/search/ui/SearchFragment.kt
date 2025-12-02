@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.search.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,19 +8,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
+import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.search.presentation.SearchScreenState
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
 import ru.practicum.android.diploma.search.presentation.UiError
+import ru.practicum.android.diploma.search.ui.adapter.SearchAdapter
+import ru.practicum.android.diploma.util.debounce
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var textWatcher: TextWatcher? = null
     private val viewModel by viewModel<SearchViewModel>()
+    private var onVacancyClickDebounce: ((track: Vacancy) -> Unit)? = null
+    private var searchAdapter = SearchAdapter { vacancy ->
+        onVacancyClickDebounce?.invoke(vacancy)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -31,6 +40,16 @@ class SearchFragment : Fragment() {
 
         viewModel.searchStatusLiveData.observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        // Recycler View
+        binding.recyclerView.adapter = searchAdapter
+
+        onVacancyClickDebounce = debounce<Vacancy>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+            findNavController().navigate(
+                R.id.action_searchFragment_to_filtersFragment,
+                Bundle.EMPTY
+            )
         }
 
         textWatcher = object : TextWatcher {
@@ -86,8 +105,7 @@ class SearchFragment : Fragment() {
                 binding.progressBar.visibility = View.VISIBLE
             }
             is SearchScreenState.ShowContent -> {
-                binding.recyclerView.visibility = View.VISIBLE
-//                (recyclerView.adapter as? VacancyAdapter)?.submitList(state.tracks)
+                renderContent(state.vacancies)
             }
             is SearchScreenState.Default -> {
                 binding.searchScreenCover.visibility = View.VISIBLE
@@ -95,6 +113,16 @@ class SearchFragment : Fragment() {
             is SearchScreenState.Error -> {
                 renderError(state.error)
             }
+        }
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun renderContent(vacancies: List<Vacancy>) {
+        binding.apply {
+            recyclerView.visibility = View.VISIBLE
+
+            searchAdapter.vacanciesList.clear()
+            searchAdapter.vacanciesList.addAll(vacancies)
+            searchAdapter.notifyDataSetChanged()
         }
     }
 
@@ -144,5 +172,9 @@ class SearchFragment : Fragment() {
         super.onDestroyView()
         textWatcher.let { binding.searchField.removeTextChangedListener(it) }
         _binding = null
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
