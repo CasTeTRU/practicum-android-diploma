@@ -34,11 +34,8 @@ class FavoriteVacancyViewHolder(
     fun bind(vacancy: VacancyDetailDTO) {
         with(binding) {
             tvNameVacancy.text = "${vacancy.name}\n${vacancy.area.name}"
-            
             tvNameCompany.text = vacancy.employer.name
-            
             tvSalary.text = formatSalary(vacancy.salary)
-
             root.setOnClickListener {
                 onVacancyClick(vacancy.id)
             }
@@ -48,18 +45,29 @@ class FavoriteVacancyViewHolder(
     private fun formatSalary(salary: SalaryDTO?): String {
         return when {
             salary == null -> ""
-            salary.from != null && salary.to != null -> 
+            salary.from != null && salary.to != null ->
                 "от ${formatNumber(salary.from)} до ${formatNumber(salary.to)} ${salary.currency ?: ""}"
-            salary.from != null -> 
+            salary.from != null ->
                 "от ${formatNumber(salary.from)} ${salary.currency ?: ""}"
-            salary.to != null -> 
+            salary.to != null ->
                 "до ${formatNumber(salary.to)} ${salary.currency ?: ""}"
             else -> ""
         }
     }
 
     private fun formatNumber(number: Int?): String {
-        return number?.toString()?.reversed()?.chunked(3)?.joinToString(" ")?.reversed() ?: ""
+        if (number == null) return ""
+        val numberString = number.toString()
+        val result = StringBuilder()
+        var count = 0
+        for (i in numberString.length - 1 downTo 0) {
+            if (count > 0 && count % 3 == 0) {
+                result.insert(0, " ")
+            }
+            result.insert(0, numberString[i])
+            count++
+        }
+        return result.toString()
     }
 }
 

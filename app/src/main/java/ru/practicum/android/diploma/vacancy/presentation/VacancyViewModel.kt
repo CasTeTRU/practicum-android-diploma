@@ -3,14 +3,7 @@ package ru.practicum.android.diploma.vacancy.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-
-import kotlinx.coroutines.launch
-
-import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
-
-import android.database.SQLException
 
 class VacancyViewModel(
     private val favoriteInteractor: FavoriteInteractor

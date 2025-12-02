@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.data.repository.DataAccessException
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 
 class FavoritesViewModel(
@@ -28,7 +30,9 @@ class FavoritesViewModel(
                 } else {
                     _favoritesState.value = FavoritesScreenState.Content(favorites)
                 }
-            } catch (e: Exception) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: DataAccessException) {
                 _favoritesState.value = FavoritesScreenState.Error
             }
         }
@@ -39,7 +43,13 @@ class FavoritesViewModel(
             try {
                 favoriteInteractor.removeFromFavorites(vacancyId)
                 loadFavorites()
-            } catch (e: Exception) {
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: DataAccessException) {
+                _favoritesState.value = FavoritesScreenState.Error
+            } catch (e: IllegalStateException) {
+                _favoritesState.value = FavoritesScreenState.Error
+            } catch (e: IllegalArgumentException) {
                 _favoritesState.value = FavoritesScreenState.Error
             }
         }
