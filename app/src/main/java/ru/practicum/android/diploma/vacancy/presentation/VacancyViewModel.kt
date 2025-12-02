@@ -7,12 +7,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.data.ApiError
 import ru.practicum.android.diploma.data.ResponceCodes
+import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 import ru.practicum.android.diploma.search.presentation.UiError
 import ru.practicum.android.diploma.vacancy.domain.VacancyInteractor
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
 class VacancyViewModel(
     private val vacancyInteractor: VacancyInteractor,
+    private val favoriteInteractor: FavoriteInteractor
 ): ViewModel()  {
     private var lastState: VacancyScreenState? = null
     private var _vacancyStatusLiveData = MutableLiveData<VacancyScreenState>()
@@ -50,6 +52,7 @@ class VacancyViewModel(
                 ResponceCodes.MAPPER_EXCEPTION -> UiError.ServerError
                 else -> UiError.Unknown(throwable.code)
             }
+
             else -> UiError.Unknown(ResponceCodes.IO_EXCEPTION)
         }
 
@@ -60,4 +63,52 @@ class VacancyViewModel(
         lastState = state
         _vacancyStatusLiveData.postValue(state)
     }
+
+//    fun checkFavoriteStatus(vacancyId: String) {
+//        viewModelScope.launch {
+//            try {
+//                val isFavorite = favoriteInteractor.isFavorite(vacancyId)
+//                _isFavoriteState.value = isFavorite
+//            } catch (e: Exception) {
+//                _isFavoriteState.value = false
+//            }
+//        }
+//    }
+//
+//    fun addToFavorites(vacancy: VacancyDetailDTO) {
+//        viewModelScope.launch {
+//            try {
+//                favoriteInteractor.addToFavorites(vacancy)
+//                _isFavoriteState.value = true
+//            } catch (e: Exception) {
+//            }
+//        }
+//    }
+
+//    fun removeFromFavorites(vacancyId: String) {
+//        viewModelScope.launch {
+//            try {
+//                favoriteInteractor.removeFromFavorites(vacancyId)
+//                _isFavoriteState.value = false
+//            } catch (e: Exception) {
+//            }
+//        }
+//    }
+
+//    fun getVacancyFromFavorites(vacancyId: String) {
+//        viewModelScope.launch {
+//            try {
+//                _vacancyState.value = VacancyScreenState.Loading
+//                val vacancy = favoriteInteractor.getVacancyById(vacancyId)
+//                if (vacancy != null) {
+//                    _vacancyState.value = VacancyScreenState.Content(vacancy)
+//                    _isFavoriteState.value = true
+//                } else {
+//                    _vacancyState.value = VacancyScreenState.Error
+//                }
+//            } catch (e: Exception) {
+//                _vacancyState.value = VacancyScreenState.Error
+//            }
+//        }
+//    }
 }
