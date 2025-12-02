@@ -19,7 +19,7 @@ class VacancyViewModel(
 
     private val _vacancyState = MutableLiveData<VacancyScreenState>()
     val vacancyState: LiveData<VacancyScreenState> = _vacancyState
-    fun checkFavoriteStatus(vacancyId: String) {
+/*    fun checkFavoriteStatus(vacancyId: String) {
         viewModelScope.launch {
             try {
                 val isFavorite = favoriteInteractor.isFavorite(vacancyId)
@@ -82,3 +82,4 @@ class VacancyViewModel(
         }
     }
 }
+*/
