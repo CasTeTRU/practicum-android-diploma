@@ -40,5 +40,6 @@
     <string name="employment_type_example">Полная занятость, Удаленная работа</string>
     <string name="full_description_with_formatting_example">Полное описание с форматированием</string>
     <string name="key_skills_example">Знание классических алгоритмов и структуры данных Программирование для Android больше одного года Знание WebRTC</string>
+    <string name="no_experience_required">Опыт работы не требуется</string>
 
 </resources>
