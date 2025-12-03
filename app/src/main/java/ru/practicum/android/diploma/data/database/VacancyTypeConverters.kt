@@ -5,13 +5,14 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ru.practicum.android.diploma.data.dto.responses.AddressDTO
 import ru.practicum.android.diploma.data.dto.responses.ContactsDTO
-import ru.practicum.android.diploma.data.dto.responses.EmploymentDTO
 import ru.practicum.android.diploma.data.dto.responses.EmployerDTO
+import ru.practicum.android.diploma.data.dto.responses.EmploymentDTO
 import ru.practicum.android.diploma.data.dto.responses.ExperienceDTO
 import ru.practicum.android.diploma.data.dto.responses.FilterAreaDTO
 import ru.practicum.android.diploma.data.dto.responses.FilterIndustryDTO
 import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
 import ru.practicum.android.diploma.data.dto.responses.ScheduleDTO
+
 
 class VacancyTypeConverters {
     private val gson = Gson()

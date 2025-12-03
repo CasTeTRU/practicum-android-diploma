@@ -3,6 +3,9 @@ package ru.practicum.android.diploma.vacancy.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 
 class VacancyViewModel(
@@ -14,67 +17,37 @@ class VacancyViewModel(
     private val _vacancyState = MutableLiveData<VacancyScreenState>()
     val vacancyState: LiveData<VacancyScreenState> = _vacancyState
 
-/*    fun checkFavoriteStatus(vacancyId: String) {
+    fun checkFavoriteStatus(vacancyId: String) {
         viewModelScope.launch {
-            runCatching {
-                favoriteInteractor.isFavorite(vacancyId)
-            }.onSuccess { isFavorite ->
-                _isFavoriteState.value = isFavorite
-            }.onFailure { error ->
-                handleDatabaseError(error)
-                _isFavoriteState.value = false
-            }
+            val isFavorite = favoriteInteractor.isFavorite(vacancyId)
+            _isFavoriteState.value = isFavorite
         }
     }
 
     fun addToFavorites(vacancy: VacancyDetailDTO) {
         viewModelScope.launch {
-            runCatching {
-                favoriteInteractor.addToFavorites(vacancy)
-            }.onSuccess {
-                _isFavoriteState.value = true
-            }.onFailure { error ->
-                handleDatabaseError(error)
-            }
+            favoriteInteractor.addToFavorites(vacancy)
+            _isFavoriteState.value = true
         }
     }
 
     fun removeFromFavorites(vacancyId: String) {
         viewModelScope.launch {
-            runCatching {
-                favoriteInteractor.removeFromFavorites(vacancyId)
-            }.onSuccess {
-                _isFavoriteState.value = false
-            }.onFailure { error ->
-                handleDatabaseError(error)
-            }
+            favoriteInteractor.removeFromFavorites(vacancyId)
+            _isFavoriteState.value = false
         }
     }
 
     fun getVacancyFromFavorites(vacancyId: String) {
         viewModelScope.launch {
             _vacancyState.value = VacancyScreenState.Loading
-
-            runCatching {
-                favoriteInteractor.getVacancyById(vacancyId)
-            }.onSuccess { vacancy ->
-                if (vacancy != null) {
-                    _vacancyState.value = VacancyScreenState.Content(vacancy)
-                    _isFavoriteState.value = true
-                } else {
-                    _vacancyState.value = VacancyScreenState.Error
-                }
-            }.onFailure { error ->
-                handleDatabaseError(error)
+            val vacancy = favoriteInteractor.getVacancyById(vacancyId)
+            if (vacancy != null) {
+                _vacancyState.value = VacancyScreenState.Content(vacancy)
+                _isFavoriteState.value = true
+            } else {
                 _vacancyState.value = VacancyScreenState.Error
             }
         }
     }
-
-    private fun handleDatabaseError(error: Throwable) {
-        if (error is SQLException) {
-        }
-    }
-
- */
 }
