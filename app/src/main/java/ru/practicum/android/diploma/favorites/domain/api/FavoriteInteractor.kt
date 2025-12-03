@@ -9,5 +9,3 @@ interface FavoriteInteractor {
     suspend fun isFavorite(vacancyId: String): Boolean
     suspend fun getVacancyById(vacancyId: String): VacancyDetailDTO?
 }
-
-
