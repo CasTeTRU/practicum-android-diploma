@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 
-class SearchAdapter(val clickListener : SearchClickListener):
+class SearchAdapter(val clickListener: SearchClickListener) :
     RecyclerView.Adapter<VacancyViewHolder>() {
     var vacanciesList = ArrayList<Vacancy>()
 
