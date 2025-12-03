@@ -67,22 +67,37 @@ class VacancyViewModel(
 
 //    fun checkFavoriteStatus(vacancyId: String) {
 //        viewModelScope.launch {
-//            val isFavorite = favoriteInteractor.isFavorite(vacancyId)
-//            _isFavoriteState.value = isFavorite
+//            runCatching {
+//                favoriteInteractor.isFavorite(vacancyId)
+//            }.onSuccess { isFavorite ->
+//                _isFavoriteState.value = isFavorite
+//            }.onFailure {
+//                _isFavoriteState.value = false
+//            }
 //        }
 //    }
 //
-//      fun addToFavorites(vacancy: VacancyDetailDTO) {
+//   fun addToFavorites(vacancy: VacancyDetailDTO) {
 //        viewModelScope.launch {
-//            favoriteInteractor.addToFavorites(vacancy)
-//            _isFavoriteState.value = true
+//            runCatching {
+//                favoriteInteractor.addToFavorites(vacancy)
+//            }.onSuccess {
+//                _isFavoriteState.value = true
+//            }.onFailure {
+//                // Ошибка при добавлении в избранное - состояние не меняем
+//            }
 //        }
 //    }
 
 //    fun removeFromFavorites(vacancyId: String) {
 //        viewModelScope.launch {
-//            favoriteInteractor.removeFromFavorites(vacancyId)
-//            _isFavoriteState.value = false
+//            runCatching {
+//                favoriteInteractor.removeFromFavorites(vacancyId)
+//            }.onSuccess {
+//                _isFavoriteState.value = false
+//            }.onFailure {
+//                // Ошибка при удалении из избранного - состояние не меняем
+//            }
 //        }
 //    }
 
