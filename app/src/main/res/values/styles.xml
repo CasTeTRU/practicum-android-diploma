@@ -75,6 +75,12 @@
         <item name="fontWeight">@dimen/font_weight_regular</item>
     </style>
 
+    <style name="MediumTextMedium">
+    <item name="android:textSize">@dimen/text_size_medium</item>
+    <item name="android:textColor">?attr/hintTextColor</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
     <style name="MediumTextLarge">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">?attr/hintTextColor</item>
