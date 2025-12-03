@@ -28,20 +28,15 @@ object SalaryFormatter {
     private var cachedFormatter: DecimalFormat? = null
 
     private fun getFormatter(locale: Locale): DecimalFormat {
-        val current = cachedFormatter
-        if (cachedLocale == locale && current != null) return current
+        cachedFormatter?.takeIf { cachedLocale == locale }?.let { return it }
 
-        synchronized(this) {
-            if (cachedLocale == locale && cachedFormatter != null) return cachedFormatter!!
-
-            val symbols = DecimalFormatSymbols(locale).apply {
-                groupingSeparator = ' '
-            }
-            val df = DecimalFormat("#,###", symbols)
-            cachedLocale = locale
-            cachedFormatter = df
-            return df
-        }
+        val df = DecimalFormat(
+            "#,###",
+            DecimalFormatSymbols(locale).apply { groupingSeparator = ' ' }
+        )
+        cachedLocale = locale
+        cachedFormatter = df
+        return df
     }
 
     fun format(context: Context, salary: Salary?): String {
