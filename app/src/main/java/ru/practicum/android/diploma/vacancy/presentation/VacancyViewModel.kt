@@ -61,7 +61,6 @@ class VacancyViewModel(
         viewModelScope.launch {
             _vacancyState.value = VacancyScreenState.Loading
             checkFavoriteStatus(vacancyId)
-            
             // Сначала пытаемся загрузить из избранного (офлайн)
             runCatching {
                 favoriteInteractor.getVacancyById(vacancyId)
