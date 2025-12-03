@@ -21,19 +21,35 @@ class FavoritesViewModel(
     fun loadFavorites() {
         viewModelScope.launch {
             _favoritesState.value = FavoritesScreenState.Loading
-            val favorites = favoriteInteractor.getFavorites()
-            if (favorites.isEmpty()) {
-                _favoritesState.value = FavoritesScreenState.Empty
-            } else {
-                _favoritesState.value = FavoritesScreenState.Content(favorites)
-            }
+            runCatching {
+                favoriteInteractor.getFavorites()
+            }.fold(
+                onSuccess = { favorites ->
+                    if (favorites.isEmpty()) {
+                        _favoritesState.value = FavoritesScreenState.Empty
+                    } else {
+                        _favoritesState.value = FavoritesScreenState.Content(favorites)
+                    }
+                },
+                onFailure = {
+                    _favoritesState.value = FavoritesScreenState.Error
+                }
+            )
         }
     }
 
     fun removeFromFavorites(vacancyId: String) {
         viewModelScope.launch {
-            favoriteInteractor.removeFromFavorites(vacancyId)
-            loadFavorites()
+            runCatching {
+                favoriteInteractor.removeFromFavorites(vacancyId)
+            }.fold(
+                onSuccess = {
+                    loadFavorites()
+                },
+                onFailure = {
+                    _favoritesState.value = FavoritesScreenState.Error
+                }
+            )
         }
     }
 }

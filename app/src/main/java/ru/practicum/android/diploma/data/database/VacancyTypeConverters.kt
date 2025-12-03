@@ -13,7 +13,6 @@ import ru.practicum.android.diploma.data.dto.responses.FilterIndustryDTO
 import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
 import ru.practicum.android.diploma.data.dto.responses.ScheduleDTO
 
-
 class VacancyTypeConverters {
     private val gson = Gson()
 

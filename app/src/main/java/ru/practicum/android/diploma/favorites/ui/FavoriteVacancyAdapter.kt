@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
 import ru.practicum.android.diploma.databinding.VacancyViewBinding
@@ -43,15 +44,18 @@ class FavoriteVacancyViewHolder(
     }
 
     private fun formatSalary(salary: SalaryDTO?): String {
+        if (salary == null) {
+            return binding.root.context.getString(R.string.salary_not_specified)
+        }
+        val currency = salary.currency?.let { " $it" } ?: ""
         return when {
-            salary == null -> ""
             salary.from != null && salary.to != null ->
-                "от ${formatNumber(salary.from)} до ${formatNumber(salary.to)} ${salary.currency ?: ""}"
+                "от ${formatNumber(salary.from)} до ${formatNumber(salary.to)}$currency"
             salary.from != null ->
-                "от ${formatNumber(salary.from)} ${salary.currency ?: ""}"
+                "от ${formatNumber(salary.from)}$currency"
             salary.to != null ->
-                "до ${formatNumber(salary.to)} ${salary.currency ?: ""}"
-            else -> ""
+                "до ${formatNumber(salary.to)}$currency"
+            else -> binding.root.context.getString(R.string.salary_not_specified)
         }
     }
 
