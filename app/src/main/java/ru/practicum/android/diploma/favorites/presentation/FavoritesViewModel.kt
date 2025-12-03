@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.data.repository.DataAccessException
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 
 class FavoritesViewModel(
@@ -22,36 +20,20 @@ class FavoritesViewModel(
 
     fun loadFavorites() {
         viewModelScope.launch {
-            try {
-                _favoritesState.value = FavoritesScreenState.Loading
-                val favorites = favoriteInteractor.getFavorites()
-                if (favorites.isEmpty()) {
-                    _favoritesState.value = FavoritesScreenState.Empty
-                } else {
-                    _favoritesState.value = FavoritesScreenState.Content(favorites)
-                }
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: DataAccessException) {
-                _favoritesState.value = FavoritesScreenState.Error
+            _favoritesState.value = FavoritesScreenState.Loading
+            val favorites = favoriteInteractor.getFavorites()
+            if (favorites.isEmpty()) {
+                _favoritesState.value = FavoritesScreenState.Empty
+            } else {
+                _favoritesState.value = FavoritesScreenState.Content(favorites)
             }
         }
     }
 
     fun removeFromFavorites(vacancyId: String) {
         viewModelScope.launch {
-            try {
-                favoriteInteractor.removeFromFavorites(vacancyId)
-                loadFavorites()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (e: DataAccessException) {
-                _favoritesState.value = FavoritesScreenState.Error
-            } catch (e: IllegalStateException) {
-                _favoritesState.value = FavoritesScreenState.Error
-            } catch (e: IllegalArgumentException) {
-                _favoritesState.value = FavoritesScreenState.Error
-            }
+            favoriteInteractor.removeFromFavorites(vacancyId)
+            loadFavorites()
         }
     }
 }
