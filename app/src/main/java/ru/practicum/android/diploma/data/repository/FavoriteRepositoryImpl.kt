@@ -68,5 +68,3 @@ private fun VacancyEntity.toVacancyDetailDTO(): VacancyDetailDTO {
         industry = industry
     )
 }
-
-
