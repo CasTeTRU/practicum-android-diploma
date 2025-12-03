@@ -61,13 +61,17 @@ class FavoriteVacancyViewHolder(
         val result = StringBuilder()
         var count = 0
         for (i in numberString.length - 1 downTo 0) {
-            if (count > 0 && count % 3 == 0) {
+            if (count > 0 && count % DIGITS_PER_GROUP == 0) {
                 result.insert(0, " ")
             }
             result.insert(0, numberString[i])
             count++
         }
         return result.toString()
+    }
+
+    companion object {
+        private const val DIGITS_PER_GROUP = 3
     }
 }
 

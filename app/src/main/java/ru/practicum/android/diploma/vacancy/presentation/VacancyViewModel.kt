@@ -8,7 +8,6 @@ import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 class VacancyViewModel(
     private val favoriteInteractor: FavoriteInteractor
 ) : ViewModel() {
-
     private val _isFavoriteState = MutableLiveData<Boolean>()
     val isFavoriteState: LiveData<Boolean> = _isFavoriteState
 

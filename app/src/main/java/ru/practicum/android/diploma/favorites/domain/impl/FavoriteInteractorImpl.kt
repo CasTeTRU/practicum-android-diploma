@@ -10,19 +10,15 @@ class FavoriteInteractorImpl(
     override suspend fun getFavorites(): List<VacancyDetailDTO> {
         return favoriteRepository.getFavorites()
     }
-
     override suspend fun addToFavorites(vacancy: VacancyDetailDTO) {
         favoriteRepository.addToFavorites(vacancy)
     }
-
     override suspend fun removeFromFavorites(vacancyId: String) {
         favoriteRepository.removeFromFavorites(vacancyId)
     }
-
     override suspend fun isFavorite(vacancyId: String): Boolean {
         return favoriteRepository.isFavorite(vacancyId)
     }
-
     override suspend fun getVacancyById(vacancyId: String): VacancyDetailDTO? {
         return favoriteRepository.getVacancyById(vacancyId)
     }
