@@ -10,8 +10,8 @@ import ru.practicum.android.diploma.databinding.VacancyViewBinding
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.search.ui.utils.SalaryFormatter
 
-class VacancyViewHolder(private val binding : VacancyViewBinding)
-: RecyclerView.ViewHolder(binding.root) {
+class VacancyViewHolder(private val binding: VacancyViewBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(vacancy: Vacancy) = with(binding) {
         val context = itemView.context
