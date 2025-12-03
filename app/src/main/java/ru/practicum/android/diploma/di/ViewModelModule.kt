@@ -7,5 +7,5 @@ import ru.practicum.android.diploma.vacancy.presentation.VacancyViewModel
 
 val viewModelModule = module {
     viewModel { FavoritesViewModel(get()) }
-    viewModel { VacancyViewModel(get()) }
+    viewModel { VacancyViewModel(get(), get()) }
 }
