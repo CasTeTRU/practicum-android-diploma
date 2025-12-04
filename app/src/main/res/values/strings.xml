@@ -28,7 +28,7 @@
     <string name="error_nothing_found">Не удалось получить список вакансий</string>
     <string name="empty_vacancy">Таких вакансий нет</string>
 
-    <string name="developer_one">Константин Галкин</string>    
+    <string name="developer_one">Константин Галкин</string>
     <string name="developer_two">Айнур Тимербаев</string>
     <string name="developer_three">Рамиль Шагалиев</string>
 
