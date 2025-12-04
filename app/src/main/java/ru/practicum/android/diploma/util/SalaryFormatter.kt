@@ -1,8 +1,8 @@
-package ru.practicum.android.diploma.search.ui.utils
+package ru.practicum.android.diploma.util
 
 import android.content.Context
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.search.domain.models.Salary
+import ru.practicum.android.diploma.domain.models.Salary
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.Locale

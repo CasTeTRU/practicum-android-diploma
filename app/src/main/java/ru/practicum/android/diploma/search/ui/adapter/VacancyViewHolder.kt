@@ -8,7 +8,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.VacancyViewBinding
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.ui.utils.SalaryFormatter
+import ru.practicum.android.diploma.util.SalaryFormatter
 
 class VacancyViewHolder(private val binding: VacancyViewBinding) :
     RecyclerView.ViewHolder(binding.root) {

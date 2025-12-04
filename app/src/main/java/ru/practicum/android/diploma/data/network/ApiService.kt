@@ -6,11 +6,11 @@ import retrofit2.http.Query
 import ru.practicum.android.diploma.data.dto.responses.AreasResponse
 import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
-import ru.practicum.android.diploma.data.dto.responses.VacancyDetailResponse
+import ru.practicum.android.diploma.data.dto.responses.VacancyByIdResponse
 
 interface ApiService {
     @GET("/vacancies/{vacancy_id}")
-    suspend fun getVacancyById(@Path("vacancy_id") id: String): VacancyDetailResponse
+    suspend fun getVacancyById(@Path("vacancy_id") id: String): VacancyByIdResponse
 
     @GET("/vacancies")
     suspend fun findVacancies(

@@ -7,6 +7,7 @@ import retrofit2.HttpException
 import ru.practicum.android.diploma.data.ResponceCodes
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
+import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
 import ru.practicum.android.diploma.util.NetworkManager
 import java.io.IOException
 
@@ -40,14 +41,14 @@ class RetrofitNetworkClient(
         }
     }
 
-    override suspend fun getVacancyById(id: String): NetworkResponse {
+    override suspend fun getVacancyById(dto: VacancyByIdRequest): NetworkResponse {
         if (!networkManager.isConnected()) {
             return NetworkResponse().apply { resultCode = ResponceCodes.ERROR_NO_INTERNET }
         }
 
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getVacancyById(id)
+                val response = apiService.getVacancyById(dto.id)
                 response.apply { resultCode = ResponceCodes.SUCCESS_STATUS }
             } catch (e: HttpException) {
                 Log.e(TAG, e.stackTraceToString())

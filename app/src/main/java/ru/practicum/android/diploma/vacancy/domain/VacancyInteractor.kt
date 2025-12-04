@@ -1,8 +1,9 @@
 package ru.practicum.android.diploma.vacancy.domain
 
-import ru.practicum.android.diploma.vacancy.domain.models.VacancyShow
+import kotlinx.coroutines.flow.Flow
+import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
 interface VacancyInteractor {
 
-    suspend fun getVacancyById(id: String): Result<VacancyShow>
+    suspend fun getVacancyById(id: String): Flow<Result<VacancyDetailed>>
 }

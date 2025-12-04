@@ -23,6 +23,10 @@
     <string name="salary_from_to">От %1$s до %2$s %3$s</string>
     <string name="vacancy_with_location">%1$s, %2$s</string>
     <string name="who_worked">Над приложением работали</string>
+    <string name="error_no_internet">Нет интернета</string>
+    <string name="error_server">Ошибка сервера</string>
+    <string name="error_nothing_found">Не удалось получить список вакансий</string>
+    <string name="empty_vacancy">Таких вакансий нет</string>
 
     <string name="developer_one">Константин Галкин</string>    
     <string name="developer_two">Айнур Тимербаев</string>

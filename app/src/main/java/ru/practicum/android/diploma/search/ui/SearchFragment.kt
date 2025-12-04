@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import ru.practicum.android.diploma.search.presentation.SearchViewModel
 import ru.practicum.android.diploma.search.presentation.UiError
 import ru.practicum.android.diploma.search.ui.adapter.SearchAdapter
 import ru.practicum.android.diploma.util.debounce
+import ru.practicum.android.diploma.vacancy.ui.VacancyFragment
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -45,10 +47,14 @@ class SearchFragment : Fragment() {
         // Recycler View
         binding.recyclerView.adapter = searchAdapter
 
-        onVacancyClickDebounce = debounce<Vacancy>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) {
+        onVacancyClickDebounce = debounce<Vacancy>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { vacancy ->
+            val bundle:  Bundle = bundleOf(
+                VacancyFragment.ARG_VACANCY to vacancy.id
+            )
+
             findNavController().navigate(
-                R.id.action_searchFragment_to_filtersFragment,
-                Bundle.EMPTY
+                R.id.action_searchFragment_to_vacancyFragment,
+                bundle
             )
         }
 
@@ -115,6 +121,7 @@ class SearchFragment : Fragment() {
             }
         }
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun renderContent(vacancies: List<Vacancy>) {
         binding.apply {
