@@ -20,6 +20,11 @@
     <string name="needed_experience">Требуемый опыт</string>
     <string name="share">Поделиться</string>
     <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="salary_not_specified">Зарплата не указана</string>
+    <string name="salary_from">От %1$s %2$s</string>
+    <string name="salary_to">До %1$s %2$s</string>
+    <string name="salary_from_to">От %1$s до %2$s %3$s</string>
+    <string name="vacancy_with_location">%1$s, %2$s</string>
     <string name="who_worked">Над приложением работали</string>
 
     <string name="developer_one">Константин Галкин</string>    

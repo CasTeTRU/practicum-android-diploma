@@ -1,6 +1,6 @@
-package ru.practicum.android.diploma.data.dto.responses
+package ru.practicum.android.diploma.search.domain.models
 
-data class AddressDTO(
+data class Address(
     val city: String,
     val street: String,
     val building: String,
