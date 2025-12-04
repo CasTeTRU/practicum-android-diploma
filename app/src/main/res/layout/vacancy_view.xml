@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/backgroundColor"
-    android:paddingHorizontal="@dimen/padding_small"
-    android:paddingVertical="@dimen/padding_medium">
+    android:paddingHorizontal="@dimen/padding_medium"
+    android:paddingVertical="@dimen/padding_small">
 
     <ImageView
         android:id="@+id/img_company"

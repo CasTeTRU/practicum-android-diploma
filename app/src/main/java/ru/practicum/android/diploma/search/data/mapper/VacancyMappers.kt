@@ -1,11 +1,20 @@
 package ru.practicum.android.diploma.search.data.mapper
 
+import ru.practicum.android.diploma.data.dto.responses.AddressDTO
 import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
 import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
 import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
+import ru.practicum.android.diploma.search.domain.models.Address
 import ru.practicum.android.diploma.search.domain.models.Salary
 import ru.practicum.android.diploma.search.domain.models.VacanciesPage
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+
+fun AddressDTO.toDomain(): Address? = Address(
+    city = city,
+    street = street,
+    building = building,
+    fullAddress = fullAddress,
+)
 
 fun SalaryDTO.toDomain(): Salary = Salary(
     from = from,
@@ -16,9 +25,11 @@ fun SalaryDTO.toDomain(): Salary = Salary(
 fun VacancyDetailDTO.toDomain(): Vacancy = Vacancy(
     id = id,
     name = name,
+    address = address?.toDomain(),
     description = description,
     salary = salary?.toDomain(),
     employerName = employer.name,
+    employerLogo = employer.logo,
     areaName = area.name,
     url = url
 )
