@@ -21,12 +21,20 @@
     <string name="salary_from">От %1$s %2$s</string>
     <string name="salary_to">До %1$s %2$s</string>
     <string name="salary_from_to">От %1$s до %2$s %3$s</string>
-    <string name="vacancy_with_location">%1$s, %2$s</string>
+    <string name="two_params">%1$s, %2$s</string>
     <string name="who_worked">Над приложением работали</string>
     <string name="error_no_internet">Нет интернета</string>
     <string name="error_server">Ошибка сервера</string>
     <string name="error_nothing_found">Не удалось получить список вакансий</string>
     <string name="empty_vacancy">Таких вакансий нет</string>
+    <string name="added_to_favorites">Добавлено в избранное</string>
+    <string name="removed_from_favorites">Удалено из избранного</string>
+    <string name="e_mail">E-mail</string>
+    <string name="phone">Телефон</string>
+    <string name="contact_person">Контактное лицо</string>
+    <string name="comment">Комментарий</string>
+    <string name="application_email">Выберите приложение для отправки email</string>
+    <string name="application_call">Выберите приложение для звонка</string>
 
     <string name="developer_one">Константин Галкин</string>
     <string name="developer_two">Айнур Тимербаев</string>

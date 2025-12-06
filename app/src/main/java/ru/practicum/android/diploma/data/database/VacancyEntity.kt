@@ -3,15 +3,16 @@ package ru.practicum.android.diploma.data.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import ru.practicum.android.diploma.data.dto.responses.AddressDTO
-import ru.practicum.android.diploma.data.dto.responses.ContactsDTO
-import ru.practicum.android.diploma.data.dto.responses.EmploymentDTO
-import ru.practicum.android.diploma.data.dto.responses.EmployerDTO
-import ru.practicum.android.diploma.data.dto.responses.ExperienceDTO
-import ru.practicum.android.diploma.data.dto.responses.FilterAreaDTO
-import ru.practicum.android.diploma.data.dto.responses.FilterIndustryDTO
-import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
-import ru.practicum.android.diploma.data.dto.responses.ScheduleDTO
+import ru.practicum.android.diploma.domain.models.Address
+import ru.practicum.android.diploma.domain.models.Contacts
+import ru.practicum.android.diploma.domain.models.Employer
+import ru.practicum.android.diploma.domain.models.Employment
+import ru.practicum.android.diploma.domain.models.Experience
+import ru.practicum.android.diploma.domain.models.FilterArea
+import ru.practicum.android.diploma.domain.models.FilterIndustry
+import ru.practicum.android.diploma.domain.models.KeySkill
+import ru.practicum.android.diploma.domain.models.Salary
+import ru.practicum.android.diploma.domain.models.Schedule
 
 @Entity(tableName = "favorite_vacancies")
 @TypeConverters(VacancyTypeConverters::class)
@@ -20,15 +21,16 @@ data class VacancyEntity(
     val id: String,
     val name: String,
     val description: String,
-    val salary: SalaryDTO?,
-    val address: AddressDTO?,
-    val experience: ExperienceDTO?,
-    val schedule: ScheduleDTO?,
-    val employment: EmploymentDTO?,
-    val contacts: ContactsDTO?,
-    val employer: EmployerDTO,
-    val area: FilterAreaDTO,
-    val skills: List<String>,
+    val salary: Salary?,
+    val address: Address?,
+    val experience: Experience?,
+    val schedule: Schedule?,
+    val employment: Employment?,
+    val contacts: Contacts?,
+    val employer: Employer?,
+    val area: FilterArea,
+    val skills: List<KeySkill>,
     val url: String,
-    val industry: FilterIndustryDTO
+    val industry: FilterIndustry
 )
+

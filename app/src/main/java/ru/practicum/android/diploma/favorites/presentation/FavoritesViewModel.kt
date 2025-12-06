@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
 
@@ -20,36 +21,15 @@ class FavoritesViewModel(
 
     fun loadFavorites() {
         viewModelScope.launch {
-            _favoritesState.value = FavoritesScreenState.Loading
-            runCatching {
-                favoriteInteractor.getFavorites()
-            }.fold(
-                onSuccess = { favorites ->
+            favoriteInteractor.getFavorites()
+                .catch { _favoritesState.value = FavoritesScreenState.Error } // ловим ошибки Flow
+                .collect { favorites ->
                     if (favorites.isEmpty()) {
                         _favoritesState.value = FavoritesScreenState.Empty
                     } else {
                         _favoritesState.value = FavoritesScreenState.Content(favorites)
                     }
-                },
-                onFailure = {
-                    _favoritesState.value = FavoritesScreenState.Error
                 }
-            )
-        }
-    }
-
-    fun removeFromFavorites(vacancyId: String) {
-        viewModelScope.launch {
-            runCatching {
-                favoriteInteractor.removeFromFavorites(vacancyId)
-            }.fold(
-                onSuccess = {
-                    loadFavorites()
-                },
-                onFailure = {
-                    _favoritesState.value = FavoritesScreenState.Error
-                }
-            )
         }
     }
 }

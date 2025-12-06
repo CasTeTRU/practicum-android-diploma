@@ -19,5 +19,6 @@ fun VacancyByIdResponse.toDomain(): VacancyDetailed = VacancyDetailed(
     name,
     salary = salary?.toDomain(),
     schedule = schedule?.toDomain(),
+    industry = industry.toDomain()
 )
 

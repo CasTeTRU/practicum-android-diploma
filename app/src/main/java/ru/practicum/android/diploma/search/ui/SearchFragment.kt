@@ -17,8 +17,8 @@ import ru.practicum.android.diploma.databinding.FragmentSearchBinding
 import ru.practicum.android.diploma.search.domain.models.Vacancy
 import ru.practicum.android.diploma.search.presentation.SearchScreenState
 import ru.practicum.android.diploma.search.presentation.SearchViewModel
-import ru.practicum.android.diploma.search.presentation.UiError
 import ru.practicum.android.diploma.search.ui.adapter.SearchAdapter
+import ru.practicum.android.diploma.util.UiError
 import ru.practicum.android.diploma.util.debounce
 import ru.practicum.android.diploma.vacancy.ui.VacancyFragment
 
@@ -27,9 +27,9 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
     private var textWatcher: TextWatcher? = null
     private val viewModel by viewModel<SearchViewModel>()
-    private var onVacancyClickDebounce: ((track: Vacancy) -> Unit)? = null
+    private var onVacancyClickDebounce: ((vacancyId: String) -> Unit)? = null
     private var searchAdapter = SearchAdapter { vacancy ->
-        onVacancyClickDebounce?.invoke(vacancy)
+        onVacancyClickDebounce?.invoke(vacancy.id)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,9 +47,9 @@ class SearchFragment : Fragment() {
         // Recycler View
         binding.recyclerView.adapter = searchAdapter
 
-        onVacancyClickDebounce = debounce<Vacancy>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { vacancy ->
+        onVacancyClickDebounce = debounce<String>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { vacancyId ->
             val bundle:  Bundle = bundleOf(
-                VacancyFragment.ARG_VACANCY to vacancy.id
+                VacancyFragment.ARG_VACANCY to vacancyId
             )
 
             findNavController().navigate(

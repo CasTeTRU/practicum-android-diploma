@@ -10,6 +10,7 @@ import ru.practicum.android.diploma.data.ApiError
 import ru.practicum.android.diploma.data.ResponceCodes
 import ru.practicum.android.diploma.search.domain.api.SearchInteractor
 import ru.practicum.android.diploma.search.domain.models.VacanciesPage
+import ru.practicum.android.diploma.util.UiError
 import ru.practicum.android.diploma.util.debounce
 
 class SearchViewModel(

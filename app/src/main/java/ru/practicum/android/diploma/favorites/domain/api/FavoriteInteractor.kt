@@ -1,11 +1,12 @@
 package ru.practicum.android.diploma.favorites.domain.api
 
-import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
+import kotlinx.coroutines.flow.Flow
+import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
 interface FavoriteInteractor {
-    suspend fun getFavorites(): List<VacancyDetailDTO>
-    suspend fun addToFavorites(vacancy: VacancyDetailDTO)
+    suspend fun getFavorites(): Flow<List<VacancyDetailed>>
+    suspend fun addToFavorites(vacancy: VacancyDetailed)
     suspend fun removeFromFavorites(vacancyId: String)
     suspend fun isFavorite(vacancyId: String): Boolean
-    suspend fun getVacancyById(vacancyId: String): VacancyDetailDTO?
+    suspend fun getVacancyById(vacancyId: String): VacancyDetailed?
 }

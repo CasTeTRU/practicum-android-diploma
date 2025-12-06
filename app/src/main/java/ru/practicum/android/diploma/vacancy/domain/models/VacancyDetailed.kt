@@ -6,6 +6,7 @@ import ru.practicum.android.diploma.domain.models.Employer
 import ru.practicum.android.diploma.domain.models.Employment
 import ru.practicum.android.diploma.domain.models.Experience
 import ru.practicum.android.diploma.domain.models.FilterArea
+import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.domain.models.KeySkill
 import ru.practicum.android.diploma.domain.models.Salary
 import ru.practicum.android.diploma.domain.models.Schedule
@@ -24,4 +25,5 @@ data class VacancyDetailed(
     val name: String,
     val salary: Salary?,
     val schedule: Schedule?,
+    val industry: FilterIndustry
 )

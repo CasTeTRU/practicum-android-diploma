@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.search.presentation
 
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.UiError
 
 sealed class SearchScreenState {
     object Default : SearchScreenState()

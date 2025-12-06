@@ -1,11 +1,12 @@
 package ru.practicum.android.diploma.data.database
 
 import androidx.room.Dao
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VacancyDao {
     @androidx.room.Query("SELECT * FROM favorite_vacancies ORDER BY id")
-    suspend fun getAllFavoritesSuspend(): List<VacancyEntity>
+    fun getAllFavorites(): Flow<List<VacancyEntity>>
 
     @androidx.room.Query("SELECT * FROM favorite_vacancies WHERE id = :id")
     suspend fun getFavoriteById(id: String): VacancyEntity?

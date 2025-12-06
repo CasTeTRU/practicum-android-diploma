@@ -3,129 +3,130 @@ package ru.practicum.android.diploma.data.database
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import ru.practicum.android.diploma.data.dto.responses.AddressDTO
-import ru.practicum.android.diploma.data.dto.responses.ContactsDTO
-import ru.practicum.android.diploma.data.dto.responses.EmployerDTO
-import ru.practicum.android.diploma.data.dto.responses.EmploymentDTO
-import ru.practicum.android.diploma.data.dto.responses.ExperienceDTO
-import ru.practicum.android.diploma.data.dto.responses.FilterAreaDTO
-import ru.practicum.android.diploma.data.dto.responses.FilterIndustryDTO
-import ru.practicum.android.diploma.data.dto.responses.SalaryDTO
-import ru.practicum.android.diploma.data.dto.responses.ScheduleDTO
+import ru.practicum.android.diploma.domain.models.Address
+import ru.practicum.android.diploma.domain.models.Contacts
+import ru.practicum.android.diploma.domain.models.Employer
+import ru.practicum.android.diploma.domain.models.Employment
+import ru.practicum.android.diploma.domain.models.Experience
+import ru.practicum.android.diploma.domain.models.FilterArea
+import ru.practicum.android.diploma.domain.models.FilterIndustry
+import ru.practicum.android.diploma.domain.models.KeySkill
+import ru.practicum.android.diploma.domain.models.Salary
+import ru.practicum.android.diploma.domain.models.Schedule
 
 class VacancyTypeConverters {
     private val gson = Gson()
 
     @TypeConverter
-    fun fromSalaryDTO(salary: SalaryDTO?): String? {
+    fun fromSalary(salary: Salary?): String? {
         return salary?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toSalaryDTO(salaryJson: String?): SalaryDTO? {
+    fun toSalary(salaryJson: String?): Salary? {
         return salaryJson?.let {
-            gson.fromJson(it, SalaryDTO::class.java)
+            gson.fromJson(it, Salary::class.java)
         }
     }
 
     @TypeConverter
-    fun fromAddressDTO(address: AddressDTO?): String? {
+    fun fromAddress(address: Address?): String? {
         return address?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toAddressDTO(addressJson: String?): AddressDTO? {
+    fun toAddress(addressJson: String?): Address? {
         return addressJson?.let {
-            gson.fromJson(it, AddressDTO::class.java)
+            gson.fromJson(it, Address::class.java)
         }
     }
 
     @TypeConverter
-    fun fromExperienceDTO(experience: ExperienceDTO?): String? {
+    fun fromExperience(experience: Experience?): String? {
         return experience?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toExperienceDTO(experienceJson: String?): ExperienceDTO? {
+    fun toExperience(experienceJson: String?): Experience? {
         return experienceJson?.let {
-            gson.fromJson(it, ExperienceDTO::class.java)
+            gson.fromJson(it, Experience::class.java)
         }
     }
 
     @TypeConverter
-    fun fromScheduleDTO(schedule: ScheduleDTO?): String? {
+    fun fromSchedule(schedule: Schedule?): String? {
         return schedule?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toScheduleDTO(scheduleJson: String?): ScheduleDTO? {
+    fun toSchedule(scheduleJson: String?): Schedule? {
         return scheduleJson?.let {
-            gson.fromJson(it, ScheduleDTO::class.java)
+            gson.fromJson(it, Schedule::class.java)
         }
     }
 
     @TypeConverter
-    fun fromEmploymentDTO(employment: EmploymentDTO?): String? {
+    fun fromEmployment(employment: Employment?): String? {
         return employment?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toEmploymentDTO(employmentJson: String?): EmploymentDTO? {
+    fun toEmployment(employmentJson: String?): Employment? {
         return employmentJson?.let {
-            gson.fromJson(it, EmploymentDTO::class.java)
+            gson.fromJson(it, Employment::class.java)
         }
     }
 
     @TypeConverter
-    fun fromContactsDTO(contacts: ContactsDTO?): String? {
+    fun fromContacts(contacts: Contacts?): String? {
         return contacts?.let { gson.toJson(it) }
     }
 
     @TypeConverter
-    fun toContactsDTO(contactsJson: String?): ContactsDTO? {
+    fun toContacts(contactsJson: String?): Contacts? {
         return contactsJson?.let {
-            gson.fromJson(it, ContactsDTO::class.java)
+            gson.fromJson(it, Contacts::class.java)
         }
     }
 
     @TypeConverter
-    fun fromEmployerDTO(employer: EmployerDTO): String {
+    fun fromEmployer(employer: Employer): String {
         return gson.toJson(employer)
     }
 
     @TypeConverter
-    fun toEmployerDTO(employerJson: String): EmployerDTO {
-        return gson.fromJson(employerJson, EmployerDTO::class.java)
+    fun toEmployer(employerJson: String): Employer {
+        return gson.fromJson(employerJson, Employer::class.java)
     }
 
     @TypeConverter
-    fun fromFilterAreaDTO(area: FilterAreaDTO): String {
+    fun fromFilterArea(area: FilterArea): String {
         return gson.toJson(area)
     }
 
     @TypeConverter
-    fun toFilterAreaDTO(areaJson: String): FilterAreaDTO {
-        return gson.fromJson(areaJson, FilterAreaDTO::class.java)
+    fun toFilterArea(areaJson: String): FilterArea {
+        return gson.fromJson(areaJson, FilterArea::class.java)
     }
 
     @TypeConverter
-    fun fromFilterIndustryDTO(industry: FilterIndustryDTO): String {
+    fun fromFilterIndustry(industry: FilterIndustry): String {
         return gson.toJson(industry)
     }
 
     @TypeConverter
-    fun toFilterIndustryDTO(industryJson: String): FilterIndustryDTO {
-        return gson.fromJson(industryJson, FilterIndustryDTO::class.java)
+    fun toFilterIndustry(industryJson: String): FilterIndustry {
+        return gson.fromJson(industryJson, FilterIndustry::class.java)
     }
 
     @TypeConverter
-    fun fromStringList(list: List<String>): String {
+    fun fromKeySkillList(list: List<KeySkill>): String {
         return gson.toJson(list)
     }
 
     @TypeConverter
-    fun toStringList(listJson: String): List<String> {
-        val listType = object : TypeToken<List<String>>() {}.type
+    fun toKeySkillList(listJson: String): List<KeySkill> {
+        val listType = object : TypeToken<List<KeySkill>>() {}.type
         return gson.fromJson(listJson, listType)
     }
 }

@@ -4,15 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentVacancyBinding
-import ru.practicum.android.diploma.search.presentation.UiError
+import ru.practicum.android.diploma.domain.models.Address
+import ru.practicum.android.diploma.domain.models.Contacts
+import ru.practicum.android.diploma.domain.models.Employment
+import ru.practicum.android.diploma.domain.models.FilterArea
+import ru.practicum.android.diploma.domain.models.KeySkill
+import ru.practicum.android.diploma.domain.models.Schedule
 import ru.practicum.android.diploma.util.SalaryFormatter
+import ru.practicum.android.diploma.util.UiEvent
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 import ru.practicum.android.diploma.vacancy.presentation.VacancyScreenState
 import ru.practicum.android.diploma.vacancy.presentation.VacancyViewModel
@@ -30,17 +38,46 @@ class VacancyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getVacancyIdFromArgs()
-
-        viewModel.vacancyStatusLiveData.observe(viewLifecycleOwner) {
-            render(it)
-        }
-
+        observeViewModel()
+        observeEvents()
         setupToolbar()
     }
 
-    private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener {
+    private fun observeViewModel() {
+        viewModel.vacancyStatusLiveData.observe(viewLifecycleOwner) {
+            render(it)
+        }
+    }
+
+    private fun observeEvents() {
+        viewModel.events.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is UiEvent.ShowMessage ->
+                    Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT).show()
+
+                is UiEvent.ShowError ->
+                    Snackbar.make(requireView(), event.error.toString(), Snackbar.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun setupToolbar() = with(binding) {
+        toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_favorite -> {
+                    viewModel.toggleFavorite()
+                    true
+                }
+                R.id.action_share -> {
+                    viewModel.shareLink()
+                    true
+                }
+                else -> false
+            }
         }
     }
 
@@ -51,29 +88,152 @@ class VacancyFragment : Fragment() {
     }
 
     private fun render(state: VacancyScreenState) {
+        hideAllView()
 
         when (state) {
             is VacancyScreenState.Loading -> {
                 binding.progressBar.visibility = View.VISIBLE
             }
             is VacancyScreenState.ShowContent -> {
-                renderContent(state.vacancy)
+                renderContent(state.vacancy, state.isFavorite)
             }
             is VacancyScreenState.Error -> {
-                renderError(state.error)
+                renderError()
             }
         }
     }
 
-    private fun renderContent(vacancy: VacancyDetailed) = with(binding) {
+    private fun hideAllView() {
+        binding.apply {
+            scrollView.visibility = View.GONE
+            errorContainer.visibility = View.GONE
+            progressBar.visibility = View.GONE
+            tvNameVacancy.visibility = View.GONE
+            tvSalaryVacancy.visibility = View.GONE
+            companyCard.visibility = View.GONE
+            experience.visibility = View.GONE
+            tvTitleNeededExperience.visibility = View.GONE
+            tvEmploymentType.visibility = View.GONE
+            tvTitleDescription.visibility = View.GONE
+            tvDescription.visibility = View.GONE
+            tvTitleContacts.visibility = View.GONE
+        }
+    }
+
+    private fun renderContent(vacancy: VacancyDetailed, isFavorite: Boolean) = with(binding) {
+        tvNameVacancy.visibility = View.VISIBLE
+        scrollView.visibility = View.VISIBLE
+        tvSalaryVacancy.visibility = View.VISIBLE
+        companyCard.visibility = View.VISIBLE
+        experience.visibility = View.VISIBLE
+        tvTitleNeededExperience.visibility = View.VISIBLE
+        tvEmploymentType.visibility = View.VISIBLE
+        tvTitleDescription.visibility = View.VISIBLE
+        tvDescription.visibility = View.VISIBLE
+        tvTitleContacts.visibility = View.VISIBLE
+
         tvNameVacancy.text = vacancy.name
         tvSalaryVacancy.text = SalaryFormatter.format(requireContext(), vacancy.salary)
-
-        experience.text = vacancy.experience?.name
+        tvDescription.text = vacancy.description
+        tvTitleNeededExperience.text = vacancy.experience?.name
         tvNameCompany.text = vacancy.employer?.name
-        tvCompanyCity.text = vacancy.address?.city
 
         viewCompanyLogo(vacancy)
+        viewEmploymentAndSchedule(vacancy.employment, vacancy.schedule)
+        viewCityOrRegion(vacancy.area, vacancy.address)
+        updateFavoriteIcon(isFavorite)
+        viewKeySkills(vacancy.keySkills)
+        viewContacts(vacancy.contacts)
+    }
+
+    private fun viewEmploymentAndSchedule(employment: Employment?, schedule: Schedule?) {
+        val employment = employment?.name
+        val schedule = schedule?.name
+
+        binding.tvEmploymentType.text = getString(R.string.two_params, employment, schedule)
+    }
+
+    private fun viewCityOrRegion(area: FilterArea,address: Address?) = with(binding) {
+        val city = address?.city
+        val region = area.name
+
+        if (!city.isNullOrEmpty()) {
+            tvCompanyCity.text = city
+        } else {
+            tvCompanyCity.text = region
+        }
+    }
+
+
+    private fun viewContacts(contacts: Contacts?) = with(binding) {
+        setupContactField(contacts?.email, tvEMail, eMail) { email ->
+            tvEMail.text = email
+            tvEMail.setOnClickListener { viewModel.emailTo(email) }
+        }
+
+        val phonesList = contacts?.phones
+        val phonesText = phonesList
+            ?.mapNotNull { it?.formatted }
+            ?.joinToString(separator = "\n")
+
+
+        setupContactField(phonesText, tvNumberPhone, numberPhone) { phones ->
+            tvNumberPhone.text = phones
+            tvNumberPhone.setOnClickListener {
+                // вызов по первому номеру
+                phonesList
+                    ?.firstOrNull { it?.formatted != null }
+                    ?.formatted
+                    ?.let { number -> viewModel.callTo(number) }
+            }
+        }
+
+        // Contact person
+        setupContactField(contacts?.name, tvContactPerson, contactPerson) { name ->
+            tvContactPerson.text = name
+        }
+
+        // Comments
+        val comments = phonesList
+            ?.mapNotNull { it?.comment }
+            ?.filter { it.isNotBlank() }
+            ?.joinToString("\n")
+
+        setupContactField(comments, tvComment, comment) { commentText ->
+            tvComment.text = commentText
+        }
+
+        tvTitleContacts.visibility = if ( listOf(
+            contacts?.email,
+            phonesText,
+            contacts?.name,
+            comments
+        ).any { !it.isNullOrEmpty() }
+        ) View.VISIBLE else View.GONE
+    }
+
+    private fun setupContactField(
+        value: String?,
+        textView: TextView,
+        container: View,
+        setupAction: (String) -> Unit
+    ) {
+        if (value.isNullOrEmpty()) {
+            textView.visibility = View.GONE
+            container.visibility = View.GONE
+        } else {
+            textView.visibility = View.VISIBLE
+            container.visibility = View.VISIBLE
+            setupAction(value)
+        }
+    }
+
+    private fun updateFavoriteIcon(isFavorite: Boolean) {
+        val item = binding.toolbar.menu.findItem(R.id.action_favorite)
+        item.setIcon(
+            if (isFavorite) R.drawable.ic_favorites_on
+            else R.drawable.ic_favorites_off
+        )
     }
 
     private fun viewCompanyLogo(vacancy: VacancyDetailed) {
@@ -85,14 +245,33 @@ class VacancyFragment : Fragment() {
             .into(binding.icCompany)
     }
 
-    private fun renderError(error: UiError) {
+    private fun viewKeySkills(keySkills: List<KeySkill>?) {
+        val keySkillsList = keySkills?.mapNotNull { it.name }
+        val formattedKeySkills = if (keySkillsList.isNullOrEmpty()) "" else keySkillsList.joinToString("\n- ", prefix = "- ")
+
+        binding.apply {
+            if (formattedKeySkills.isEmpty()) {
+                tvSkillsTitle.visibility = View.GONE
+                tvSkills.visibility = View.GONE
+            } else {
+                tvSkillsTitle.visibility = View.GONE
+                tvSkills.visibility = View.GONE
+                tvSkills.text = formattedKeySkills
+            }
+        }
+    }
+
+    private fun renderError() {
+        binding.errorContainer.visibility = View.VISIBLE
+        binding.tvError.visibility = View.VISIBLE
+        binding.ivError.visibility = View.VISIBLE
     }
 
     private fun getVacancyIdFromArgs() {
         val vacancyId = requireArguments().getString(ARG_VACANCY)
 
         if (!vacancyId.isNullOrEmpty()) {
-            viewModel.searchVacancyById(vacancyId)
+            viewModel.loadVacancy(vacancyId)
         }
     }
 

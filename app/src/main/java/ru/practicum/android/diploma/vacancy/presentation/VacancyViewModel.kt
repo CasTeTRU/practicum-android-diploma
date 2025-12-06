@@ -1,116 +1,110 @@
 package ru.practicum.android.diploma.vacancy.presentation
 
-import android.database.SQLException
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.data.ApiError
-import ru.practicum.android.diploma.data.ResponceCodes
+import ru.practicum.android.diploma.R
+import ru.practicum.android.diploma.domain.util.ResourcesProviderInteractor
 import ru.practicum.android.diploma.favorites.domain.api.FavoriteInteractor
-import ru.practicum.android.diploma.search.presentation.UiError
+import ru.practicum.android.diploma.util.SingleLiveEvent
+import ru.practicum.android.diploma.util.UiError
+import ru.practicum.android.diploma.util.UiEvent
 import ru.practicum.android.diploma.vacancy.domain.VacancyInteractor
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
 class VacancyViewModel(
     private val vacancyInteractor: VacancyInteractor,
-    private val favoriteInteractor: FavoriteInteractor
+    private val favoriteInteractor: FavoriteInteractor,
+    private val resourcesProvider: ResourcesProviderInteractor
 ): ViewModel()  {
-    private var lastState: VacancyScreenState? = null
+    private var lastVacancy: VacancyDetailed? = null
+    private var isFavorite: Boolean = false
     private var _vacancyStatusLiveData = MutableLiveData<VacancyScreenState>()
     val vacancyStatusLiveData: LiveData<VacancyScreenState> = _vacancyStatusLiveData
+    private val _events = SingleLiveEvent<UiEvent>()
+    val events: LiveData<UiEvent> = _events
 
-    fun searchVacancyById(id: String) {
+    fun loadVacancy(id: String) {
+        renderState(VacancyScreenState.Loading)
+
         viewModelScope.launch {
-            vacancyInteractor
-                .getVacancyById(id)
-                .collect { result ->
-                    result.fold(
-                        onSuccess = { vacancy -> handleSuccess(vacancy) },
-                        onFailure = { throwable -> handleError(throwable) }
-                    )
+            val localFavorite = favoriteInteractor.getVacancyById(id)
+
+            if (localFavorite != null) {
+                lastVacancy = localFavorite
+                isFavorite = true
+                renderState(VacancyScreenState.ShowContent(localFavorite, true))
+            } else {
+                vacancyInteractor
+                    .getVacancyById(id)
+                    .collect { result ->
+                        result.fold(
+                            onSuccess = { vacancy ->
+                                lastVacancy = vacancy
+                                loadFavoriteStatusAndEmit(vacancy)
+                            },
+                            onFailure = { throwable ->
+                                renderState(VacancyScreenState.Error(UiError.NothingFound))
+                            }
+                        )
+                    }
             }
         }
     }
 
-    private fun handleSuccess(vacancy: VacancyDetailed) {
-        renderState(
-            VacancyScreenState.ShowContent(
-                vacancy = vacancy,
-            )
-        )
+    fun shareLink() {
+        lastVacancy?.let {
+            vacancyInteractor.shareLink(it.url)
+        }
     }
 
-    private fun handleError(throwable: Throwable) {
+    fun emailTo(email: String) {
+        vacancyInteractor.emailTo(email)
+    }
 
-        val uiError: UiError = when (throwable) {
-            is java.net.UnknownHostException -> UiError.NoInternet
-            is ApiError -> when (throwable.code) {
-                ResponceCodes.ERROR_NO_INTERNET -> UiError.NoInternet
-                ResponceCodes.NOTHING_FOUND -> UiError.NothingFound
-                ResponceCodes.IO_EXCEPTION,
-                ResponceCodes.MAPPER_EXCEPTION -> UiError.ServerError
-                else -> UiError.Unknown(throwable.code)
+    fun callTo(phoneNumber: String) {
+        vacancyInteractor.callTo(phoneNumber)
+    }
+
+    private suspend fun loadFavoriteStatusAndEmit(vacancy: VacancyDetailed) {
+        isFavorite = favoriteInteractor.isFavorite(vacancy.id)
+        renderState(VacancyScreenState.ShowContent(
+            vacancy = vacancy,
+            isFavorite = isFavorite
+        ))
+    }
+
+    fun toggleFavorite() {
+        val vacancy = lastVacancy ?: return
+        val newFav = !isFavorite
+
+        isFavorite = newFav
+        renderState(VacancyScreenState.ShowContent(vacancy, newFav))
+        viewModelScope.launch {
+            runCatching {
+                if (newFav) {
+                    favoriteInteractor.addToFavorites(vacancy)
+                } else {
+                    favoriteInteractor.removeFromFavorites(vacancy.id)
+                }
+            }.onSuccess {
+                _events.value = UiEvent.ShowMessage(
+                    if (newFav) resourcesProvider.getString(R.string.added_to_favorites)
+                    else resourcesProvider.getString(R.string.removed_from_favorites)
+                )
+            }.onFailure { throwable: Throwable ->
+                // откат
+                isFavorite = !newFav
+                renderState(VacancyScreenState.ShowContent(vacancy, !newFav))
+
+                _events.value = UiEvent.ShowError(UiError.NothingFound)
             }
-
-            else -> UiError.Unknown(ResponceCodes.IO_EXCEPTION)
         }
-
-        renderState(VacancyScreenState.Error(uiError))
     }
 
     private fun renderState(state: VacancyScreenState) {
-        lastState = state
         _vacancyStatusLiveData.postValue(state)
     }
-
-//    fun checkFavoriteStatus(vacancyId: String) {
-//        viewModelScope.launch {
-//            runCatching {
-//                favoriteInteractor.isFavorite(vacancyId)
-//            }.onSuccess { isFavorite ->
-//                _isFavoriteState.value = isFavorite
-//            }.onFailure {
-//                _isFavoriteState.value = false
-//            }
-//        }
-//    }
-//
-//   fun addToFavorites(vacancy: VacancyDetailDTO) {
-//        viewModelScope.launch {
-//            runCatching {
-//                favoriteInteractor.addToFavorites(vacancy)
-//            }.onSuccess {
-//                _isFavoriteState.value = true
-//            }.onFailure {
-//                // Ошибка при добавлении в избранное - состояние не меняем
-//            }
-//        }
-//    }
-
-//    fun removeFromFavorites(vacancyId: String) {
-//        viewModelScope.launch {
-//            runCatching {
-//                favoriteInteractor.removeFromFavorites(vacancyId)
-//            }.onSuccess {
-//                _isFavoriteState.value = false
-//            }.onFailure {
-//                // Ошибка при удалении из избранного - состояние не меняем
-//            }
-//        }
-//    }
-
-//    fun getVacancyFromFavorites(vacancyId: String) {
-//        viewModelScope.launch {
-//            _vacancyState.value = VacancyScreenState.Loading
-//            val vacancy = favoriteInteractor.getVacancyById(vacancyId)
-//            if (vacancy != null) {
-//                _vacancyState.value = VacancyScreenState.Content(vacancy)
-//                _isFavoriteState.value = true
-//            } else {
-//                _vacancyState.value = VacancyScreenState.Error
-//            }
-//        }
-//    }
 }
