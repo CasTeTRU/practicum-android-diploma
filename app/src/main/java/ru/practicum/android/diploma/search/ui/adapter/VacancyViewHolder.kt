@@ -19,7 +19,11 @@ class VacancyViewHolder(private val binding: VacancyViewBinding) :
         val cornerSize = itemView.resources.getDimensionPixelSize(R.dimen.corner_radius)
         val isNightMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
             Configuration.UI_MODE_NIGHT_YES
-        val placeholder = if (isNightMode) R.drawable.ic_company_logo_placeholder_night else R.drawable.ic_company_logo_placeholder
+        val placeholder = if (isNightMode) {
+            R.drawable.ic_company_logo_placeholder_night
+        } else {
+            R.drawable.ic_company_logo_placeholder
+        }
 
         val imageUrl = vacancy.employerLogo?.takeIf { it.isNotBlank() }
         Glide.with(itemView)
