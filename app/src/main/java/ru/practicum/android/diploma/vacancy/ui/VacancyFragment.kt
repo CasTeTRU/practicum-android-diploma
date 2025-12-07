@@ -159,7 +159,9 @@ class VacancyFragment : Fragment() {
 
         setupContactField(contacts?.email, tvEMail, eMail) { email ->
             tvEMail.text = email
-            viewModel.emailTo(email)
+            tvEMail.setOnClickListener {
+                viewModel.emailTo(email)
+            }
         }
 
         setupContactField(phonesText, tvNumberPhone, numberPhone) { phones ->
