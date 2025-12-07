@@ -164,7 +164,7 @@ class SearchFragment : Fragment() {
         binding.apply {
             recyclerView.visibility = View.VISIBLE
             searchInfo.visibility = View.VISIBLE
-            searchInfo.text = getString(R.string.vacancies_found, found.toString())
+            searchInfo.text = resources.getQuantityString(R.plurals.vacancies_found, found, found)
 
             searchAdapter.submitList(vacancies)
             searchAdapter.notifyDataSetChanged()
