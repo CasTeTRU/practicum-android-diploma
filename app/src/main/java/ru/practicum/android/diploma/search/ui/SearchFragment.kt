@@ -11,6 +11,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentSearchBinding
@@ -21,6 +23,7 @@ import ru.practicum.android.diploma.search.ui.adapter.SearchAdapter
 import ru.practicum.android.diploma.util.UiError
 import ru.practicum.android.diploma.util.debounce
 import ru.practicum.android.diploma.vacancy.ui.VacancyFragment
+
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -40,45 +43,62 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initUI()
+
         viewModel.searchStatusLiveData.observe(viewLifecycleOwner) {
             render(it)
         }
+    }
 
-        // Recycler View
-        binding.recyclerView.adapter = searchAdapter
+    private fun initUI() {
+        setupRecyclerView()
+        setupSearchField()
+        setupToolbar()
+        setupVacancyClickDebounce()
+        setupClearIcon()
+    }
 
-        onVacancyClickDebounce = debounce<String>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { vacancyId ->
-            val bundle:  Bundle = bundleOf(
-                VacancyFragment.ARG_VACANCY to vacancyId
-            )
-
-            findNavController().navigate(
-                R.id.action_searchFragment_to_vacancyFragment,
-                bundle
-            )
+    private fun setupRecyclerView() = with(binding) {
+        if (recyclerView.layoutManager == null) {
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
+        // Recycler View
+        recyclerView.adapter = searchAdapter
 
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return // нас интересует только скролл вниз
+
+                val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+                val lastVisiblePosition = layoutManager.findLastVisibleItemPosition()
+                val totalItems = searchAdapter.itemCount
+                // если достигли конца — просим ViewModel подгрузить
+                if (lastVisiblePosition >= totalItems - 1) {
+                    viewModel.fetchNextPage()
+                }
+            }
+        })
+    }
+
+    private fun setupSearchField() {
+        // Убираем двойные вызовы: используем только onTextChanged для запуска дебаунса
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
-            override fun afterTextChanged(s: Editable?) {
-                if (!s.isNullOrEmpty()) {
-                    viewModel.searchDebounce(s.toString())
-                }
-            }
+            override fun afterTextChanged(s: Editable?) = Unit
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentText = s?.toString() ?: ""
-
-                viewModel.searchDebounce(
-                    changedText = currentText
-                )
+                viewModel.onQueryChanged(currentText)
                 updateClearButtonVisibility(currentText)
             }
         }
 
         textWatcher?.let { binding.searchField.addTextChangedListener(it) }
+    }
 
+    private fun setupToolbar() {
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.actionFilter -> {
@@ -93,33 +113,50 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun hideAllView() {
-        binding.apply {
-            progressBar.visibility = View.GONE
-            recyclerView.visibility = View.GONE
-            searchInfo.visibility = View.GONE
-            searchScreenCover.visibility = View.GONE
-            errorPlaceholder.visibility = View.GONE
+    private fun setupVacancyClickDebounce() {
+        onVacancyClickDebounce = debounce<String>(
+            CLICK_DEBOUNCE_DELAY,
+            viewLifecycleOwner.lifecycleScope,
+            false
+        ) { vacancyId ->
+            val bundle = bundleOf(VacancyFragment.ARG_VACANCY to vacancyId)
+            findNavController().navigate(R.id.action_searchFragment_to_vacancyFragment, bundle)
         }
     }
 
-    private fun render(state: SearchScreenState) {
+    private fun setupClearIcon() = with(binding) {
+        clearIcon.setOnClickListener {
+            searchField.setText("")
+            updateClearButtonVisibility("")
+            viewModel.onQueryChanged("")
+        }
+    }
+
+    private fun hideAllView() = with(binding) {
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        searchInfo.visibility = View.GONE
+        searchScreenCover.visibility = View.GONE
+        errorPlaceholder.visibility = View.GONE
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun render(state: SearchScreenState): Unit = with(binding) {
         hideAllView()
 
-        when (state) {
-            is SearchScreenState.Loading -> {
-                binding.progressBar.visibility = View.VISIBLE
-            }
-            is SearchScreenState.ShowContent -> {
-                renderContent(state.vacancies)
-            }
-            is SearchScreenState.Default -> {
-                binding.searchScreenCover.visibility = View.VISIBLE
-            }
-            is SearchScreenState.Error -> {
-                renderError(state.error)
-            }
+        // базовые индикаторы
+        progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+        if (state.isLoading) return
+
+        // Контент
+        if (state.vacancies.isNotEmpty()) {
+            renderContent(state.vacancies)
+        } else if (state.error == null) {
+            searchScreenCover.visibility = View.VISIBLE
         }
+
+        // Ошибки
+        state.error?.let { renderError(it) }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -127,8 +164,7 @@ class SearchFragment : Fragment() {
         binding.apply {
             recyclerView.visibility = View.VISIBLE
 
-            searchAdapter.vacanciesList.clear()
-            searchAdapter.vacanciesList.addAll(vacancies)
+            searchAdapter.submitList(vacancies)
             searchAdapter.notifyDataSetChanged()
         }
     }
@@ -179,6 +215,7 @@ class SearchFragment : Fragment() {
         super.onDestroyView()
         textWatcher.let { binding.searchField.removeTextChangedListener(it) }
         _binding = null
+        onVacancyClickDebounce = null
     }
 
     companion object {
