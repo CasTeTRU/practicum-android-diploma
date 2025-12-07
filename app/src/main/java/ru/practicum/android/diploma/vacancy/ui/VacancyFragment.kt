@@ -21,6 +21,9 @@ import ru.practicum.android.diploma.domain.models.KeySkill
 import ru.practicum.android.diploma.domain.models.Schedule
 import ru.practicum.android.diploma.util.SalaryFormatter
 import ru.practicum.android.diploma.util.UiEvent
+import ru.practicum.android.diploma.util.hide
+import ru.practicum.android.diploma.util.show
+import ru.practicum.android.diploma.util.showIf
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 import ru.practicum.android.diploma.vacancy.presentation.VacancyScreenState
 import ru.practicum.android.diploma.vacancy.presentation.VacancyViewModel
@@ -93,7 +96,7 @@ class VacancyFragment : Fragment() {
 
         when (state) {
             is VacancyScreenState.Loading -> {
-                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.show()
             }
 
             is VacancyScreenState.ShowContent -> {
@@ -129,7 +132,7 @@ class VacancyFragment : Fragment() {
 
         viewCompanyLogo(vacancy)
         viewEmploymentAndSchedule(vacancy.employment, vacancy.schedule)
-        viewCityOrRegion(vacancy?.area, vacancy?.address)
+        viewCityOrRegion(vacancy.area, vacancy.address)
         updateFavoriteIcon(isFavorite)
         viewKeySkills(vacancy.keySkills)
         viewContacts(vacancy.contacts)
@@ -232,27 +235,20 @@ class VacancyFragment : Fragment() {
             .into(binding.icCompany)
     }
 
-    private fun viewKeySkills(keySkills: List<KeySkill>?) {
+    private fun viewKeySkills(keySkills: List<KeySkill>?) = with(binding) {
         val keySkillsList = keySkills?.mapNotNull { it.name }
         val formattedKeySkills =
             if (keySkillsList.isNullOrEmpty()) "" else keySkillsList.joinToString("\n- ", prefix = "- ")
 
-        binding.apply {
-            if (formattedKeySkills.isEmpty()) {
-                tvSkillsTitle.visibility = View.GONE
-                tvSkills.visibility = View.GONE
-            } else {
-                tvSkillsTitle.visibility = View.GONE
-                tvSkills.visibility = View.GONE
-                tvSkills.text = formattedKeySkills
-            }
-        }
+        tvSkillsTitle.showIf(formattedKeySkills.isNotEmpty())
+        tvSkills.showIf(formattedKeySkills.isNotEmpty())
+        tvSkills.text = formattedKeySkills
     }
 
-    private fun renderError() {
-        binding.errorContainer.visibility = View.VISIBLE
-        binding.tvError.visibility = View.VISIBLE
-        binding.ivError.visibility = View.VISIBLE
+    private fun renderError() = with(binding) {
+        binding.errorContainer.show()
+        binding.tvError.show()
+        binding.ivError.show()
     }
 
     private fun getVacancyIdFromArgs() {
@@ -265,21 +261,5 @@ class VacancyFragment : Fragment() {
 
     companion object {
         const val ARG_VACANCY = "vacancy_id"
-    }
-}
-
-private fun View.show() {
-    visibility = View.VISIBLE
-}
-
-private fun View.hide() {
-    visibility = View.GONE
-}
-
-private fun View.showIf(condition: Boolean) {
-    visibility = if (condition) {
-        View.VISIBLE
-    } else {
-        View.GONE
     }
 }
