@@ -13,8 +13,7 @@ val databaseModule = module {
             AppDatabase::class.java,
             "diploma_database"
         )
-            .fallbackToDestructiveMigration(true)
+            .fallbackToDestructiveMigration(false)
             .build()
     }
-    single { get<AppDatabase>().vacancyDao() }
 }
