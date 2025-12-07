@@ -98,7 +98,6 @@ class SearchViewModel(
             )
             return
         }
-        
         val newList = if (reset) {
             page.vacancies
         } else {
