@@ -1,10 +1,15 @@
 package ru.practicum.android.diploma.search.presentation
 
 import ru.practicum.android.diploma.search.domain.models.Vacancy
+import ru.practicum.android.diploma.util.UiError
 
-sealed class SearchScreenState {
-    object Default : SearchScreenState()
-    object Loading : SearchScreenState()
-    data class ShowContent(val vacancies: List<Vacancy>, val found: Int) : SearchScreenState()
-    data class Error(val error: UiError) : SearchScreenState()
-}
+data class SearchScreenState(
+    val query: String = "",
+    val vacancies: List<Vacancy> = emptyList(),
+    val found: Int = 0,
+    val isLoading: Boolean = false, // первая / основная загрузка (центр. прогресс)
+    val isFetching: Boolean = false, // дозагрузка следующих страниц (spinner)
+    val error: UiError? = null,
+    val page: Int = 1,
+    val canLoadMore: Boolean = true
+)

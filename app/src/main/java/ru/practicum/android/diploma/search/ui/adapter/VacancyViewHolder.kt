@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.search.ui.adapter
 
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +9,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.VacancyViewBinding
 import ru.practicum.android.diploma.search.domain.models.Vacancy
-import ru.practicum.android.diploma.search.ui.utils.SalaryFormatter
+import ru.practicum.android.diploma.util.SalaryFormatter
 
 class VacancyViewHolder(private val binding: VacancyViewBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -16,14 +17,21 @@ class VacancyViewHolder(private val binding: VacancyViewBinding) :
     fun bind(vacancy: Vacancy) = with(binding) {
         val context = itemView.context
         val cornerSize = itemView.resources.getDimensionPixelSize(R.dimen.corner_radius)
+        val isNightMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
+        val placeholder = if (isNightMode) {
+            R.drawable.ic_company_logo_placeholder_night
+        } else {
+            R.drawable.ic_company_logo_placeholder
+        }
 
         val imageUrl = vacancy.employerLogo?.takeIf { it.isNotBlank() }
         Glide.with(itemView)
             .load(imageUrl)
             .centerCrop()
-            .placeholder(R.drawable.ic_company_logo_placeholder)
-            .fallback(R.drawable.ic_company_logo_placeholder)
-            .error(R.drawable.ic_company_logo_placeholder)
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .error(placeholder)
             .transform(RoundedCorners(cornerSize))
             .into(imgCompany)
 
@@ -32,7 +40,7 @@ class VacancyViewHolder(private val binding: VacancyViewBinding) :
             ?: vacancy.areaName
             ?: ""
 
-        tvNameVacancy.text = context.getString(R.string.vacancy_with_location, vacancy.name, location)
+        tvNameVacancy.text = context.getString(R.string.two_params, vacancy.name, location)
         tvNameCompany.text = employerName
         tvSalary.text = SalaryFormatter.format(context, vacancy.salary)
     }

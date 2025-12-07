@@ -4,4 +4,3 @@ data class FilterIndustryDTO(
     val id: Int,
     val name: String
 )
-

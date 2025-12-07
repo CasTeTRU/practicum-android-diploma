@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.search.presentation
+package ru.practicum.android.diploma.util
 
 sealed class UiError {
     object NoInternet : UiError()
@@ -6,4 +6,3 @@ sealed class UiError {
     object NothingFound : UiError()
     data class Unknown(val code: Int) : UiError()
 }
-
