@@ -218,7 +218,8 @@ class VacancyFragment : Fragment() {
 
     private fun viewCompanyLogo(vacancy: VacancyDetailed) {
         val cornerSize = resources.getDimensionPixelSize(R.dimen.corner_radius)
-        val isNightMode = (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES
+        val isNightMode = resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+            android.content.res.Configuration.UI_MODE_NIGHT_YES
         val placeholder = if (isNightMode) R.drawable.ic_company_logo_placeholder_night else R.drawable.ic_company_logo_placeholder
         Glide.with(this)
             .load(vacancy.employer?.logo)
