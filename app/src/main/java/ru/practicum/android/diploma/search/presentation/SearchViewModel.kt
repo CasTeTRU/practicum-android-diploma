@@ -84,6 +84,21 @@ class SearchViewModel(
 
     private fun handleSuccess(page: VacanciesPage, reset: Boolean) {
         val cur = _searchStatusLiveData.value ?: SearchScreenState()
+
+        // Если это первая загрузка и список пустой, показываем плейсхолдер
+        if (reset && page.vacancies.isEmpty()) {
+            _searchStatusLiveData.value = cur.copy(
+                vacancies = emptyList(),
+                found = page.found,
+                isLoading = false,
+                isFetching = false,
+                error = UiError.NothingFound,
+                page = 1,
+                canLoadMore = false
+            )
+            return
+        }
+        
         val newList = if (reset) {
             page.vacancies
         } else {
