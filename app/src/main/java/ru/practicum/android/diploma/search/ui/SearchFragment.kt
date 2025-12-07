@@ -150,7 +150,7 @@ class SearchFragment : Fragment() {
 
         // Контент
         if (state.vacancies.isNotEmpty()) {
-            renderContent(state.vacancies)
+            renderContent(state.vacancies, state.found)
         } else if (state.error == null) {
             searchScreenCover.visibility = View.VISIBLE
         }
@@ -160,9 +160,11 @@ class SearchFragment : Fragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun renderContent(vacancies: List<Vacancy>) {
+    private fun renderContent(vacancies: List<Vacancy>, found: Int) {
         binding.apply {
             recyclerView.visibility = View.VISIBLE
+            searchInfo.visibility = View.VISIBLE
+            searchInfo.text = getString(R.string.vacancies_found, found.toString())
 
             searchAdapter.submitList(vacancies)
             searchAdapter.notifyDataSetChanged()

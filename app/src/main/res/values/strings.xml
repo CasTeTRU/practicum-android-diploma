@@ -27,6 +27,7 @@
     <string name="error_server">Ошибка сервера</string>
     <string name="error_nothing_found">Не удалось получить список вакансий</string>
     <string name="empty_vacancy">Таких вакансий нет</string>
+    <string name="vacancies_found">Найдено %s вакансий</string>
     <string name="added_to_favorites">Добавлено в избранное</string>
     <string name="removed_from_favorites">Удалено из избранного</string>
     <string name="e_mail">E-mail</string>
