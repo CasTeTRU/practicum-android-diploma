@@ -105,4 +105,19 @@
         <item name="fontWeight">@dimen/font_weight_bold</item>
 
     </style>
+
+    <style name="HintAppearance">
+        <item name="android:textColorHint">@color/gray</item>
+        <item name="expandedHintEnabled">true</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="endIconMode">custom</item>
+        <item name="endIconTint">?attr/android:textColorPrimary</item>
+    </style>
+
+    <style name="SalaryField">
+        <item name="android:textColorHint">"@color/hint_text_color"</item>
+        <item name="expandedHintEnabled">false</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
 </resources>
