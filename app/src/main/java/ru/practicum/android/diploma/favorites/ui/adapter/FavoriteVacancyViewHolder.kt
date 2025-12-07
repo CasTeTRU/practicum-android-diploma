@@ -28,7 +28,7 @@ class FavoriteVacancyViewHolder(
 
         val employerName = vacancy.employer?.name.orEmpty()
         val location = vacancy.address?.city.takeIf { !it.isNullOrBlank() }
-            ?: vacancy.area.name
+            ?: vacancy.area?.name
 
         tvNameVacancy.text = context.getString(R.string.two_params, vacancy.name, location)
         tvNameCompany.text = employerName

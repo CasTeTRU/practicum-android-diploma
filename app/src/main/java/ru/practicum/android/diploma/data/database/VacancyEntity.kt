@@ -28,8 +28,8 @@ data class VacancyEntity(
     val employment: Employment?,
     val contacts: Contacts?,
     val employer: Employer?,
-    val area: FilterArea,
-    val skills: List<KeySkill>,
+    val area: FilterArea?,
+    val skills: List<KeySkill>?,
     val url: String,
-    val industry: FilterIndustry
+    val industry: FilterIndustry?
 )

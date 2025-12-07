@@ -8,16 +8,16 @@ import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 fun VacancyByIdResponse.toDomain(): VacancyDetailed = VacancyDetailed(
     address = address?.toDomain(),
     url = url,
-    area = area.toDomain(),
+    area = area?.toDomain(),
     contacts = contacts?.toDomain(),
     description = description,
-    employer = employer.toDomain(),
+    employer = employer?.toDomain(),
     employment = employment?.toDomain(),
     experience = experience?.toDomain(),
     id,
-    keySkills = skills.map { KeySkill(it) },
+    keySkills = skills?.map { KeySkill(it) },
     name,
     salary = salary?.toDomain(),
     schedule = schedule?.toDomain(),
-    industry = industry.toDomain()
+    industry = industry?.toDomain()
 )

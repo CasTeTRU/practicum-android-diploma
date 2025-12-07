@@ -129,7 +129,7 @@ class VacancyFragment : Fragment() {
 
         viewCompanyLogo(vacancy)
         viewEmploymentAndSchedule(vacancy.employment, vacancy.schedule)
-        viewCityOrRegion(vacancy.area, vacancy.address)
+        viewCityOrRegion(vacancy?.area, vacancy?.address)
         updateFavoriteIcon(isFavorite)
         viewKeySkills(vacancy.keySkills)
         viewContacts(vacancy.contacts)
@@ -142,9 +142,9 @@ class VacancyFragment : Fragment() {
         binding.tvEmploymentType.text = getString(R.string.two_params, employment, schedule)
     }
 
-    private fun viewCityOrRegion(area: FilterArea, address: Address?) = with(binding) {
+    private fun viewCityOrRegion(area: FilterArea?, address: Address?) = with(binding) {
         val city = address?.city
-        val region = area.name
+        val region = area?.name
 
         if (!city.isNullOrEmpty()) {
             tvCompanyCity.text = city

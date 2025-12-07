@@ -14,16 +14,16 @@ import ru.practicum.android.diploma.domain.models.Schedule
 data class VacancyDetailed(
     val address: Address?,
     val url: String,
-    val area: FilterArea,
+    val area: FilterArea?,
     val contacts: Contacts?,
     val description: String,
     val employer: Employer?,
     val employment: Employment?,
     val experience: Experience?,
     val id: String,
-    val keySkills: List<KeySkill>,
+    val keySkills: List<KeySkill>?,
     val name: String,
     val salary: Salary?,
     val schedule: Schedule?,
-    val industry: FilterIndustry
+    val industry: FilterIndustry?
 )

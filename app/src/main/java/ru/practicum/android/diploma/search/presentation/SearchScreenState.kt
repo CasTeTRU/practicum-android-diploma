@@ -12,7 +12,4 @@ data class SearchScreenState(
     val error: UiError? = null,
     val page: Int = 1,
     val canLoadMore: Boolean = true
-) {
-    val isEmpty: Boolean
-        get() = vacancies.isEmpty() && !isLoading && error == null
-}
+)
