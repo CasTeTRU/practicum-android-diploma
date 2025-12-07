@@ -10,6 +10,7 @@
 
     <ImageView
         android:id="@+id/ivCompanyLogo"
+        style="@style/CompanyLogoImage"
         android:layout_width="@dimen/icon_size_large"
         android:layout_height="@dimen/icon_size_large"
         android:contentDescription="@string/company_logo"

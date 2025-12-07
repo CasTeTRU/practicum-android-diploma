@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.search.ui.adapter
 
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,14 +17,16 @@ class VacancyViewHolder(private val binding: VacancyViewBinding) :
     fun bind(vacancy: Vacancy) = with(binding) {
         val context = itemView.context
         val cornerSize = itemView.resources.getDimensionPixelSize(R.dimen.corner_radius)
+        val isNightMode = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val placeholder = if (isNightMode) R.drawable.ic_company_logo_placeholder_night else R.drawable.ic_company_logo_placeholder
 
         val imageUrl = vacancy.employerLogo?.takeIf { it.isNotBlank() }
         Glide.with(itemView)
             .load(imageUrl)
             .centerCrop()
-            .placeholder(R.drawable.ic_company_logo_placeholder)
-            .fallback(R.drawable.ic_company_logo_placeholder)
-            .error(R.drawable.ic_company_logo_placeholder)
+            .placeholder(placeholder)
+            .fallback(placeholder)
+            .error(placeholder)
             .transform(RoundedCorners(cornerSize))
             .into(imgCompany)
 

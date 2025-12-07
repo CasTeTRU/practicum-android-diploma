@@ -66,6 +66,7 @@
 
                 <ImageView
                     android:id="@+id/ic_company"
+                    style="@style/CompanyLogoImage"
                     android:layout_width="@dimen/icon_size_large"
                     android:layout_height="@dimen/icon_size_large"
                     android:layout_marginTop="@dimen/padding_medium"
