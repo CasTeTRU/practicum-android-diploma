@@ -37,7 +37,7 @@ class SearchViewModel(
 
     private fun startSearch(query: String) {
         if (query.isEmpty()) {
-            _searchStatusLiveData.value = SearchScreenState() // reset to default
+            _searchStatusLiveData.value = SearchScreenState()
             return
         }
 
@@ -62,7 +62,11 @@ class SearchViewModel(
 
     fun fetchNextPage() {
         val cur = _searchStatusLiveData.value ?: return
-        if (cur.isLoading || cur.isFetching || !cur.canLoadMore || cur.query.isBlank()) return
+        val isCurrentlyLoading = cur.isLoading || cur.isFetching
+        val cannotLoadMore = !cur.canLoadMore
+        val isQueryEmpty = cur.query.isBlank()
+
+        if (isCurrentlyLoading || cannotLoadMore || isQueryEmpty) return
 
         val nextPage = cur.page + 1
         _searchStatusLiveData.value = cur.copy(isFetching = true) // only fetching flag
@@ -106,8 +110,10 @@ class SearchViewModel(
                 ResponceCodes.NOTHING_FOUND -> UiError.NothingFound
                 ResponceCodes.IO_EXCEPTION,
                 ResponceCodes.MAPPER_EXCEPTION -> UiError.ServerError
+
                 else -> UiError.Unknown(throwable.code)
             }
+
             else -> UiError.Unknown(ResponceCodes.IO_EXCEPTION)
         }
 
@@ -117,10 +123,6 @@ class SearchViewModel(
             isFetching = false,
             error = uiError
         )
-    }
-
-    private fun renderState(state: SearchScreenState) {
-        _searchStatusLiveData.postValue(state)
     }
 
     companion object {

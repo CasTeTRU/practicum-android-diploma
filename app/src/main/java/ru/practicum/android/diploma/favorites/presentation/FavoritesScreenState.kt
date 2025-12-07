@@ -2,7 +2,6 @@ package ru.practicum.android.diploma.favorites.presentation
 
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
-
 sealed class FavoritesScreenState {
     object Loading : FavoritesScreenState()
     object Empty : FavoritesScreenState()

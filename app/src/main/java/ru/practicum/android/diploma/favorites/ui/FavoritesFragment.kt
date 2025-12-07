@@ -39,7 +39,7 @@ class FavoritesFragment : Fragment() {
         observeViewModel()
 
         onVacancyClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { vacancyId ->
-            val bundle:  Bundle = bundleOf(
+            val bundle: Bundle = bundleOf(
                 VacancyFragment.ARG_VACANCY to vacancyId
             )
 

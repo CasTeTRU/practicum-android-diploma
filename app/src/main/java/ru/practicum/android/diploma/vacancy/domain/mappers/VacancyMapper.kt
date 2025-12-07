@@ -21,4 +21,3 @@ fun VacancyByIdResponse.toDomain(): VacancyDetailed = VacancyDetailed(
     schedule = schedule?.toDomain(),
     industry = industry.toDomain()
 )
-

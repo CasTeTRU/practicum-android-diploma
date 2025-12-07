@@ -18,7 +18,7 @@ class VacancyViewModel(
     private val vacancyInteractor: VacancyInteractor,
     private val favoriteInteractor: FavoriteInteractor,
     private val resourcesProvider: ResourcesProviderInteractor
-): ViewModel()  {
+) : ViewModel() {
     private var lastVacancy: VacancyDetailed? = null
     private var isFavorite: Boolean = false
     private var _vacancyStatusLiveData = MutableLiveData<VacancyScreenState>()
@@ -91,11 +91,14 @@ class VacancyViewModel(
                 }
             }.onSuccess {
                 _events.value = UiEvent.ShowMessage(
-                    if (newFav) resourcesProvider.getString(R.string.added_to_favorites)
-                    else resourcesProvider.getString(R.string.removed_from_favorites)
+                    if (newFav) {
+                        resourcesProvider.getString(R.string.added_to_favorites)
+                    } else {
+                        resourcesProvider.getString(R.string.removed_from_favorites)
+                    }
                 )
             }.onFailure { throwable: Throwable ->
-                // откат
+                // откат назад в случае не удачи
                 isFavorite = !newFav
                 renderState(VacancyScreenState.ShowContent(vacancy, !newFav))
 

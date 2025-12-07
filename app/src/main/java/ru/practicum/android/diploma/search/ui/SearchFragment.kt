@@ -24,7 +24,6 @@ import ru.practicum.android.diploma.util.UiError
 import ru.practicum.android.diploma.util.debounce
 import ru.practicum.android.diploma.vacancy.ui.VacancyFragment
 
-
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
@@ -145,7 +144,8 @@ class SearchFragment : Fragment() {
         hideAllView()
 
         // базовые индикаторы
-        progressBar.visibility = if (state.isLoading) View.VISIBLE else View.GONE
+        progressBar.visibility = if (state.isLoading || state.isFetching) View.VISIBLE else View.GONE
+
         if (state.isLoading) return
 
         // Контент

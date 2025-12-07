@@ -22,4 +22,3 @@ val vacancyModule = module {
 
     viewModel { VacancyViewModel(get(), get(), get()) }
 }
-

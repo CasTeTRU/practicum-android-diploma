@@ -16,7 +16,7 @@ import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
 
 class VacancyRepositoryImpl(
     private val networkClient: NetworkClient
-): VacancyRepository {
+) : VacancyRepository {
     override suspend fun getVacancyById(id: String): Flow<Result<VacancyDetailed>> = flow {
         val vacancyIdRequest = VacancyByIdRequest(id = id)
         val response = networkClient.getVacancyById(vacancyIdRequest)

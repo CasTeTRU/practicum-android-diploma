@@ -28,4 +28,3 @@ interface ApiService {
     @GET("/industries")
     suspend fun getIndustries(): IndustriesResponse
 }
-

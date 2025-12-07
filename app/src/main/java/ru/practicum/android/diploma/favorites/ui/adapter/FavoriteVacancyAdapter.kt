@@ -33,4 +33,3 @@ class VacancyDiffCallback : DiffUtil.ItemCallback<VacancyDetailed>() {
         return oldItem == newItem
     }
 }
-

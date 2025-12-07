@@ -7,7 +7,7 @@ import ru.practicum.android.diploma.search.domain.models.Vacancy
 
 class SearchAdapter(
     val clickListener: SearchClickListener
-) :ListAdapter<Vacancy, VacancyViewHolder>(VacancyDiffCallback()) {
+) : ListAdapter<Vacancy, VacancyViewHolder>(VacancyDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VacancyViewHolder =
         VacancyViewHolder.from(parent)

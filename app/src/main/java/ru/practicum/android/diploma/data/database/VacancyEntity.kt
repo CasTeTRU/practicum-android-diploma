@@ -33,4 +33,3 @@ data class VacancyEntity(
     val url: String,
     val industry: FilterIndustry
 )
-
