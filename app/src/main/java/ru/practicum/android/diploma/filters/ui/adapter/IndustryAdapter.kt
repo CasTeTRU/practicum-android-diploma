@@ -34,7 +34,6 @@ class IndustryAdapter(
         if (previousSelected == industryId) return
         selectedIndustryId = industryId
         val indicesToUpdate = mutableSetOf<Int>()
-        
         previousSelected?.let { id ->
             currentList.indexOfFirst { it.id == id }.takeIf { it != -1 }?.let(indicesToUpdate::add)
         }

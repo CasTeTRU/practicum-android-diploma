@@ -27,7 +27,6 @@ class FiltersViewModel(
     private fun loadFilters() {
         val filters = filterInteractor.getFilters() ?: DEFAULT_FILTERS
         _filtersState.value = FiltersScreenState(filters)
-        
         if (filters.industry != null) {
             loadIndustryName(filters.industry)
         }
