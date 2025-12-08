@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.filters.ui.adapter
 
-import android.view.View
+import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.ItemIndustryBinding
 import ru.practicum.android.diploma.domain.models.FilterIndustry
 
@@ -11,7 +11,9 @@ class IndustryViewHolder(
 
     fun bind(industry: FilterIndustry, isSelected: Boolean) {
         binding.tvIndustryName.text = industry.name
-        binding.ivSelected.visibility = if (isSelected) View.VISIBLE else View.GONE
+        binding.ivSelected.setImageResource(
+            if (isSelected) R.drawable.ic_radio_button_on else R.drawable.ic_radio_button_off
+        )
 
         binding.root.setOnClickListener {
             onIndustryClick(industry)
