@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.filters.domain.api.FiltersStorage
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
@@ -27,7 +28,7 @@ class FiltersStorageImpl(
         val json = sharedPreferences.getString(FILTER_SETTINGS_KEY, null) ?: return defaultFilters()
         return try {
             gson.fromJson(json, FiltersParameters::class.java) ?: defaultFilters()
-        } catch (e: Exception) {
+        } catch (e: JsonSyntaxException) {
             Log.e("FiltersStorage", "Failed to parse filters JSON", e)
             defaultFilters()
         }
