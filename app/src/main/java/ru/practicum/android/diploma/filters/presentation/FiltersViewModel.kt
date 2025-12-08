@@ -25,6 +25,14 @@ class FiltersViewModel(
             filtersInteractor.restorePreviousState()
         }
     }
+
+    fun clearIndustry() {
+        updateState { it.copy(industry = null) }
+        viewModelScope.launch {
+            filtersInteractor.clearIndustry()
+        }
+    }
+
     fun updateSalary(salary: Int?) {
         updateState { it.copy(salary = salary) }
     }
@@ -71,8 +79,7 @@ class FiltersViewModel(
                 }
             } catch (t: Throwable) {
                 Log.w(TAG, "loadSavedIndustry failed", t)
-                _filtersState.value = FilterScreenState(error = UiError.Unknown(0))
-            }
+                _filtersState.value = FilterScreenState(error = UiError.Unknown(0)) }
         }
     }
 

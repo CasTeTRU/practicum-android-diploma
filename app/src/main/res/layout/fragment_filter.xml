@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -48,8 +49,8 @@
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/app_bar_layout"
         app:placeholderText="@string/industry"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintStart_toStartOf="@id/leftBorder"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_industry"
@@ -105,7 +106,7 @@
             android:layout_height="wrap_content"
             style="@style/SearchField"
             android:background="@drawable/bg_search_field"
-            android:inputType="number"
+            android.inputType="number"
             android:digits="0123456789"
             android:imeOptions="actionDone"
             android:maxLines="1"

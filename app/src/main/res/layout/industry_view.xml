@@ -9,7 +9,7 @@
         android:id="@+id/industryText"
         style="@style/FilterItem"
         android:maxLines="2"
-        android:textColor="?attr/android:textColor"
+        android:textColor="?attr/colorOnBackground"
         app:layout_constraintEnd_toStartOf="@id/industryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -17,9 +17,9 @@
 
     <com.google.android.material.radiobutton.MaterialRadioButton
         android:id="@+id/industryButton"
-        android:button="@drawable/radio_button_selected"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:button="@drawable/radio_button_selected"
         android:buttonTintMode="add"
         android:checked="false"
         android:clickable="false"

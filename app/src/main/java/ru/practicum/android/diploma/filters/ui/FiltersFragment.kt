@@ -1,26 +1,32 @@
 package ru.practicum.android.diploma.filters.ui
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.databinding.FragmentFilterBinding
+import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
+import ru.practicum.android.diploma.filters.presentation.FilterScreenState
 import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
-import ru.practicum.android.diploma.util.showIf
 
 class FiltersFragment : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
-    private var textWatcher: TextWatcher? = null
+
     private val viewModel by viewModel<FiltersViewModel>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = FragmentFilterBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -28,64 +34,89 @@ class FiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initUI()
+        setupListeners()
+        setupObservers()
+    }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadSavedFilters()
+    }
+
+    private fun setupListeners() {
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        setupIndustryListener()
+        setupSalaryListener()
+        setupCheckboxListener()
+        setupActionButtons()
+    }
+
+    private fun setupObservers() {
         viewModel.filtersState.observe(viewLifecycleOwner) { state ->
+            showContent(state.toParams())
+
             val hasFilters = state.industry != null || state.salary != null || state.onlyWithSalary
-            binding.applyButton.showIf(hasFilters)
-            binding.resetButton.showIf(hasFilters)
-
-            binding.etIndustry.setText(state?.industry?.name ?: "")
-
-            updateSalaryField(state.salary)
-
-            binding.onlyWithSalaryCheckbox.isChecked = state.onlyWithSalary
+            binding.applyButton.isVisible = hasFilters
+            binding.resetButton.isVisible = hasFilters
         }
     }
 
-    private fun updateSalaryField(salary: Int?) {
-        textWatcher?.let { binding.expectedSalary.removeTextChangedListener(it) }
+    private fun showContent(filters: FiltersParameters) {
+        binding.etIndustry.setText(filters.industry?.name ?: "")
+        binding.toFilterIndustry.isVisible = filters.industry == null
+        binding.clearIndustry.isVisible = filters.industry != null
 
-        val text = salary?.toString() ?: ""
-        binding.expectedSalary.setText(text)
-        // Устанавливаем курсор в конец
-        binding.expectedSalary.setSelection(text.length)
+        // Снимаем слушатель, чтобы избежать рекурсивных обновлений
+        binding.expectedSalary.doOnTextChanged { text, _, _, _ -> }
+        if (binding.expectedSalary.text?.toString() ?: "" != filters.salary?.toString() ?: "") {
+            binding.expectedSalary.setText(filters.salary?.toString() ?: "")
+        }
+        setupSalaryListener() // Восстанавливаем слушатель
 
-        textWatcher?.let { binding.expectedSalary.addTextChangedListener(it) }
+        binding.onlyWithSalaryCheckbox.isChecked = filters.onlyWithSalary
+        binding.clearIcon.isVisible = filters.salary != null
     }
 
-    private fun initUI() {
-        setupCallback()
-        setupExpectedSalary()
-        setupOnlyWithSalaryCheckbox()
-        setupToolbar()
+    private fun setupIndustryListener() {
+        binding.etIndustry.setOnClickListener {
+            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
+        }
+        binding.clearIndustry.setOnClickListener {
+            viewModel.clearIndustry()
+        }
     }
 
-    private fun setupExpectedSalary() = with(binding) {
-        textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val salary = s.toString().toIntOrNull()
-                viewModel.updateSalary(salary)
+    private fun setupSalaryListener() {
+        binding.expectedSalary.doOnTextChanged { text, _, _, _ ->
+            viewModel.updateSalary(text.toString().toIntOrNull())
+            binding.clearIcon.isVisible = !text.isNullOrEmpty()
+        }
+
+        binding.expectedSalary.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                binding.expectedSalary.clearFocus()
+                true
+            } else {
+                false
             }
-            override fun afterTextChanged(s: Editable?) = Unit
         }
-        textWatcher?.let { expectedSalary.addTextChangedListener(it) }
+
+        binding.clearIcon.setOnClickListener {
+            binding.expectedSalary.text?.clear()
+        }
     }
 
-    private fun setupOnlyWithSalaryCheckbox() = with(binding) {
-        onlyWithSalaryCheckbox.setOnCheckedChangeListener { _, isChecked ->
+    private fun setupCheckboxListener() {
+        binding.onlyWithSalaryCheckbox.setOnCheckedChangeListener { _, isChecked ->
             viewModel.updateOnlyWithSalary(isChecked)
         }
     }
 
-    private fun setupCallback() {
-        binding.industryBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment, Bundle.EMPTY)
-        }
+    private fun setupActionButtons() {
         binding.applyButton.setOnClickListener {
             viewModel.applyFilters()
-
             findNavController().popBackStack()
         }
 
@@ -94,20 +125,16 @@ class FiltersFragment : Fragment() {
         }
     }
 
-    private fun setupToolbar() {
-        binding.toolbar.setNavigationOnClickListener {
-            viewModel.restorePreviousState()
-            findNavController().popBackStack()
-        }
+    private fun FilterScreenState.toParams(): FiltersParameters {
+        return FiltersParameters(
+            industry = this.industry,
+            salary = this.salary,
+            onlyWithSalary = this.onlyWithSalary
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadSavedFilters()
     }
 }
