@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.data
 
-object ResponceCodes {
+object ResponseCodes {
     const val ERROR_NO_INTERNET = -1
     const val IO_EXCEPTION = -2
     const val SUCCESS_STATUS = 200
