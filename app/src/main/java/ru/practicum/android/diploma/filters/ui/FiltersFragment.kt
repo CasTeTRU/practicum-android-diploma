@@ -70,7 +70,7 @@ class FiltersFragment : Fragment() {
 
         // Снимаем слушатель, чтобы избежать рекурсивных обновлений
         binding.expectedSalary.doOnTextChanged { text, _, _, _ -> }
-        if ((binding.expectedSalary.text?.toString() ?: "") != (filters.salary?.toString() ?: "")) {
+        if (binding.expectedSalary.text?.toString() ?: "" != filters.salary?.toString() ?: "") {
             binding.expectedSalary.setText(filters.salary?.toString() ?: "")
         }
         setupSalaryListener() // Восстанавливаем слушатель
