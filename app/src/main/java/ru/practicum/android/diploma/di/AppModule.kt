@@ -9,6 +9,7 @@ val appModule = module {
         databaseModule,
         favoritesModule,
         vacancyModule,
-        searchModule
+        searchModule,
+        filtersModule
     )
 }

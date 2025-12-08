@@ -5,11 +5,9 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.ApiError
-import ru.practicum.android.diploma.data.ResponceCodes
+import ru.practicum.android.diploma.data.ResponseCodes
 import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
-import ru.practicum.android.diploma.data.dto.responses.VacancyByIdResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
-import ru.practicum.android.diploma.search.data.SearchRepositoryImpl.Companion.TAG_SEARCH_RESPONSE
 import ru.practicum.android.diploma.vacancy.domain.VacancyRepository
 import ru.practicum.android.diploma.vacancy.domain.mappers.toDomain
 import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
@@ -21,27 +19,30 @@ class VacancyRepositoryImpl(
         val vacancyIdRequest = VacancyByIdRequest(id = id)
         val response = networkClient.getVacancyById(vacancyIdRequest)
         when (response.resultCode) {
-            ResponceCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponceCodes.ERROR_NO_INTERNET)))
-            ResponceCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponceCodes.IO_EXCEPTION)))
-            ResponceCodes.SUCCESS_STATUS -> {
-                val vacancyIdResponse = response as? VacancyByIdResponse
+            ResponseCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponseCodes.ERROR_NO_INTERNET)))
+            ResponseCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponseCodes.IO_EXCEPTION)))
+            ResponseCodes.SUCCESS_STATUS -> {
+                val vacancyIdResponse = response.data
 
                 if (vacancyIdResponse != null) {
                     try {
                         val domain = vacancyIdResponse.toDomain()
                         emit(Result.success(domain))
                     } catch (t: IllegalArgumentException) {
-                        Log.d(TAG_SEARCH_RESPONSE, "$vacancyIdResponse", t)
+                        Log.d(TAG_VACANCY_RESPONSE, "$vacancyIdResponse", t)
                         // Если маппер упал по какой-то причине
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     } catch (e: JsonSyntaxException) {
-                        Log.d(TAG_SEARCH_RESPONSE, "$vacancyIdResponse", e)
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        Log.d(TAG_VACANCY_RESPONSE, "$vacancyIdResponse", e)
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     }
                 } else {
-                    emit(Result.failure(ApiError(ResponceCodes.NOTHING_FOUND)))
+                    emit(Result.failure(ApiError(ResponseCodes.NOTHING_FOUND)))
                 }
             }
         }
+    }
+    companion object {
+        const val TAG_VACANCY_RESPONSE = "VacancyRepositoryImpl"
     }
 }

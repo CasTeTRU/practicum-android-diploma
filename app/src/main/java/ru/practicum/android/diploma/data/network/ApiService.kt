@@ -3,14 +3,14 @@ package ru.practicum.android.diploma.data.network
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import ru.practicum.android.diploma.data.dto.responses.AreasResponse
-import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
+import ru.practicum.android.diploma.data.dto.responses.FilterAreaDTO
+import ru.practicum.android.diploma.data.dto.responses.FilterIndustryDTO
 import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
-import ru.practicum.android.diploma.data.dto.responses.VacancyByIdResponse
+import ru.practicum.android.diploma.data.dto.responses.VacancyDetailDTO
 
 interface ApiService {
     @GET("/vacancies/{vacancy_id}")
-    suspend fun getVacancyById(@Path("vacancy_id") id: String): VacancyByIdResponse
+    suspend fun getVacancyById(@Path("vacancy_id") id: String): VacancyDetailDTO
 
     @GET("/vacancies")
     suspend fun findVacancies(
@@ -23,8 +23,8 @@ interface ApiService {
     ): VacanciesSearchResponse
 
     @GET("/areas")
-    suspend fun getAreas(): AreasResponse
+    suspend fun getAreas(): List<FilterAreaDTO>
 
     @GET("/industries")
-    suspend fun getIndustries(): IndustriesResponse
+    suspend fun getIndustries(): List<FilterIndustryDTO>
 }

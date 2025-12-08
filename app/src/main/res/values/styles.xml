@@ -103,7 +103,21 @@
         <item name="android:textColor">?attr/android:textColorPrimary</item>
         <item name='android:fontFamily'>@font/ys_display_bold</item>
         <item name="fontWeight">@dimen/font_weight_bold</item>
+    </style>
 
+    <style name="FilterItem">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">?attr/android:textColor</item>
+        <item name="android:fontWeight">400</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:paddingVertical">@dimen/margin_medium</item>
+        <item name="android:paddingHorizontal">@dimen/padding_medium</item>
+        <item name="layout_constraintHorizontal_bias">0</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="HintAppearance">
@@ -119,5 +133,11 @@
         <item name="expandedHintEnabled">false</item>
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
+    </style>
+
+    <style name="FilterRight">
+        <item name="backgroundTint">?attr/android:colorBackground</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

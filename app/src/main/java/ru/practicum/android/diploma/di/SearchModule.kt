@@ -14,5 +14,5 @@ val searchModule = module {
 
     single<SearchInteractor> { SearchInteractorImpl(get()) }
 
-    viewModel { SearchViewModel(get()) }
+    viewModel { SearchViewModel(get(), get()) }
 }

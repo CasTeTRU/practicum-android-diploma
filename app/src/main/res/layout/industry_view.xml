@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/industryText"
+        style="@style/FilterItem"
+        android:maxLines="2"
+        android:textColor="?attr/android:textColor"
+        app:layout_constraintEnd_toStartOf="@id/industryButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/empty_list_placeholder" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/industryButton"
+        android:button="@drawable/radio_button_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTintMode="add"
+        android:checked="false"
+        android:clickable="false"
+        android:foregroundTint="#0000"
+        app:layout_constraintBottom_toBottomOf="@id/industryText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/industryText"
+        app:layout_constraintVertical_bias="0.448"
+        app:useMaterialThemeColors="false" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

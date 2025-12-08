@@ -11,5 +11,6 @@ data class SearchScreenState(
     val isFetching: Boolean = false, // дозагрузка следующих страниц (spinner)
     val error: UiError? = null,
     val page: Int = 1,
-    val canLoadMore: Boolean = true
+    val canLoadMore: Boolean = true,
+    val hasFilters: Boolean = false
 )
