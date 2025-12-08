@@ -31,6 +31,10 @@ class FiltersViewModel(
         }
     }
 
+    fun updateIndustry(industry: ru.practicum.android.diploma.domain.models.FilterIndustry?) {
+        updateState { it.copy(industry = industry) }
+    }
+
     fun updateSalary(salary: Int?) {
         updateState { it.copy(salary = salary) }
     }

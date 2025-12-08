@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
@@ -19,7 +20,6 @@ import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
 class FiltersFragment : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel by viewModel<FiltersViewModel>()
 
     override fun onCreateView(
@@ -34,13 +34,9 @@ class FiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupFragmentResultListener()
         setupListeners()
         setupObservers()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadSavedFilters()
     }
 
     private fun setupListeners() {
@@ -81,7 +77,7 @@ class FiltersFragment : Fragment() {
 
     private fun setupIndustryListener() {
         binding.etIndustry.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
+            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment)
         }
         binding.clearIndustry.setOnClickListener {
             viewModel.clearIndustry()
@@ -131,6 +127,27 @@ class FiltersFragment : Fragment() {
             salary = this.salary,
             onlyWithSalary = this.onlyWithSalary
         )
+    }
+
+    private fun setupFragmentResultListener() {
+        setFragmentResultListener(REQUEST_KEY_INDUSTRY_SELECTED) { _, bundle ->
+            val industryId = bundle.getInt(KEY_INDUSTRY_ID)
+            val industryName = bundle.getString(KEY_INDUSTRY_NAME)
+            industryName?.let { name ->
+                viewModel.updateIndustry(
+                    ru.practicum.android.diploma.domain.models.FilterIndustry(
+                        id = industryId,
+                        name = name
+                    )
+                )
+            }
+        }
+    }
+
+    companion object {
+        const val REQUEST_KEY_INDUSTRY_SELECTED = "industry_selected"
+        const val KEY_INDUSTRY_ID = "selected_industry_id"
+        const val KEY_INDUSTRY_NAME = "selected_industry_name"
     }
 
     override fun onDestroyView() {

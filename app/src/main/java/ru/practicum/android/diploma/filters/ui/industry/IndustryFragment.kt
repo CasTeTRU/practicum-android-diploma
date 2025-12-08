@@ -86,7 +86,7 @@ class IndustryFragment : Fragment() {
                 val currentText = s?.toString() ?: ""
                 viewModel.onSearchInput(currentText)
                 binding.clearIcon.showIf(currentText.isNotEmpty())
-                binding.searchIcon.showIf(currentText.isEmpty())
+                binding.searchFieldIcon.showIf(currentText.isEmpty())
             }
         }
 
