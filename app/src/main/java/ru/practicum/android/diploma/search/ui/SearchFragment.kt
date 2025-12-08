@@ -233,6 +233,7 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         viewModel.loadSavedFilters()
+        viewModel.refreshSearchIfActive()
     }
 
     companion object {

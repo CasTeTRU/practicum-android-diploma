@@ -1,6 +1,5 @@
 package ru.practicum.android.diploma.search.presentation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -43,6 +42,14 @@ class SearchViewModel(
         }
     }
 
+    fun refreshSearchIfActive() {
+        val current = _searchStatusLiveData.value ?: return
+        val query = current.query
+        if (query.isNotBlank()) {
+            startSearch(query)
+        }
+    }
+
     fun onQueryChanged(query: String) {
         val current = _searchStatusLiveData.value ?: SearchScreenState()
         if (current.query != query) {
@@ -79,7 +86,8 @@ class SearchViewModel(
         }
 
         viewModelScope.launch {
-            searchInteractor.getVacancies(query = query, page = 1)
+            val savedFilters = filtersInteractor.getFilterSettings()
+            searchInteractor.getVacancies(query = query, page = 1, filters = savedFilters)
                 .collect { result ->
                     result.fold(
                         onSuccess = { page -> handleSuccess(page = page, reset = true) },
@@ -101,7 +109,8 @@ class SearchViewModel(
         updateState { it.copy(isFetching = true) }
 
         viewModelScope.launch {
-            searchInteractor.getVacancies(query = cur.query, page = nextPage)
+            val savedFilters = filtersInteractor.getFilterSettings()
+            searchInteractor.getVacancies(query = cur.query, page = nextPage, filters = savedFilters)
                 .collect { result ->
                     result.fold(
                         onSuccess = { page -> handleSuccess(page = page, reset = false) },
@@ -139,7 +148,6 @@ class SearchViewModel(
     }
 
     private fun handleError(throwable: Throwable) {
-        Log.d(TAG, "search error: $throwable")
         val uiError: UiError = when (throwable) {
             is java.net.UnknownHostException -> UiError.NoInternet
             is ApiError -> when (throwable.code) {
@@ -163,7 +171,6 @@ class SearchViewModel(
     }
 
     companion object {
-        private const val TAG = "SearchViewModel"
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

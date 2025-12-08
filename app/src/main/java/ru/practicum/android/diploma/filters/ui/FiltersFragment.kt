@@ -16,12 +16,10 @@ import ru.practicum.android.diploma.databinding.FragmentFilterBinding
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
 import ru.practicum.android.diploma.filters.presentation.FilterScreenState
 import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
-import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
 
 class FiltersFragment : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
-
     private val viewModel by viewModel<FiltersViewModel>()
 
     override fun onCreateView(
@@ -36,17 +34,9 @@ class FiltersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupFragmentResultListener()
         setupListeners()
         setupObservers()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadSavedFilters()
-        setupToolbar()
-        setupIndustryField()
-        observeViewModel()
-        setupFragmentResultListener()
     }
 
     private fun setupListeners() {
@@ -87,7 +77,7 @@ class FiltersFragment : Fragment() {
 
     private fun setupIndustryListener() {
         binding.etIndustry.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_industryFragment)
+            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment)
         }
         binding.clearIndustry.setOnClickListener {
             viewModel.clearIndustry()
@@ -139,24 +129,12 @@ class FiltersFragment : Fragment() {
         )
     }
 
-    private fun setupIndustryField() {
-        binding.etIndustry.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment)
-        }
-    }
-
-    private fun observeViewModel() {
-        viewModel.filtersState.observe(viewLifecycleOwner) { state ->
-            binding.etIndustry.setText(state.industryName ?: "")
-        }
-    }
-
     private fun setupFragmentResultListener() {
         setFragmentResultListener(REQUEST_KEY_INDUSTRY_SELECTED) { _, bundle ->
             val industryId = bundle.getInt(KEY_INDUSTRY_ID)
             val industryName = bundle.getString(KEY_INDUSTRY_NAME)
             industryName?.let { name ->
-                viewModel.saveIndustry(
+                viewModel.updateIndustry(
                     ru.practicum.android.diploma.domain.models.FilterIndustry(
                         id = industryId,
                         name = name

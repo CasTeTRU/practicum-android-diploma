@@ -5,8 +5,7 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.ApiError
-import ru.practicum.android.diploma.data.ResponceCodes
-import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
+import ru.practicum.android.diploma.data.ResponseCodes
 import ru.practicum.android.diploma.data.mapper.toDomain
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.domain.models.FilterIndustry
@@ -19,24 +18,24 @@ class IndustryRepositoryImpl(
         val response = networkClient.getIndustries()
 
         when (response.resultCode) {
-            ResponceCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponceCodes.ERROR_NO_INTERNET)))
-            ResponceCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponceCodes.IO_EXCEPTION)))
-            ResponceCodes.SUCCESS_STATUS -> {
-                val industriesResponse = response as? IndustriesResponse
+            ResponseCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponseCodes.ERROR_NO_INTERNET)))
+            ResponseCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponseCodes.IO_EXCEPTION)))
+            ResponseCodes.SUCCESS_STATUS -> {
+                val industriesList = response.data
 
-                if (industriesResponse?.industries != null) {
+                if (industriesList != null) {
                     try {
-                        val domainList = industriesResponse.industries.map { it.toDomain() }
+                        val domainList = industriesList.map { it.toDomain() }
                         emit(Result.success(domainList))
                     } catch (t: IllegalArgumentException) {
-                        Log.d(TAG, "$industriesResponse", t)
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        Log.d(TAG, "$industriesList", t)
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     } catch (e: JsonSyntaxException) {
-                        Log.d(TAG, "$industriesResponse", e)
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        Log.d(TAG, "$industriesList", e)
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     }
                 } else {
-                    emit(Result.failure(ApiError(ResponceCodes.NOTHING_FOUND)))
+                    emit(Result.failure(ApiError(ResponseCodes.NOTHING_FOUND)))
                 }
             }
             else -> emit(Result.failure(ApiError(response.resultCode)))
