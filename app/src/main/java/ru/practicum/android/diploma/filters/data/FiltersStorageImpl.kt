@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filters.data
 
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import ru.practicum.android.diploma.domain.models.FilterIndustry
@@ -27,6 +28,7 @@ class FiltersStorageImpl(
         return try {
             gson.fromJson(json, FiltersParameters::class.java) ?: defaultFilters()
         } catch (e: Exception) {
+            Log.e("FiltersStorage", "Failed to parse filters JSON", e)
             defaultFilters()
         }
     }

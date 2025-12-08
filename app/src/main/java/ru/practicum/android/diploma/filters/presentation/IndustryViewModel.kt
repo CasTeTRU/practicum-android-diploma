@@ -52,10 +52,9 @@ class IndustryViewModel(
         viewModelScope.launch {
             try {
                 filtersInteractor.saveIndustry(selected)
-            } catch (t: Throwable) {
-                Log.w(TAG, "applySelection failed", t)
-                // show error if needed — we opt not to change list state here
-                updateState { it.copy(error = mapToUiError(t)) }
+            } catch (e: Exception) {
+                Log.w(TAG, "applySelection failed", e)
+                updateState { it.copy(error = mapToUiError(e)) }
             }
         }
     }
@@ -82,9 +81,8 @@ class IndustryViewModel(
                 if (savedIndustry != null) {
                     updateState { it.copy(selected = savedIndustry) }
                 }
-            } catch (t: Throwable) {
-                Log.w(TAG, "Failed to load saved industry", t)
-                // можно опционально показать ошибку
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to load saved industry", e)
             }
         }
     }

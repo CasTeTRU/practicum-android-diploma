@@ -18,7 +18,7 @@ class RetrofitNetworkClient(
 ) : NetworkClient {
     private suspend fun <T> safeApiCall(apiCall: suspend () -> T): NetworkResponse<T> {
         if (!networkManager.isConnected()) {
-            return NetworkResponse<T>().apply { resultCode = ResponseCodes.ERROR_NO_INTERNET }
+            return NetworkResponse<T>(resultCode = ResponseCodes.ERROR_NO_INTERNET)
         }
 
         return withContext(Dispatchers.IO) {
@@ -30,10 +30,10 @@ class RetrofitNetworkClient(
                 )
             } catch (e: HttpException) {
                 Log.e(TAG, e.stackTraceToString())
-                NetworkResponse<T>().apply { resultCode = e.code() }
+                NetworkResponse<T>(resultCode = e.code())
             } catch (e: IOException) {
                 Log.e(TAG, e.stackTraceToString())
-                NetworkResponse<T>().apply { resultCode = ResponseCodes.IO_EXCEPTION }
+                NetworkResponse<T>(resultCode = ResponseCodes.IO_EXCEPTION)
             }
         }
     }
