@@ -49,7 +49,7 @@
         android:id="@+id/filterIndustryFragment"
         android:name="ru.practicum.android.diploma.filters.ui.FilterIndustryFragment"
         android:label="filterIndustryFragment"
-        tools:layout="@layout/fragment_filter_industry">
+        tools:layout="@layout/fragment_industry">
     </fragment>
 
 

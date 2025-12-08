@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.FilterIndustry
-import ru.practicum.android.diploma.filters.domain.api.FilterInteractor
+import ru.practicum.android.diploma.filters.domain.api.FiltersInteractor
 import ru.practicum.android.diploma.filters.domain.api.IndustryInteractor
 import ru.practicum.android.diploma.util.UiError
 
 class FilterIndustryViewModel(
     private val industryInteractor: IndustryInteractor,
-    private val filterInteractor: FilterInteractor
+    private val filtersInteractor: FiltersInteractor
 ) : ViewModel() {
 
     private val _screenState = MutableLiveData<FilterIndustryScreenState>()
@@ -52,11 +52,11 @@ class FilterIndustryViewModel(
         }
     }
 
-    private fun loadSavedIndustry(industries: List<FilterIndustry>) {
-        val savedFilters = filterInteractor.getFilters()
-        savedFilters?.industry?.let { savedIndustryId ->
-            val savedIndustry = industries.find { it.id == savedIndustryId }
-            savedIndustry?.let {
+    private suspend fun loadSavedIndustry(industries: List<FilterIndustry>) {
+        val savedFilters = filtersInteractor.getFilterSettings()
+        savedFilters.industry?.let { savedIndustry ->
+            val foundIndustry = industries.find { it.id == savedIndustry.id }
+            foundIndustry?.let {
                 _selectedIndustry.value = it
             }
         }

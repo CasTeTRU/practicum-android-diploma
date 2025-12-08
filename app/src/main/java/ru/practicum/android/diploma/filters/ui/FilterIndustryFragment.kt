@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.practicum.android.diploma.R
-import ru.practicum.android.diploma.databinding.FragmentFilterIndustryBinding
+import ru.practicum.android.diploma.databinding.FragmentIndustryBinding
 import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.filters.presentation.FilterIndustryScreenState
 import ru.practicum.android.diploma.filters.presentation.FilterIndustryViewModel
@@ -20,7 +20,7 @@ import ru.practicum.android.diploma.filters.ui.adapter.IndustryAdapter
 import ru.practicum.android.diploma.util.UiError
 
 class FilterIndustryFragment : Fragment() {
-    private var _binding: FragmentFilterIndustryBinding? = null
+    private var _binding: FragmentIndustryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: FilterIndustryViewModel by viewModel()
     private val adapter = IndustryAdapter { industry ->
@@ -32,7 +32,7 @@ class FilterIndustryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentFilterIndustryBinding.inflate(inflater, container, false)
+        _binding = FragmentIndustryBinding.inflate(inflater, container, false)
         return binding.root
     }
 

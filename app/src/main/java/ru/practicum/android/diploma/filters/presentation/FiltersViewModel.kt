@@ -5,27 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.practicum.android.diploma.domain.models.FilterIndustry
-import ru.practicum.android.diploma.filters.domain.api.FilterInteractor
-import ru.practicum.android.diploma.filters.domain.api.IndustryInteractor
 import ru.practicum.android.diploma.filters.domain.api.FiltersInteractor
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
 
 class FiltersViewModel(
-    private val filterInteractor: FilterInteractor,
-    private val industryInteractor: IndustryInteractor
     private val filtersInteractor: FiltersInteractor
 ) : ViewModel() {
     private val _filtersState = MutableLiveData<FilterScreenState>(FilterScreenState())
     val filtersState: LiveData<FilterScreenState> = _filtersState
 
-    private val _filtersState = MutableLiveData<FiltersScreenState>()
-    val filtersState: LiveData<FiltersScreenState> = _filtersState
-
-    private var industriesCache: List<FilterIndustry>? = null
-
     init {
-        loadFilters()
         loadSavedFilters()
     }
 
@@ -42,12 +31,10 @@ class FiltersViewModel(
         }
     }
 
-    private fun loadFilters() {
-        val filters = filterInteractor.getFilters() ?: DEFAULT_FILTERS
-        _filtersState.value = FiltersScreenState(filters)
-        if (filters.industry != null) {
-            loadIndustryName(filters.industry)
-        }
+    fun updateIndustry(industry: ru.practicum.android.diploma.domain.models.FilterIndustry?) {
+        updateState { it.copy(industry = industry) }
+    }
+
     fun updateSalary(salary: Int?) {
         updateState { it.copy(salary = salary) }
     }
@@ -56,12 +43,6 @@ class FiltersViewModel(
         updateState { it.copy(onlyWithSalary = onlyWithSalary) }
     }
 
-    private fun loadIndustryName(industryId: Int) {
-        // Используем кеш, если он есть
-        industriesCache?.let { industries ->
-            val industry = industries.find { it.id == industryId }
-            updateIndustryName(industry?.name)
-            return
     fun applyFilters() {
         val state = _filtersState.value ?: return
         viewModelScope.launch {
@@ -75,18 +56,9 @@ class FiltersViewModel(
         }
     }
 
-        // Загружаем отрасли, если кеша нет
     fun clearSelection() {
         _filtersState.value = FilterScreenState()
         viewModelScope.launch {
-            industryInteractor.getIndustries().collect { result ->
-                result.fold(
-                    onSuccess = { industries ->
-                        industriesCache = industries
-                        val industry = industries.find { it.id == industryId }
-                        updateIndustryName(industry?.name)
-                    },
-                    onFailure = { }
             filtersInteractor.resetFilterSettings()
         }
     }
@@ -104,37 +76,14 @@ class FiltersViewModel(
         }
     }
 
-    private fun updateIndustryName(industryName: String?) {
-        val currentState = _filtersState.value ?: return
-        _filtersState.value = currentState.copy(industryName = industryName)
-    }
     // --- Internal logic ---
 
-    fun saveIndustry(industry: FilterIndustry) {
-        val currentFilters = filterInteractor.getFilters() ?: DEFAULT_FILTERS
-        val updatedFilters = currentFilters.copy(industry = industry.id)
-        filterInteractor.saveFilters(updatedFilters)
-        _filtersState.value = FiltersScreenState(
-            filters = updatedFilters,
-            industryName = industry.name
-        )
     private inline fun updateState(update: (FilterScreenState) -> FilterScreenState) {
         val current = _filtersState.value ?: FilterScreenState()
         _filtersState.value = update(current)
     }
 
     companion object {
-        private val DEFAULT_FILTERS = FiltersParameters(
-            salary = null,
-            onlyWithSalary = false,
-            industry = null,
-            area = null
-        )
         private const val TAG = "FiltersViewModel"
     }
 }
-
-data class FiltersScreenState(
-    val filters: FiltersParameters,
-    val industryName: String? = null
-)

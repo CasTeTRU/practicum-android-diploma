@@ -26,7 +26,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <EditText
-        android:id="@+id/search_industry"
+        android:id="@+id/searchIndustry"
         style="@style/SearchField"
         android:layout_width="match_parent"
         android:layout_height="@dimen/search_field_height"
@@ -38,26 +38,28 @@
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout" />
 
     <ImageView
-        android:id="@+id/search_icon"
+        android:id="@+id/searchFieldIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_medium"
         android:src="@drawable/ic_search"
+        android:contentDescription=""
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/search_industry"
-        app:layout_constraintEnd_toEndOf="@+id/search_industry"
-        app:layout_constraintTop_toTopOf="@+id/search_industry" />
+        app:layout_constraintBottom_toBottomOf="@+id/searchIndustry"
+        app:layout_constraintEnd_toEndOf="@+id/searchIndustry"
+        app:layout_constraintTop_toTopOf="@+id/searchIndustry" />
 
     <ImageView
-        android:id="@+id/clear_icon"
+        android:id="@+id/clearIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_medium"
         android:src="@drawable/ic_close"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/search_industry"
-        app:layout_constraintEnd_toEndOf="@+id/search_industry"
-        app:layout_constraintTop_toTopOf="@+id/search_industry" />
+        android:contentDescription=""
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/searchIndustry"
+        app:layout_constraintEnd_toEndOf="@+id/searchIndustry"
+        app:layout_constraintTop_toTopOf="@+id/searchIndustry" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -70,9 +72,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_industry"
-        app:layout_constraintBottom_toTopOf="@id/apply_button"
-        tools:listitem="@layout/industry_view"
+        app:layout_constraintTop_toBottomOf="@+id/searchIndustry"
+        app:layout_constraintBottom_toTopOf="@id/applyButton"
+        tools:listitem="@layout/item_industry"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -97,11 +99,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_industry"
+        app:layout_constraintTop_toBottomOf="@+id/searchIndustry"
         tools:visibility="invisible" />
 
     <Button
-        android:id="@+id/apply_button"
+        android:id="@+id/applyButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/reset_button_height"
         android:layout_marginHorizontal="@dimen/padding_medium"
