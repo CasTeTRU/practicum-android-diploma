@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.search.data
 
+import android.util.Log
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -41,8 +42,10 @@ class SearchRepositoryImpl(
                         val domain = vacancyResponse.toDomain()
                         emit(Result.success(domain))
                     } catch (t: IllegalArgumentException) {
+                        Log.e(TAG, "Failed to map vacancy response", t)
                         emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     } catch (e: JsonSyntaxException) {
+                        Log.e(TAG, "Failed to parse vacancy response JSON", e)
                         emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     }
                 } else {
@@ -51,5 +54,9 @@ class SearchRepositoryImpl(
             }
             else -> emit(Result.failure(ApiError(response.resultCode)))
         }
+    }
+
+    companion object {
+        private const val TAG = "SearchRepositoryImpl"
     }
 }
