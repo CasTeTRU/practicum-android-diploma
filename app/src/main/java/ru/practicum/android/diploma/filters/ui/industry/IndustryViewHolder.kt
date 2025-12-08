@@ -9,14 +9,10 @@ import ru.practicum.android.diploma.domain.models.FilterIndustry
 class IndustryViewHolder(
     private val binding: IndustryViewBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: FilterIndustry) {
-        with(binding) {
-            industryText.text = item.name
-        }
-    }
 
-    fun check(status: Boolean = true) {
-        binding.industryButton.isChecked = status
+    fun bind(item: FilterIndustry, isSelected: Boolean) {
+        binding.industryText.text = item.name
+        binding.industryButton.isChecked = isSelected
     }
 
     companion object {

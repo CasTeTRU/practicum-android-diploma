@@ -13,7 +13,7 @@ import ru.practicum.android.diploma.filters.presentation.IndustryViewModel
 
 val filtersModule = module {
 
-    single<FiltersStorage> { FiltersStorageImpl(get(),get()) }
+    single<FiltersStorage> { FiltersStorageImpl(get(), get()) }
 
     single<FiltersRepository> { FiltersRepositoryImpl(get(), get()) }
 

@@ -10,7 +10,6 @@ class IndustryAdapter(
 ) : ListAdapter<FilterIndustry, IndustryViewHolder>(IndustryDiffCallback()) {
     private var selectedId: Int? = null
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndustryViewHolder =
         IndustryViewHolder.from(parent)
 
@@ -18,17 +17,11 @@ class IndustryAdapter(
         val industry = getItem(position)
         val isSelected = industry.id == selectedId
 
-        holder.bind(industry)
-        holder.check(isSelected)
+        holder.bind(industry, isSelected)
 
         holder.itemView.setOnClickListener {
-            // обновляем selection через публичный метод (чтобы логика консистентна)
             val oldSelectedId = selectedId
-            if (oldSelectedId == industry.id) {
-                // toggle off
-                updateSelectedId(null)
-                clickListener.onIndustryClick(industry) // всё ещё сообщаем о клике
-            } else {
+            if (oldSelectedId != industry.id) {
                 updateSelectedId(industry.id)
                 clickListener.onIndustryClick(industry)
             }
