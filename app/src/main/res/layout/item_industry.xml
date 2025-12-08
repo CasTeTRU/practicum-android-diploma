@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/android:colorBackground">
+
+    <TextView
+        android:id="@+id/industry_text"
+        style="@style/RegularTextMedium"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginEnd="@dimen/toolbar_height"
+        android:paddingVertical="@dimen/margin_medium"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:ellipsize="end"
+        android:maxLines="2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/empty_list" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/industry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/radio_button_selected"
+        android:buttonTintMode="add"
+        android:checked="false"
+        android:clickable="false"
+        android:foregroundTint="#0000"
+        app:layout_constraintBottom_toBottomOf="@id/industry_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/industry_text"
+        app:layout_constraintVertical_bias="0.448"
+        app:useMaterialThemeColors="false" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

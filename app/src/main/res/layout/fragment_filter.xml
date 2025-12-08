@@ -64,15 +64,27 @@
             android:ellipsize="end"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageButton
-        android:id="@+id/industry_btn"
-        style = "@style/FilterRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/to_filter_industry"
+        style="@style/SearchIconButton"
+        android:visibility="gone"
         android:src="@drawable/ic_arrow_forward"
+        app:tint="?attr/colorOnBackground"
+        app:layout_constraintTop_toTopOf="@id/til_industry"
         app:layout_constraintBottom_toBottomOf="@id/til_industry"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"
-        app:layout_constraintTop_toTopOf="@id/til_industry" />
+        tools:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/clear_industry"
+        style="@style/SearchIconButton"
+        android:visibility="gone"
+        android:src="@drawable/ic_close"
+        app:tint="?attr/colorOnBackground"
+        app:layout_constraintTop_toTopOf="@id/til_industry"
+        app:layout_constraintBottom_toBottomOf="@id/til_industry"
+        app:layout_constraintEnd_toEndOf="@id/rightBorder"
+        tools:visibility="gone"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/expected_salary_container"
@@ -136,6 +148,7 @@
         android:background="@drawable/bg_search_info"
         android:text="@string/apply"
         android:textAllCaps="false"
+        android:textColor="@color/white_day"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/reset_button"
         app:layout_constraintEnd_toEndOf="@id/rightBorder"

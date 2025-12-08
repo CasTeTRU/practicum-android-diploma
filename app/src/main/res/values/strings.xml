@@ -51,6 +51,7 @@
     <string name="enter_industry">Введите отрасль</string>
     <string name="no_list">Не удалось получить\nсписок</string>
     <string name="choose">Выбрать</string>
+    <string name="empty_list">Список пуст</string>
 
     <string name="developer_one">Константин Галкин</string>
     <string name="developer_two">Айнур Тимербаев</string>
