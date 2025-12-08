@@ -44,8 +44,8 @@ class FiltersViewModel(
                         onlyWithSalary = state.onlyWithSalary
                     )
                 )
-            } catch (t: Throwable) {
-                Log.w(TAG, "applyFilters failed", t)
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "applyFilters failed", e)
                 updateState { it.copy(error = UiError.Unknown(0)) }
             }
         }
@@ -69,8 +69,8 @@ class FiltersViewModel(
                         onlyWithSalary = savedFilters.onlyWithSalary
                     )
                 }
-            } catch (t: Throwable) {
-                Log.w(TAG, "loadSavedIndustry failed", t)
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "loadSavedIndustry failed", e)
                 _filtersState.value = FilterScreenState(error = UiError.Unknown(0))
             }
         }

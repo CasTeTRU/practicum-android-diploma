@@ -39,8 +39,8 @@ class SearchViewModel(
                 val savedFilters = filtersInteractor.getFilterSettings()
                 val hasFilters = savedFilters.industry != null || savedFilters.salary != null || savedFilters.onlyWithSalary
                 updateState { it.copy(hasFilters = hasFilters) }
-            } catch (t: Throwable) {
-                Log.w(TAG, "loadSavedIndustry failed", t)
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "loadSavedIndustry failed", e)
                 updateState { it.copy(error = UiError.Unknown(0)) }
             }
         }
