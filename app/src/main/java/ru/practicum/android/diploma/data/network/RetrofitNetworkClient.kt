@@ -8,6 +8,7 @@ import ru.practicum.android.diploma.data.ResponseCodes
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
+import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
 import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
 import ru.practicum.android.diploma.util.NetworkManager
 import java.io.IOException
@@ -54,8 +55,41 @@ class RetrofitNetworkClient(
     override suspend fun getAreas() =
         safeApiCall { apiService.getAreas() }
 
-    override suspend fun getIndustries() =
-        safeApiCall { apiService.getIndustries() }
+    override suspend fun getAreas(): NetworkResponse {
+        if (!networkManager.isConnected()) {
+            return NetworkResponse().apply { resultCode = ResponceCodes.ERROR_NO_INTERNET }
+        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = apiService.getAreas()
+                response.apply { resultCode = ResponceCodes.SUCCESS_STATUS }
+            } catch (e: HttpException) {
+                Log.e(TAG, e.stackTraceToString())
+                NetworkResponse().apply { resultCode = e.code() }
+            } catch (e: IOException) {
+                Log.e(TAG, e.stackTraceToString())
+                NetworkResponse().apply { resultCode = ResponceCodes.IO_EXCEPTION }
+            }
+        }
+    }
+
+    override suspend fun getIndustries(): NetworkResponse {
+        if (!networkManager.isConnected()) {
+            return NetworkResponse().apply { resultCode = ResponceCodes.ERROR_NO_INTERNET }
+        }
+        return withContext(Dispatchers.IO) {
+            try {
+                val industriesList = apiService.getIndustries()
+                IndustriesResponse(industries = industriesList).apply { resultCode = ResponceCodes.SUCCESS_STATUS }
+            } catch (e: HttpException) {
+                Log.e(TAG, e.stackTraceToString())
+                NetworkResponse().apply { resultCode = e.code() }
+            } catch (e: IOException) {
+                Log.e(TAG, e.stackTraceToString())
+                NetworkResponse().apply { resultCode = ResponceCodes.IO_EXCEPTION }
+            }
+        }
+    }
 
     companion object {
         const val TAG = "RETROFIT_NETWORK_CLIENT"
