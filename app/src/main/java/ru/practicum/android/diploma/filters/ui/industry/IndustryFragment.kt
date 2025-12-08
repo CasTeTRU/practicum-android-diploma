@@ -178,6 +178,6 @@ class IndustryFragment : Fragment() {
     }
 
     companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 300L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
