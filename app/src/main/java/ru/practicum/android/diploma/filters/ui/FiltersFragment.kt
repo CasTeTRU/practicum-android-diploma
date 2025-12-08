@@ -52,7 +52,6 @@ class FiltersFragment : Fragment() {
         setFragmentResultListener(REQUEST_KEY_INDUSTRY_SELECTED) { _, bundle ->
             val industryId = bundle.getInt(KEY_INDUSTRY_ID)
             val industryName = bundle.getString(KEY_INDUSTRY_NAME)
-            
             industryName?.let { name ->
                 viewModel.saveIndustry(
                     ru.practicum.android.diploma.domain.models.FilterIndustry(
