@@ -12,7 +12,14 @@ import ru.practicum.android.diploma.filters.domain.api.IndustryRepository
 import ru.practicum.android.diploma.filters.domain.impl.FilterInteractorImpl
 import ru.practicum.android.diploma.filters.domain.impl.IndustryInteractorImpl
 import ru.practicum.android.diploma.filters.presentation.FilterIndustryViewModel
+import ru.practicum.android.diploma.filters.data.FiltersRepositoryImpl
+import ru.practicum.android.diploma.filters.data.FiltersStorageImpl
+import ru.practicum.android.diploma.filters.domain.api.FiltersInteractor
+import ru.practicum.android.diploma.filters.domain.api.FiltersRepository
+import ru.practicum.android.diploma.filters.domain.api.FiltersStorage
+import ru.practicum.android.diploma.filters.domain.impl.FiltersInteractorImpl
 import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
+import ru.practicum.android.diploma.filters.presentation.IndustryViewModel
 
 val filtersModule = module {
     single { FilterStorage(get(), get()) }
@@ -22,4 +29,15 @@ val filtersModule = module {
     single<IndustryInteractor> { IndustryInteractorImpl(get()) }
     viewModel { FilterIndustryViewModel(get(), get()) }
     viewModel { FiltersViewModel(get(), get()) }
+
+    single<FiltersStorage> { FiltersStorageImpl(get(), get()) }
+
+    single<FiltersRepository> { FiltersRepositoryImpl(get(), get()) }
+
+    single<FiltersStorage> { FiltersStorageImpl(get(), get()) }
+
+    single<FiltersInteractor> { FiltersInteractorImpl(get()) }
+
+    viewModel { FiltersViewModel(get()) }
+    viewModel { IndustryViewModel(get()) }
 }

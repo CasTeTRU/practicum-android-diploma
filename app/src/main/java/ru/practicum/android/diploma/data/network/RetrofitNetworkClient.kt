@@ -4,11 +4,12 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import ru.practicum.android.diploma.data.ResponceCodes
+import ru.practicum.android.diploma.data.ResponseCodes
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
 import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
+import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
 import ru.practicum.android.diploma.util.NetworkManager
 import java.io.IOException
 
@@ -16,50 +17,43 @@ class RetrofitNetworkClient(
     private val apiService: ApiService,
     private val networkManager: NetworkManager
 ) : NetworkClient {
-    override suspend fun findVacancies(dto: VacanciesSearchRequest): NetworkResponse {
+    private suspend fun <T> safeApiCall(apiCall: suspend () -> T): NetworkResponse<T> {
         if (!networkManager.isConnected()) {
-            return NetworkResponse().apply { resultCode = ResponceCodes.ERROR_NO_INTERNET }
+            return NetworkResponse<T>(resultCode = ResponseCodes.ERROR_NO_INTERNET)
         }
 
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.findVacancies(
-                    dto.query,
-                    dto.area,
-                    dto.salary,
-                    dto.industry,
-                    dto.page,
-                    dto.onlyWithSalary
+                val response = apiCall()
+                NetworkResponse(
+                    data = response,
+                    resultCode = ResponseCodes.SUCCESS_STATUS
                 )
-                response.apply { resultCode = ResponceCodes.SUCCESS_STATUS }
             } catch (e: HttpException) {
                 Log.e(TAG, e.stackTraceToString())
-                NetworkResponse().apply { resultCode = e.code() }
+                NetworkResponse<T>(resultCode = e.code())
             } catch (e: IOException) {
                 Log.e(TAG, e.stackTraceToString())
-                NetworkResponse().apply { resultCode = ResponceCodes.IO_EXCEPTION }
+                NetworkResponse<T>(resultCode = ResponseCodes.IO_EXCEPTION)
             }
         }
     }
 
-    override suspend fun getVacancyById(dto: VacancyByIdRequest): NetworkResponse {
-        if (!networkManager.isConnected()) {
-            return NetworkResponse().apply { resultCode = ResponceCodes.ERROR_NO_INTERNET }
-        }
+    override suspend fun findVacancies(dto: VacanciesSearchRequest): NetworkResponse<VacanciesSearchResponse> =
+        safeApiCall { apiService.findVacancies(
+            dto.query,
+            dto.area,
+            dto.salary,
+            dto.industry,
+            dto.page,
+            dto.onlyWithSalary
+        ) }
 
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = apiService.getVacancyById(dto.id)
-                response.apply { resultCode = ResponceCodes.SUCCESS_STATUS }
-            } catch (e: HttpException) {
-                Log.e(TAG, e.stackTraceToString())
-                NetworkResponse().apply { resultCode = e.code() }
-            } catch (e: IOException) {
-                Log.e(TAG, e.stackTraceToString())
-                NetworkResponse().apply { resultCode = ResponceCodes.IO_EXCEPTION }
-            }
-        }
-    }
+    override suspend fun getVacancyById(dto: VacancyByIdRequest) =
+        safeApiCall { apiService.getVacancyById(dto.id) }
+
+    override suspend fun getAreas() =
+        safeApiCall { apiService.getAreas() }
 
     override suspend fun getAreas(): NetworkResponse {
         if (!networkManager.isConnected()) {
@@ -96,6 +90,8 @@ class RetrofitNetworkClient(
             }
         }
     }
+    override suspend fun getIndustries() =
+        safeApiCall { apiService.getIndustries() }
 
     companion object {
         const val TAG = "RETROFIT_NETWORK_CLIENT"

@@ -8,12 +8,16 @@ import kotlinx.coroutines.launch
 import ru.practicum.android.diploma.domain.models.FilterIndustry
 import ru.practicum.android.diploma.filters.domain.api.FilterInteractor
 import ru.practicum.android.diploma.filters.domain.api.IndustryInteractor
+import ru.practicum.android.diploma.filters.domain.api.FiltersInteractor
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
 
 class FiltersViewModel(
     private val filterInteractor: FilterInteractor,
     private val industryInteractor: IndustryInteractor
+    private val filtersInteractor: FiltersInteractor
 ) : ViewModel() {
+    private val _filtersState = MutableLiveData<FilterScreenState>(FilterScreenState())
+    val filtersState: LiveData<FilterScreenState> = _filtersState
 
     private val _filtersState = MutableLiveData<FiltersScreenState>()
     val filtersState: LiveData<FiltersScreenState> = _filtersState
@@ -22,6 +26,20 @@ class FiltersViewModel(
 
     init {
         loadFilters()
+        loadSavedFilters()
+    }
+
+    fun restorePreviousState() {
+        viewModelScope.launch {
+            filtersInteractor.restorePreviousState()
+        }
+    }
+
+    fun clearIndustry() {
+        updateState { it.copy(industry = null) }
+        viewModelScope.launch {
+            filtersInteractor.clearIndustry()
+        }
     }
 
     private fun loadFilters() {
@@ -30,6 +48,12 @@ class FiltersViewModel(
         if (filters.industry != null) {
             loadIndustryName(filters.industry)
         }
+    fun updateSalary(salary: Int?) {
+        updateState { it.copy(salary = salary) }
+    }
+
+    fun updateOnlyWithSalary(onlyWithSalary: Boolean) {
+        updateState { it.copy(onlyWithSalary = onlyWithSalary) }
     }
 
     private fun loadIndustryName(industryId: Int) {
@@ -38,9 +62,22 @@ class FiltersViewModel(
             val industry = industries.find { it.id == industryId }
             updateIndustryName(industry?.name)
             return
+    fun applyFilters() {
+        val state = _filtersState.value ?: return
+        viewModelScope.launch {
+            filtersInteractor.saveFilterSettings(
+                FiltersParameters(
+                    industry = state.industry,
+                    salary = state.salary,
+                    onlyWithSalary = state.onlyWithSalary
+                )
+            )
         }
+    }
 
         // Загружаем отрасли, если кеша нет
+    fun clearSelection() {
+        _filtersState.value = FilterScreenState()
         viewModelScope.launch {
             industryInteractor.getIndustries().collect { result ->
                 result.fold(
@@ -50,6 +87,18 @@ class FiltersViewModel(
                         updateIndustryName(industry?.name)
                     },
                     onFailure = { }
+            filtersInteractor.resetFilterSettings()
+        }
+    }
+
+    fun loadSavedFilters() {
+        viewModelScope.launch {
+            val savedFilters = filtersInteractor.getFilterSettings()
+            updateState {
+                it.copy(
+                    industry = savedFilters.industry,
+                    salary = savedFilters.salary,
+                    onlyWithSalary = savedFilters.onlyWithSalary
                 )
             }
         }
@@ -59,6 +108,7 @@ class FiltersViewModel(
         val currentState = _filtersState.value ?: return
         _filtersState.value = currentState.copy(industryName = industryName)
     }
+    // --- Internal logic ---
 
     fun saveIndustry(industry: FilterIndustry) {
         val currentFilters = filterInteractor.getFilters() ?: DEFAULT_FILTERS
@@ -68,6 +118,9 @@ class FiltersViewModel(
             filters = updatedFilters,
             industryName = industry.name
         )
+    private inline fun updateState(update: (FilterScreenState) -> FilterScreenState) {
+        val current = _filtersState.value ?: FilterScreenState()
+        _filtersState.value = update(current)
     }
 
     companion object {
@@ -77,6 +130,7 @@ class FiltersViewModel(
             industry = null,
             area = null
         )
+        private const val TAG = "FiltersViewModel"
     }
 }
 

@@ -52,6 +52,7 @@
         tools:layout="@layout/fragment_filter_industry">
     </fragment>
 
+
     <fragment
         android:id="@+id/vacancyFragment"
         android:name="ru.practicum.android.diploma.vacancy.ui.VacancyFragment"
