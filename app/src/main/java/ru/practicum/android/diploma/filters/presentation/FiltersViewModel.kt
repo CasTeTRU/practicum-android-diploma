@@ -71,8 +71,6 @@ class FiltersViewModel(
         )
     }
 
-    fun getFilters(): FiltersParameters? = filterInteractor.getFilters()
-
     companion object {
         private val DEFAULT_FILTERS = FiltersParameters(
             salary = null,

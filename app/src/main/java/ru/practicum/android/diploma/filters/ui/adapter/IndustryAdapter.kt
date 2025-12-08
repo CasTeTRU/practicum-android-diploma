@@ -24,6 +24,7 @@ class IndustryAdapter(
 
     override fun onBindViewHolder(holder: IndustryViewHolder, position: Int) {
         val industry = getItem(position)
+
         val isSelected = industry.id == selectedIndustryId
         holder.bind(industry, isSelected)
     }
