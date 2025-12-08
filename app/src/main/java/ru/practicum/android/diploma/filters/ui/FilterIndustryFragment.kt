@@ -150,7 +150,7 @@ class FilterIndustryFragment : Fragment() {
         binding.errorPlaceholder.visibility = View.VISIBLE
         binding.errorPlaceholder.text = when (error) {
             UiError.NoInternet -> getString(R.string.error_no_internet)
-            UiError.ServerError -> getString(R.string.error_server)
+            UiError.ServerError -> getString(R.string.no_list)
             UiError.NothingFound -> getString(R.string.error_nothing_found)
             is UiError.Unknown -> getString(R.string.error_server)
         }
