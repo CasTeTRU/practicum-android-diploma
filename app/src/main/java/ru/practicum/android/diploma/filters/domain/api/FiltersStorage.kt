@@ -20,15 +20,4 @@ interface FiltersStorage {
     fun getIndustry(): FilterIndustry?
     fun saveIndustry(industry: FilterIndustry)
     fun clearIndustry()
-
-    fun getSalary(): Int?
-    fun saveSalary(salary: Int?)
-    fun clearSalary()
-
-    fun getArea(): String?
-    fun saveArea(area: String?)
-    fun clearArea()
-
-    fun getOnlyWithSalary(): Boolean
-    fun saveOnlyWithSalary(onlyWithSalary: Boolean)
 }

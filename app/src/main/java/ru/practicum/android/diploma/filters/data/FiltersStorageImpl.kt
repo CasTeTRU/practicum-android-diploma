@@ -56,26 +56,6 @@ class FiltersStorageImpl(
         updateState { copy(industry = null) }
     }
 
-    override fun saveSalary(salary: Int?) {
-        updateState { copy(salary = salary) }
-    }
-
-    override fun clearSalary() {
-        updateState { copy(salary = null) }
-    }
-
-    override fun saveArea(area: String?) {
-        updateState { copy(area = area) }
-    }
-
-    override fun clearArea() {
-        updateState { copy(area = null) }
-    }
-
-    override fun saveOnlyWithSalary(onlyWithSalary: Boolean) {
-        updateState { copy(onlyWithSalary = onlyWithSalary) }
-    }
-
     // Метод отката к предыдущему состоянию
     override fun restorePreviousState() {
         prevState?.let {
@@ -86,15 +66,11 @@ class FiltersStorageImpl(
     }
 
     override fun clearFilterSettings() {
-        prevState = currentState.copy()
+        prevState = null
         saveState(defaultFilters())
     }
 
-    // Геттеры остаются такими же
     override fun getIndustry(): FilterIndustry? = currentState.industry
-    override fun getSalary(): Int? = currentState.salary
-    override fun getArea(): String? = currentState.area
-    override fun getOnlyWithSalary(): Boolean = currentState.onlyWithSalary
 
     private companion object {
         const val FILTER_SETTINGS_KEY = "filters_parameters"
