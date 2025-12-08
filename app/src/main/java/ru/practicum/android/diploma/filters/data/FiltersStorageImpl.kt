@@ -78,3 +78,4 @@ class FiltersStorageImpl(
         const val FILTER_SETTINGS_KEY = "filters_parameters"
     }
 }
+//fixed

@@ -1,62 +1,88 @@
-package ru.practicum.android.diploma.search.data
+package ru.practicum.android.diploma.filters.presentation
 
-import android.util.Log
-import com.google.gson.JsonSyntaxException
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import ru.practicum.android.diploma.data.ApiError
-import ru.practicum.android.diploma.data.ResponseCodes
-import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
-import ru.practicum.android.diploma.data.network.NetworkClient
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import ru.practicum.android.diploma.filters.domain.api.FiltersInteractor
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
-import ru.practicum.android.diploma.search.data.mapper.toDomain
-import ru.practicum.android.diploma.search.domain.api.SearchRepository
-import ru.practicum.android.diploma.search.domain.models.VacanciesPage
 
-class SearchRepositoryImpl(
-    private val networkClient: NetworkClient
-) : SearchRepository {
-    override suspend fun getVacancies(
-        query: String,
-        page: Int,
-        filters: FiltersParameters?
-    ): Flow<Result<VacanciesPage>> = flow {
-        val vacancySearchRequest = VacanciesSearchRequest(
-            query = query,
-            area = filters?.area,
-            salary = filters?.salary,
-            industry = filters?.industry?.id,
-            page = page,
-            onlyWithSalary = filters?.onlyWithSalary ?: false
-        )
-        val response = networkClient.findVacancies(vacancySearchRequest)
+class FiltersViewModel(
+    private val filtersInteractor: FiltersInteractor
+) : ViewModel() {
 
-        when (response.resultCode) {
-            ResponseCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponseCodes.ERROR_NO_INTERNET)))
-            ResponseCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponseCodes.IO_EXCEPTION)))
-            ResponseCodes.SUCCESS_STATUS -> {
-                val vacancyResponse = response.data
+    private val _filtersState = MutableLiveData<FilterScreenState>(FilterScreenState())
+    val filtersState: LiveData<FilterScreenState> = _filtersState
 
-                if (vacancyResponse?.items !== null) {
-                    try {
-                        val domain = vacancyResponse.toDomain()
-                        emit(Result.success(domain))
-                    } catch (t: IllegalArgumentException) {
-                        Log.d(TAG_SEARCH_RESPONSE, "$vacancyResponse", t)
-                        // Если маппер упал по какой-то причине
-                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
-                    } catch (e: JsonSyntaxException) {
-                        Log.d(TAG_SEARCH_RESPONSE, "$vacancyResponse", e)
-                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
-                    }
-                } else {
-                    emit(Result.failure(ApiError(ResponseCodes.NOTHING_FOUND)))
-                }
-            }
-            else -> emit(Result.failure(ApiError(response.resultCode)))
+    init {
+        loadSavedFilters()
+    }
+
+    // --- Public API ---
+
+    fun restorePreviousState() {
+        viewModelScope.launch {
+            filtersInteractor.restorePreviousState()
         }
     }
+
+    fun clearIndustry() {
+        updateState { it.copy(industry = null) }
+        viewModelScope.launch {
+            filtersInteractor.clearIndustry()
+        }
+    }
+
+    fun updateSalary(salary: Int?) {
+        updateState { it.copy(salary = salary) }
+    }
+
+    fun updateOnlyWithSalary(onlyWithSalary: Boolean) {
+        updateState { it.copy(onlyWithSalary = onlyWithSalary) }
+    }
+
+    fun applyFilters() {
+        val state = _filtersState.value ?: return
+        val newFilters = FiltersParameters(
+            industry = state.industry,
+            salary = state.salary,
+            onlyWithSalary = state.onlyWithSalary
+        )
+
+        viewModelScope.launch {
+            filtersInteractor.saveFilterSettings(newFilters)
+        }
+    }
+
+    fun clearSelection() {
+        _filtersState.value = FilterScreenState()
+        viewModelScope.launch {
+            filtersInteractor.resetFilterSettings()
+        }
+    }
+
+    fun loadSavedFilters() {
+        viewModelScope.launch {
+            val savedFilters = filtersInteractor.getFilterSettings()
+            updateState {
+                it.copy(
+                    industry = savedFilters.industry,
+                    salary = savedFilters.salary,
+                    onlyWithSalary = savedFilters.onlyWithSalary
+                )
+            }
+        }
+    }
+
+    // --- Internal logic ---
+
+    private inline fun updateState(update: (FilterScreenState) -> FilterScreenState) {
+        val current = _filtersState.value ?: FilterScreenState()
+        _filtersState.value = update(current)
+    }
+
     companion object {
-        const val TAG_SEARCH_RESPONSE = "SearchRepositoryImpl"
+        private const val TAG = "FiltersViewModel"
     }
 }
