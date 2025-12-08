@@ -38,10 +38,17 @@ class RetrofitNetworkClient(
         }
     }
 
-    override suspend fun findVacancies(dto: VacanciesSearchRequest): NetworkResponse<VacanciesSearchResponse>  =
-        safeApiCall { apiService.findVacancies(dto.query, dto.area, dto.salary, dto.industry, dto.page, dto.onlyWithSalary) }
+    override suspend fun findVacancies(dto: VacanciesSearchRequest): NetworkResponse<VacanciesSearchResponse> =
+        safeApiCall { apiService.findVacancies(
+            dto.query,
+            dto.area,
+            dto.salary,
+            dto.industry,
+            dto.page,
+            dto.onlyWithSalary
+        ) }
 
-    override suspend fun getVacancyById(dto: VacancyByIdRequest)  =
+    override suspend fun getVacancyById(dto: VacancyByIdRequest) =
         safeApiCall { apiService.getVacancyById(dto.id) }
 
     override suspend fun getAreas() =

@@ -66,13 +66,11 @@ class IndustryFragment : Fragment() {
             viewModel.applySelection()
             findNavController().popBackStack()
         }
-        applyButton.hide()
     }
 
     private fun setupClearIcon() = with(binding) {
         clearIcon.setOnClickListener {
             searchIndustry.setText("")
-            updateClearButtonVisibility("")
             viewModel.onSearchInput("")
         }
     }
@@ -87,26 +85,18 @@ class IndustryFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val currentText = s?.toString() ?: ""
                 viewModel.onSearchInput(currentText)
-                updateClearButtonVisibility(currentText)
+                binding.clearIcon.showIf(currentText.isNotEmpty())
+                binding.searchIcon.showIf(currentText.isEmpty())
             }
         }
 
         textWatcher?.let { binding.searchIndustry.addTextChangedListener(it) }
     }
 
-
-    private fun updateClearButtonVisibility(text: String) = with(binding) {
-        val shouldShowClearButton = text.isNotEmpty()
-
-        searchIcon.showIf(!shouldShowClearButton)
-        clearIcon.showIf(shouldShowClearButton)
-    }
-
     private fun setupRecyclerView() = with(binding) {
         if (recyclerView.layoutManager == null) {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
         }
-        // Recycler View
         recyclerView.adapter = industryAdapter
 
         val initialSelected = viewModel.industryStatusLiveData.value?.selected
@@ -133,18 +123,15 @@ class IndustryFragment : Fragment() {
     private fun render(state: IndustryScreenState): Unit = with(binding) {
         hideAllView()
 
-        // базовые индикаторы
         applyButton.showIf(state.selected != null)
         progressBar.showIf(state.isLoading)
 
         if (state.isLoading) return
 
-        // Контент
         if (state.industryList.isNotEmpty()) {
             renderContent(state.industryList)
         }
 
-        // Ошибки
         state.error?.let { renderError(it) }
     }
 
@@ -191,6 +178,6 @@ class IndustryFragment : Fragment() {
     }
 
     companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY = 300L
     }
 }

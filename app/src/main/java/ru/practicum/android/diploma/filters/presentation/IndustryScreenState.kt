@@ -10,4 +10,3 @@ data class IndustryScreenState(
     val isLoading: Boolean = false,
     val error: UiError? = null
 )
-
