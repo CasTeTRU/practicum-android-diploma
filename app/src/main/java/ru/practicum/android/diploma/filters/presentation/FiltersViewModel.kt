@@ -25,6 +25,14 @@ class FiltersViewModel(
             filtersInteractor.restorePreviousState()
         }
     }
+
+    fun clearIndustry() {
+        updateState { it.copy(industry = null) }
+        viewModelScope.launch {
+            filtersInteractor.clearIndustry()
+        }
+    }
+
     fun updateSalary(salary: Int?) {
         updateState { it.copy(salary = salary) }
     }
@@ -44,7 +52,7 @@ class FiltersViewModel(
                         onlyWithSalary = state.onlyWithSalary
                     )
                 )
-            } catch (e: RuntimeException) {
+            } catch (e: Exception) {
                 Log.w(TAG, "applyFilters failed", e)
                 updateState { it.copy(error = UiError.Unknown(0)) }
             }
@@ -69,8 +77,8 @@ class FiltersViewModel(
                         onlyWithSalary = savedFilters.onlyWithSalary
                     )
                 }
-            } catch (e: RuntimeException) {
-                Log.w(TAG, "loadSavedIndustry failed", e)
+            } catch (e: Exception) {
+                Log.w(TAG, "loadSavedFilters failed", e)
                 _filtersState.value = FilterScreenState(error = UiError.Unknown(0))
             }
         }
@@ -87,4 +95,3 @@ class FiltersViewModel(
         private const val TAG = "FiltersViewModel"
     }
 }
-//fixed
