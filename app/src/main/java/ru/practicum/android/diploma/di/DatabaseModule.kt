@@ -1,5 +1,7 @@
 package ru.practicum.android.diploma.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.room.Room
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -17,4 +19,9 @@ val databaseModule = module {
             .build()
     }
     single { get<AppDatabase>().vacancyDao() }
+
+    single<SharedPreferences> {
+        androidContext()
+            .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
+    }
 }

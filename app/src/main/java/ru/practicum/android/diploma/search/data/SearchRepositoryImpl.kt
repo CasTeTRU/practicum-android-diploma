@@ -5,9 +5,8 @@ import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.ApiError
-import ru.practicum.android.diploma.data.ResponceCodes
+import ru.practicum.android.diploma.data.ResponseCodes
 import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
-import ru.practicum.android.diploma.data.dto.responses.VacanciesSearchResponse
 import ru.practicum.android.diploma.data.network.NetworkClient
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
 import ru.practicum.android.diploma.search.data.mapper.toDomain
@@ -26,17 +25,17 @@ class SearchRepositoryImpl(
             query = query,
             area = filters?.area,
             salary = filters?.salary,
-            industry = filters?.industry,
+            industry = filters?.industry?.id,
             page = page,
             onlyWithSalary = filters?.onlyWithSalary ?: false
         )
         val response = networkClient.findVacancies(vacancySearchRequest)
 
         when (response.resultCode) {
-            ResponceCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponceCodes.ERROR_NO_INTERNET)))
-            ResponceCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponceCodes.IO_EXCEPTION)))
-            ResponceCodes.SUCCESS_STATUS -> {
-                val vacancyResponse = response as? VacanciesSearchResponse
+            ResponseCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponseCodes.ERROR_NO_INTERNET)))
+            ResponseCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponseCodes.IO_EXCEPTION)))
+            ResponseCodes.SUCCESS_STATUS -> {
+                val vacancyResponse = response.data
 
                 if (vacancyResponse?.items !== null) {
                     try {
@@ -45,13 +44,13 @@ class SearchRepositoryImpl(
                     } catch (t: IllegalArgumentException) {
                         Log.d(TAG_SEARCH_RESPONSE, "$vacancyResponse", t)
                         // Если маппер упал по какой-то причине
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     } catch (e: JsonSyntaxException) {
                         Log.d(TAG_SEARCH_RESPONSE, "$vacancyResponse", e)
-                        emit(Result.failure(ApiError(ResponceCodes.MAPPER_EXCEPTION)))
+                        emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     }
                 } else {
-                    emit(Result.failure(ApiError(ResponceCodes.NOTHING_FOUND)))
+                    emit(Result.failure(ApiError(ResponseCodes.NOTHING_FOUND)))
                 }
             }
             else -> emit(Result.failure(ApiError(response.resultCode)))
