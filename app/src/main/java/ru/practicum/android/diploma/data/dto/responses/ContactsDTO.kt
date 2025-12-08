@@ -1,6 +1,6 @@
 package ru.practicum.android.diploma.data.dto.responses
 
-data class ContactsDTO(
+class ContactsDTO(
     val id: String,
     val name: String,
     val email: String,
