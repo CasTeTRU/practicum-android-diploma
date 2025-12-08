@@ -37,23 +37,20 @@ class SearchViewModel(
         viewModelScope.launch {
             try {
                 val savedFilters = filtersInteractor.getFilterSettings()
-                val hasFilters = savedFilters.industry != null ||
-                    savedFilters.salary != null ||
-                    savedFilters.onlyWithSalary
+                val hasFilters = savedFilters.industry != null || savedFilters.salary != null || savedFilters.onlyWithSalary
                 updateState { it.copy(hasFilters = hasFilters) }
-            } catch (e: Exception) {
-                Log.w(TAG, "loadSavedFilters failed", e)
+            } catch (e: RuntimeException) {
+                Log.w(TAG, "loadSavedIndustry failed", e)
                 updateState { it.copy(error = UiError.Unknown(0)) }
             }
         }
     }
 
     fun onQueryChanged(query: String) {
-        val current = _searchStatusLiveData.value ?: SearchScreenState()
-        if (current.query == query) return
+        updateState { cur ->
+            if (cur.query == query) return@updateState cur
 
-        updateState {
-            it.copy(query = query, page = 1, canLoadMore = true, error = null)
+            cur.copy(query = query, page = 1, canLoadMore = true, error = null)
         }
         searchDebounce(query)
     }
@@ -121,7 +118,7 @@ class SearchViewModel(
     private fun handleSuccess(page: VacanciesPage, reset: Boolean) {
         updateState { cur ->
             if (reset && page.vacancies.isEmpty()) {
-                cur.copy(
+                return@updateState cur.copy(
                     vacancies = emptyList(),
                     found = page.found,
                     isLoading = false,
@@ -130,18 +127,18 @@ class SearchViewModel(
                     page = 1,
                     canLoadMore = false
                 )
-            } else {
-                val newList = if (reset) page.vacancies else cur.vacancies + page.vacancies
-                cur.copy(
-                    vacancies = newList,
-                    found = page.found,
-                    isLoading = false,
-                    isFetching = false,
-                    error = null,
-                    page = if (reset) 1 else cur.page + 1,
-                    canLoadMore = page.vacancies.isNotEmpty()
-                )
             }
+
+            val newList = if (reset) page.vacancies else cur.vacancies + page.vacancies
+            cur.copy(
+                vacancies = newList,
+                found = page.found,
+                isLoading = false,
+                isFetching = false,
+                error = null,
+                page = if (reset) 1 else cur.page + 1,
+                canLoadMore = page.vacancies.isNotEmpty()
+            )
         }
     }
 
