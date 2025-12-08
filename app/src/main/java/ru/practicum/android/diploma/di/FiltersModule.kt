@@ -16,16 +16,10 @@ import ru.practicum.android.diploma.filters.presentation.FiltersViewModel
 
 val filtersModule = module {
     single { FilterStorage(get(), get()) }
-    
     single<FilterRepository> { FilterRepositoryImpl(get()) }
-    
     single<FilterInteractor> { FilterInteractorImpl(get()) }
-
     single<IndustryRepository> { IndustryRepositoryImpl(get()) }
-
     single<IndustryInteractor> { IndustryInteractorImpl(get()) }
-
     viewModel { FilterIndustryViewModel(get(), get()) }
-    
     viewModel { FiltersViewModel(get(), get()) }
 }

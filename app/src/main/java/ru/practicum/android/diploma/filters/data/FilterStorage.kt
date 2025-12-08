@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filters.data
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import ru.practicum.android.diploma.filters.domain.models.FiltersParameters
 
@@ -18,6 +19,7 @@ class FilterStorage(
         return try {
             gson.fromJson(json, FiltersParameters::class.java)
         } catch (e: com.google.gson.JsonSyntaxException) {
+            Log.d(TAG, "Failed to parse filters from JSON: $json", e)
             // Если данные повреждены, очищаем их
             clearFilters()
             null
@@ -29,6 +31,7 @@ class FilterStorage(
     }
 
     companion object {
+        private const val TAG = "FilterStorage"
         private const val KEY_FILTERS = "filters_parameters"
     }
 }

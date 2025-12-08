@@ -23,7 +23,9 @@ class FilterIndustryFragment : Fragment() {
     private var _binding: FragmentFilterIndustryBinding? = null
     private val binding get() = _binding!!
     private val viewModel: FilterIndustryViewModel by viewModel()
-    private lateinit var adapter: IndustryAdapter
+    private val adapter = IndustryAdapter { industry ->
+        viewModel.onIndustrySelected(industry)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,10 +47,6 @@ class FilterIndustryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = IndustryAdapter { industry ->
-            viewModel.onIndustrySelected(industry)
-            adapter.setSelectedIndustry(industry.id)
-        }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
     }
@@ -61,8 +59,8 @@ class FilterIndustryFragment : Fragment() {
 
     private fun setupSearchField() {
         binding.searchIndustry.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
             override fun afterTextChanged(s: Editable?) {
                 val query = s?.toString() ?: ""
                 viewModel.filterIndustries(query)
