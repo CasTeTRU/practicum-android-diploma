@@ -8,6 +8,7 @@ import ru.practicum.android.diploma.data.ResponceCodes
 import ru.practicum.android.diploma.data.dto.NetworkResponse
 import ru.practicum.android.diploma.data.dto.requests.VacanciesSearchRequest
 import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
+import ru.practicum.android.diploma.data.dto.responses.IndustriesResponse
 import ru.practicum.android.diploma.util.NetworkManager
 import java.io.IOException
 
@@ -84,8 +85,8 @@ class RetrofitNetworkClient(
         }
         return withContext(Dispatchers.IO) {
             try {
-                val response = apiService.getIndustries()
-                response.apply { resultCode = ResponceCodes.SUCCESS_STATUS }
+                val industriesList = apiService.getIndustries()
+                IndustriesResponse(industries = industriesList).apply { resultCode = ResponceCodes.SUCCESS_STATUS }
             } catch (e: HttpException) {
                 Log.e(TAG, e.stackTraceToString())
                 NetworkResponse().apply { resultCode = e.code() }
