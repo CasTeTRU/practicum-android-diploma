@@ -6,4 +6,54 @@
     <string name="vacancies_search">Поиск вакансий</string>
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
+    <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="error_getting_favorites">Не удалось получить список вакансий</string>
+    <string name="company_logo">Логотип компании</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="job_description">Описание вакансии</string>
+    <string name="key_skills">Ключевые навыки</string>
+    <string name="contacts">Контакты</string>
+    <string name="vacancy_not_found_error">Вакансия не найдена или удалена</string>
+    <string name="needed_experience">Требуемый опыт</string>
+    <string name="share">Поделиться</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="salary_not_specified">Зарплата не указана</string>
+    <string name="salary_from">от %1$s %2$s</string>
+    <string name="salary_to">до %1$s %2$s</string>
+    <string name="salary_from_to">от %1$s до %2$s %3$s</string>
+    <string name="two_params">%1$s, %2$s</string>
+    <string name="who_worked">Над приложением работали</string>
+    <string name="error_no_internet">Нет интернета</string>
+    <string name="error_server">Ошибка сервера</string>
+    <string name="error_nothing_found">Не удалось получить список вакансий</string>
+    <string name="empty_vacancy">Таких вакансий нет</string>
+    <plurals name="vacancies_found">
+        <item quantity="one">Найдена %d вакансия</item>
+        <item quantity="few">Найдено %d вакансии</item>
+        <item quantity="many">Найдено %d вакансий</item>
+        <item quantity="other">Найдено %d вакансий</item>
+    </plurals>
+    <string name="added_to_favorites">Добавлено в избранное</string>
+    <string name="removed_from_favorites">Удалено из избранного</string>
+    <string name="e_mail">E-mail</string>
+    <string name="phone">Телефон</string>
+    <string name="contact_person">Контактное лицо</string>
+    <string name="comment">Комментарий</string>
+    <string name="application_email">Выберите приложение для отправки email</string>
+    <string name="application_call">Выберите приложение для звонка</string>
+
+    <string name="developer_one">Константин Галкин</string>
+    <string name="developer_two">Айнур Тимербаев</string>
+    <string name="developer_three">Рамиль Шагалиев</string>
+
+    <string name="name_vacancy_example">Андроид-разработчик</string>
+    <string name="salary_vacancy_example">от 100 000 ₽</string>
+    <string name="company_name_example">Еда</string>
+    <string name="company_city_example">Москва</string>
+    <string name="needed_experience_example">От 1 года до 3 лет</string>
+    <string name="employment_type_example">Полная занятость, Удаленная работа</string>
+    <string name="full_description_with_formatting_example">Полное описание с форматированием</string>
+    <string name="key_skills_example">Знание классических алгоритмов и структуры данных Программирование для Android больше одного года Знание WebRTC</string>
+    <string name="no_experience_required">Опыт работы не требуется</string>
+
 </resources>

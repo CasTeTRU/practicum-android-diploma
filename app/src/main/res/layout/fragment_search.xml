@@ -15,4 +15,104 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/vacancies_search" />
 
+    <FrameLayout
+        android:id="@+id/searchRoot"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/padding_medium"
+        android:layout_marginVertical="@dimen/padding_small"
+        android:layout_height="@dimen/search_field_height"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/searchField"
+            style="@style/SearchField"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_search_placeholder"
+            android:gravity="center_vertical|start"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="56dp"
+            android:inputType="text|textNoSuggestions"
+            android:singleLine="true"/>
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            style="@style/SearchIconButton"
+            android:src="@drawable/ic_search" />
+
+        <ImageView
+            android:id="@+id/clearIcon"
+            style="@style/SearchIconButton"
+            android:src="@drawable/ic_close"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/ProgressBar"
+        android:layout_marginVertical="@dimen/padding_small"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        tools:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/padding_small"
+        android:clipToPadding="false"
+        android:paddingTop="50dp"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchRoot"
+        tools:itemCount="5"
+        tools:listitem="@layout/vacancy_view"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/searchInfo"
+        style="@style/SearchInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchRoot"
+        tools:visibility="gone" />
+
+
+    <ImageView
+        android:id="@+id/searchScreenCover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/img_placeholder_search_screen"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchRoot"
+        tools:visibility="gone" />
+
+    <TextView
+        android:id="@+id/errorPlaceholder"
+        style="@style/ErrorPlaceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:drawableTopCompat="@drawable/img_error_connection"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchRoot"
+        tools:text=""
+        tools:visibility="gone" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

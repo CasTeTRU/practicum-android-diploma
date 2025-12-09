@@ -1,18 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
-    <TextView
-        android:id="@+id/buildConfigReadExampleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Team"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/ToolbarStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/team" />
+
+    <TextView
+        android:id="@+id/tv_developers"
+        style="@style/BoldTextExtraLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/icon_size_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:text="@string/who_worked"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <TextView
+        android:id="@+id/tv_developer_one"
+        style="@style/MediumTextMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/icon_size_medium"
+        android:text="@string/developer_one"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintStart_toStartOf="@+id/tv_developers"
+        app:layout_constraintTop_toBottomOf="@+id/tv_developers" />
+
+    <TextView
+        android:id="@+id/tv_developer_two"
+        style="@style/MediumTextMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:text="@string/developer_two"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintStart_toStartOf="@+id/tv_developer_one"
+        app:layout_constraintTop_toBottomOf="@+id/tv_developer_one" />
+
+    <TextView
+        android:id="@+id/tv_developer_three"
+        style="@style/MediumTextMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_medium"
+        android:text="@string/developer_three"
+        android:textColor="?attr/colorOnBackground"
+        app:layout_constraintStart_toStartOf="@+id/tv_developer_two"
+        app:layout_constraintTop_toBottomOf="@+id/tv_developer_two" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

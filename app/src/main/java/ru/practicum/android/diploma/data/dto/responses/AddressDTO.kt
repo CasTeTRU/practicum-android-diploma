@@ -4,5 +4,5 @@ data class AddressDTO(
     val city: String,
     val street: String,
     val building: String,
-    val fullAddress: String
+    val raw: String?
 )
