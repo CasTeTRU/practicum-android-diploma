@@ -20,6 +20,7 @@
 
     <dimen name="corner_radius">12dp</dimen>
 
+    <dimen name="reset_button_height">60dp</dimen>
     <dimen name="search_field_height">56dp</dimen>
     <dimen name="tv_error_layout_width">268dp</dimen>
     <dimen name="toolbar_height">64dp</dimen>

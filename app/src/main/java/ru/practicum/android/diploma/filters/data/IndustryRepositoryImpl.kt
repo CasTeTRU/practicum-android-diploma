@@ -1,4 +1,4 @@
-package ru.practicum.android.diploma.vacancy.data
+package ru.practicum.android.diploma.filters.data
 
 import android.util.Log
 import com.google.gson.JsonSyntaxException
@@ -6,43 +6,43 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.practicum.android.diploma.data.ApiError
 import ru.practicum.android.diploma.data.ResponseCodes
-import ru.practicum.android.diploma.data.dto.requests.VacancyByIdRequest
+import ru.practicum.android.diploma.data.mapper.toDomain
 import ru.practicum.android.diploma.data.network.NetworkClient
-import ru.practicum.android.diploma.vacancy.domain.VacancyRepository
-import ru.practicum.android.diploma.vacancy.domain.mappers.toDomain
-import ru.practicum.android.diploma.vacancy.domain.models.VacancyDetailed
+import ru.practicum.android.diploma.domain.models.FilterIndustry
+import ru.practicum.android.diploma.filters.domain.api.IndustryRepository
 
-class VacancyRepositoryImpl(
+class IndustryRepositoryImpl(
     private val networkClient: NetworkClient
-) : VacancyRepository {
-    override suspend fun getVacancyById(id: String): Flow<Result<VacancyDetailed>> = flow {
-        val vacancyIdRequest = VacancyByIdRequest(id = id)
-        val response = networkClient.getVacancyById(vacancyIdRequest)
+) : IndustryRepository {
+    override suspend fun getIndustries(): Flow<Result<List<FilterIndustry>>> = flow {
+        val response = networkClient.getIndustries()
+
         when (response.resultCode) {
             ResponseCodes.ERROR_NO_INTERNET -> emit(Result.failure(ApiError(ResponseCodes.ERROR_NO_INTERNET)))
             ResponseCodes.IO_EXCEPTION -> emit(Result.failure(ApiError(ResponseCodes.IO_EXCEPTION)))
             ResponseCodes.SUCCESS_STATUS -> {
-                val vacancyIdResponse = response.data
+                val industriesList = response.data
 
-                if (vacancyIdResponse != null) {
+                if (industriesList != null) {
                     try {
-                        val domain = vacancyIdResponse.toDomain()
-                        emit(Result.success(domain))
+                        val domainList = industriesList.map { it.toDomain() }
+                        emit(Result.success(domainList))
                     } catch (t: IllegalArgumentException) {
-                        Log.d(TAG_VACANCY_RESPONSE, "$vacancyIdResponse", t)
-                        // Если маппер упал по какой-то причине
+                        Log.d(TAG, "$industriesList", t)
                         emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     } catch (e: JsonSyntaxException) {
-                        Log.d(TAG_VACANCY_RESPONSE, "$vacancyIdResponse", e)
+                        Log.d(TAG, "$industriesList", e)
                         emit(Result.failure(ApiError(ResponseCodes.MAPPER_EXCEPTION)))
                     }
                 } else {
                     emit(Result.failure(ApiError(ResponseCodes.NOTHING_FOUND)))
                 }
             }
+            else -> emit(Result.failure(ApiError(response.resultCode)))
         }
     }
+
     companion object {
-        const val TAG_VACANCY_RESPONSE = "VacancyRepositoryImpl"
+        const val TAG = "IndustryRepositoryImpl"
     }
 }

@@ -81,7 +81,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupSearchField() {
-        // Убираем двойные вызовы: используем только onTextChanged для запуска дебаунса
         textWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
@@ -112,8 +111,19 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun updateActionFilterIcon(hasFilters: Boolean) {
+        val item = binding.toolbar.menu.findItem(R.id.actionFilter)
+        item.setIcon(
+            if (hasFilters) {
+                R.drawable.ic_filter_on
+            } else {
+                R.drawable.ic_filter_off
+            }
+        )
+    }
+
     private fun setupVacancyClickDebounce() {
-        onVacancyClickDebounce = debounce<String>(
+        onVacancyClickDebounce = debounce(
             CLICK_DEBOUNCE_DELAY,
             viewLifecycleOwner.lifecycleScope,
             false
@@ -145,6 +155,7 @@ class SearchFragment : Fragment() {
 
         // базовые индикаторы
         progressBar.visibility = if (state.isLoading || state.isFetching) View.VISIBLE else View.GONE
+        updateActionFilterIcon(state.hasFilters)
 
         if (state.isLoading) return
 
@@ -210,14 +221,19 @@ class SearchFragment : Fragment() {
             binding.searchIcon.visibility = View.VISIBLE
             binding.clearIcon.visibility = View.GONE
         }
-
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        textWatcher.let { binding.searchField.removeTextChangedListener(it) }
+        textWatcher?.let { binding.searchField.removeTextChangedListener(it) }
         _binding = null
         onVacancyClickDebounce = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadSavedFilters()
+        viewModel.refreshSearchIfActive()
     }
 
     companion object {

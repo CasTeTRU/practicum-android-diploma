@@ -6,7 +6,7 @@
     <string name="vacancies_search">Поиск вакансий</string>
     <string name="filters">Настройки фильтрации</string>
     <string name="enter_search_placeholder">Введите запрос</string>
-    <string name="empty_favorites_placeholder">Список пуст</string>
+    <string name="empty_list_placeholder">Список пуст</string>
     <string name="error_getting_favorites">Не удалось получить список вакансий</string>
     <string name="company_logo">Логотип компании</string>
     <string name="vacancy">Вакансия</string>
@@ -41,6 +41,17 @@
     <string name="comment">Комментарий</string>
     <string name="application_email">Выберите приложение для отправки email</string>
     <string name="application_call">Выберите приложение для звонка</string>
+    <string name="industry">Отрасль</string>
+    <string name="wanted_salary">Ожидаемая зарплата</string>
+    <string name="enter_amount">Введите сумму</string>
+    <string name="reset">Сбросить</string>
+    <string name="apply">Применить</string>
+    <string name="not_salary">Не показывать без зарплаты</string>
+    <string name="industry_choice">Выбор отрасли</string>
+    <string name="enter_industry">Введите отрасль</string>
+    <string name="no_list">Не удалось получить\nсписок</string>
+    <string name="choose">Выбрать</string>
+    <string name="empty_list">Список пуст</string>
 
     <string name="developer_one">Константин Галкин</string>
     <string name="developer_two">Айнур Тимербаев</string>

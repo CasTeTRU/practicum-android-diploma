@@ -1,5 +1,6 @@
 package ru.practicum.android.diploma.data.dto
 
-open class NetworkResponse {
-    var resultCode: Int = 0
-}
+data class NetworkResponse<T>(
+    val data: T? = null,
+    val resultCode: Int = 0
+)
