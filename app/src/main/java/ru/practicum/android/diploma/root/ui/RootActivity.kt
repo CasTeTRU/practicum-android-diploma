@@ -25,8 +25,7 @@ class RootActivity : AppCompatActivity() {
             updateBottomNavVisibility(destination.id)
         }
 
-    // Отслеживаем изменения layout для предотвращения появления BottomNavBar при появлении клавиатуры
-
+        // Отслеживаем изменения layout для предотвращения появления BottomNavBar при появлении клавиатуры
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
             navController.currentDestination?.id?.let { destinationId ->
                 updateBottomNavVisibility(destinationId)
@@ -34,7 +33,7 @@ class RootActivity : AppCompatActivity() {
         }
     }
 
-    // Если на экране фильтра или отрасли появилась клавиатура, то не показываем BottomNavBar
+        // Если на экране фильтра или отрасли появилась клавиатура, то не показываем BottomNavBar
 
     private fun updateBottomNavVisibility(destinationId: Int) {
         val shouldHide = destinationId == R.id.filtersFragment ||
