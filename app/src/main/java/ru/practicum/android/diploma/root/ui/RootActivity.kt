@@ -29,6 +29,13 @@ class RootActivity : AppCompatActivity() {
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
             navController.currentDestination?.id?.let { destinationId ->
                 updateBottomNavVisibility(destinationId)
+            if (
+                destination.id == R.id.filtersFragment ||
+                destination.id == R.id.filterIndustryFragment
+            ) {
+                binding.bottomNavigationView.visibility = android.view.View.GONE
+            } else {
+                binding.bottomNavigationView.visibility = android.view.View.VISIBLE
             }
         }
     }
