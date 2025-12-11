@@ -24,7 +24,9 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (
-                destination.id == R.id.filtersFragment) {
+                destination.id == R.id.filtersFragment ||
+                destination.id == R.id.filterIndustryFragment
+            ) {
                 binding.bottomNavigationView.visibility = android.view.View.GONE
             } else {
                 binding.bottomNavigationView.visibility = android.view.View.VISIBLE
