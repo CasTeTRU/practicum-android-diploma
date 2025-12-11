@@ -38,7 +38,7 @@ class RootActivity : AppCompatActivity() {
 
     private fun updateBottomNavVisibility(destinationId: Int) {
         val shouldHide = destinationId == R.id.filtersFragment ||
-                         destinationId == R.id.filterIndustryFragment
+            destinationId == R.id.filterIndustryFragment
         binding.bottomNavigationView.visibility = if (shouldHide) {
             android.view.View.GONE
         } else {
