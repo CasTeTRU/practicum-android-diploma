@@ -23,13 +23,25 @@ class RootActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (
-                destination.id == R.id.filtersFragment) {
-                binding.bottomNavigationView.visibility = android.view.View.GONE
-            } else {
-                binding.bottomNavigationView.visibility = android.view.View.VISIBLE
-            }
+            updateBottomNavVisibility(destination.id)
+        }
 
+        // Отслеживаем изменения layout для предотвращения появления BottomNavBar при появлении клавиатуры
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            navController.currentDestination?.id?.let { destinationId ->
+                updateBottomNavVisibility(destinationId)
+            }
+        }
+    }
+        // Если на экране фильтра или отрасли появилась клавиатура, то не показываем BottomNavBar
+    private fun updateBottomNavVisibility(destinationId: Int) {
+        val shouldHide = destinationId == R.id.filtersFragment || 
+                         destinationId == R.id.filterIndustryFragment
+        
+        binding.bottomNavigationView.visibility = if (shouldHide) {
+            android.view.View.GONE
+        } else {
+            android.view.View.VISIBLE
         }
     }
 }
