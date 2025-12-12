@@ -53,7 +53,13 @@ class SearchViewModel(
     fun onQueryChanged(query: String) {
         val current = _searchStatusLiveData.value ?: SearchScreenState()
         if (current.query != query) {
-            updateState { it.copy(query = query, page = 1, canLoadMore = true, error = null, isPaginationError = false) }
+            updateState { it.copy(
+                query = query,
+                page = 1,
+                canLoadMore = true,
+                error = null,
+                isPaginationError = false
+            ) }
             searchDebounce(query)
         }
     }
