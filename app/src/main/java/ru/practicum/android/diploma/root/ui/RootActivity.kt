@@ -44,17 +44,12 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun updateBottomNavVisibility(destinationId: Int) {
-        // Скрываем BottomNavBar если:
-        // 1. Это экран фильтров или отрасли
-        // 2. Клавиатура видна (во время поиска или ввода)
         val shouldHide = isKeyboardVisible ||
             destinationId == R.id.filtersFragment ||
             destinationId == R.id.filterIndustryFragment
 
-        binding.bottomNavigationView.visibility = if (shouldHide) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        val visibility = if (shouldHide) View.GONE else View.VISIBLE
+        binding.bottomNavigationView.visibility = visibility
+        binding.menuTopDivider.visibility = visibility
     }
 }
