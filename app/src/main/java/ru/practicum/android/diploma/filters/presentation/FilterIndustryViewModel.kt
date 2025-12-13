@@ -21,8 +21,13 @@ class FilterIndustryViewModel(
     private val _selectedIndustry = MutableLiveData<FilterIndustry?>()
     val selectedIndustry: LiveData<FilterIndustry?> = _selectedIndustry
 
+    private val _shouldShowApplyButton = MutableLiveData<Boolean>(false)
+    val shouldShowApplyButton: LiveData<Boolean> = _shouldShowApplyButton
+
     private var allIndustries: List<FilterIndustry> = emptyList()
     private var filteredIndustries: List<FilterIndustry> = emptyList()
+    private var isInitialLoad = true
+    private var appliedIndustry: FilterIndustry? = null
 
     init {
         loadIndustries()
@@ -36,8 +41,11 @@ class FilterIndustryViewModel(
                     onSuccess = { industries ->
                         allIndustries = industries
                         filteredIndustries = industries
-                        // Загружаем сохраненную отрасль перед установкой состояния
-                        loadSavedIndustry(industries)
+                        // Загружаем сохраненную отрасль перед установкой состояния только при первой загрузке
+                        if (isInitialLoad) {
+                            loadSavedIndustry(industries)
+                            isInitialLoad = false
+                        }
                         _screenState.value = FilterIndustryScreenState.Content(industries)
                     },
                     onFailure = { throwable ->
@@ -53,17 +61,31 @@ class FilterIndustryViewModel(
     }
 
     private suspend fun loadSavedIndustry(industries: List<FilterIndustry>) {
+        // Сбрасываем выбранную отрасль перед загрузкой примененной
+        _selectedIndustry.value = null
         val savedFilters = filtersInteractor.getFilterSettings()
         savedFilters.industry?.let { savedIndustry ->
             val foundIndustry = industries.find { it.id == savedIndustry.id }
             foundIndustry?.let {
+                appliedIndustry = it
                 _selectedIndustry.value = it
+                updateApplyButtonVisibility()
             }
+        } ?: run {
+            appliedIndustry = null
+            updateApplyButtonVisibility()
         }
     }
 
     fun onIndustrySelected(industry: FilterIndustry) {
         _selectedIndustry.value = industry
+        updateApplyButtonVisibility()
+    }
+
+    private fun updateApplyButtonVisibility() {
+        val selected = _selectedIndustry.value
+        // Показываем кнопку только если выбранная отрасль отличается от примененной
+        _shouldShowApplyButton.value = selected != null && selected.id != appliedIndustry?.id
     }
 
     fun filterIndustries(query: String) {
@@ -76,6 +98,25 @@ class FilterIndustryViewModel(
     }
 
     fun getSelectedIndustry(): FilterIndustry? = _selectedIndustry.value
+
+    fun resetToSavedIndustry() {
+        if (allIndustries.isEmpty()) return
+        viewModelScope.launch {
+            // Сбрасываем выбранную отрасль и загружаем только примененную
+            _selectedIndustry.value = null
+            val savedFilters = filtersInteractor.getFilterSettings()
+            savedFilters.industry?.let { savedIndustry ->
+                val foundIndustry = allIndustries.find { it.id == savedIndustry.id }
+                foundIndustry?.let {
+                    appliedIndustry = it
+                    _selectedIndustry.value = it
+                }
+            } ?: run {
+                appliedIndustry = null
+            }
+            updateApplyButtonVisibility()
+        }
+    }
 }
 
 sealed class FilterIndustryScreenState {
