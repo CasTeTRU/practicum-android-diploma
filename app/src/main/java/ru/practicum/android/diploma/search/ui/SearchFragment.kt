@@ -171,7 +171,7 @@ class SearchFragment : Fragment() {
         }
 
         if (state.isPaginationError) {
-            Toast.makeText(requireContext(), R.string.error_no_internet, Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), R.string.error_check_internet_connection, Toast.LENGTH_SHORT).show()
         }
 
         // Ошибки
