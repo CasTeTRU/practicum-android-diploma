@@ -26,6 +26,7 @@ class FilterIndustryFragment : Fragment() {
     private val adapter = IndustryAdapter { industry ->
         viewModel.onIndustrySelected(industry)
     }
+    private var isFirstRender = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,11 +40,30 @@ class FilterIndustryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        isFirstRender = true
         setupRecyclerView()
         setupToolbar()
         setupSearchField()
         setupApplyButton()
         observeViewModel()
+        // Загружаем текущую отрасль из аргументов, если она передана
+        loadCurrentIndustryFromArguments()
+    }
+
+    private fun loadCurrentIndustryFromArguments() {
+        arguments?.let { args ->
+            val industryId = args.getInt(FiltersFragment.KEY_CURRENT_INDUSTRY_ID, -1)
+            val industryName = args.getString(FiltersFragment.KEY_CURRENT_INDUSTRY_NAME)
+            if (industryId != -1 && industryName != null) {
+                val currentIndustry = ru.practicum.android.diploma.domain.models.FilterIndustry(
+                    id = industryId,
+                    name = industryName
+                )
+                viewModel.setCurrentIndustry(currentIndustry)
+                // Обновляем состояние после установки текущей отрасли
+                viewModel.resetToSavedIndustry()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -102,13 +122,16 @@ class FilterIndustryFragment : Fragment() {
         }
 
         viewModel.selectedIndustry.observe(viewLifecycleOwner) { industry ->
-            binding.applyButton.isVisible = industry != null
             // Обновляем выбранный элемент в адаптере при изменении
             industry?.let {
                 adapter.setSelectedIndustry(it.id)
             } ?: run {
                 adapter.setSelectedIndustry(null)
             }
+        }
+
+        viewModel.shouldShowApplyButton.observe(viewLifecycleOwner) { shouldShow ->
+            binding.applyButton.isVisible = shouldShow
         }
     }
 
@@ -118,6 +141,11 @@ class FilterIndustryFragment : Fragment() {
                 showLoading()
             }
             is FilterIndustryScreenState.Content -> {
+                // Сбрасываем выбранную отрасль до примененной только при первом рендеринге
+                if (isFirstRender) {
+                    viewModel.resetToSavedIndustry()
+                    isFirstRender = false
+                }
                 showContent(state.industries)
             }
             is FilterIndustryScreenState.Error -> {

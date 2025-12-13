@@ -77,7 +77,14 @@ class FiltersFragment : Fragment() {
 
     private fun setupIndustryListener() {
         binding.etIndustry.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment)
+            val currentState = viewModel.filtersState.value
+            val bundle = Bundle().apply {
+                currentState?.industry?.let { industry ->
+                    putInt(KEY_CURRENT_INDUSTRY_ID, industry.id)
+                    putString(KEY_CURRENT_INDUSTRY_NAME, industry.name)
+                }
+            }
+            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment, bundle)
         }
         binding.clearIndustry.setOnClickListener {
             viewModel.clearIndustry()
@@ -148,6 +155,8 @@ class FiltersFragment : Fragment() {
         const val REQUEST_KEY_INDUSTRY_SELECTED = "industry_selected"
         const val KEY_INDUSTRY_ID = "selected_industry_id"
         const val KEY_INDUSTRY_NAME = "selected_industry_name"
+        const val KEY_CURRENT_INDUSTRY_ID = "current_industry_id"
+        const val KEY_CURRENT_INDUSTRY_NAME = "current_industry_name"
     }
 
     override fun onDestroyView() {
