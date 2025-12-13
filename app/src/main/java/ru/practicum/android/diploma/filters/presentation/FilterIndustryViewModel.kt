@@ -63,17 +63,30 @@ class FilterIndustryViewModel(
     private suspend fun loadSavedIndustry(industries: List<FilterIndustry>) {
         // Сбрасываем выбранную отрасль перед загрузкой примененной
         _selectedIndustry.value = null
-        val savedFilters = filtersInteractor.getFilterSettings()
-        savedFilters.industry?.let { savedIndustry ->
-            val foundIndustry = industries.find { it.id == savedIndustry.id }
+        // Если appliedIndustry уже установлен (передан через аргументы), используем его
+        if (appliedIndustry != null) {
+            val foundIndustry = industries.find { it.id == appliedIndustry?.id }
             foundIndustry?.let {
-                appliedIndustry = it
                 _selectedIndustry.value = it
                 updateApplyButtonVisibility()
+            } ?: run {
+                appliedIndustry = null
+                updateApplyButtonVisibility()
             }
-        } ?: run {
-            appliedIndustry = null
-            updateApplyButtonVisibility()
+        } else {
+            // Иначе загружаем из хранилища
+            val savedFilters = filtersInteractor.getFilterSettings()
+            savedFilters.industry?.let { savedIndustry ->
+                val foundIndustry = industries.find { it.id == savedIndustry.id }
+                foundIndustry?.let {
+                    appliedIndustry = it
+                    _selectedIndustry.value = it
+                    updateApplyButtonVisibility()
+                }
+            } ?: run {
+                appliedIndustry = null
+                updateApplyButtonVisibility()
+            }
         }
     }
 
@@ -99,20 +112,37 @@ class FilterIndustryViewModel(
 
     fun getSelectedIndustry(): FilterIndustry? = _selectedIndustry.value
 
+    fun setCurrentIndustry(industry: FilterIndustry) {
+        appliedIndustry = industry
+        if (allIndustries.isNotEmpty()) {
+            val foundIndustry = allIndustries.find { it.id == industry.id }
+            foundIndustry?.let {
+                _selectedIndustry.value = it
+                updateApplyButtonVisibility()
+            }
+        }
+    }
+
     fun resetToSavedIndustry() {
         if (allIndustries.isEmpty()) return
         viewModelScope.launch {
             // Сбрасываем выбранную отрасль и загружаем только примененную
             _selectedIndustry.value = null
-            val savedFilters = filtersInteractor.getFilterSettings()
-            savedFilters.industry?.let { savedIndustry ->
-                val foundIndustry = allIndustries.find { it.id == savedIndustry.id }
+            // Используем appliedIndustry, если он уже установлен, иначе загружаем из хранилища
+            if (appliedIndustry != null) {
+                val foundIndustry = allIndustries.find { it.id == appliedIndustry?.id }
                 foundIndustry?.let {
-                    appliedIndustry = it
                     _selectedIndustry.value = it
                 }
-            } ?: run {
-                appliedIndustry = null
+            } else {
+                val savedFilters = filtersInteractor.getFilterSettings()
+                savedFilters.industry?.let { savedIndustry ->
+                    val foundIndustry = allIndustries.find { it.id == savedIndustry.id }
+                    foundIndustry?.let {
+                        appliedIndustry = it
+                        _selectedIndustry.value = it
+                    }
+                }
             }
             updateApplyButtonVisibility()
         }

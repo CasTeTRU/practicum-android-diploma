@@ -46,6 +46,24 @@ class FilterIndustryFragment : Fragment() {
         setupSearchField()
         setupApplyButton()
         observeViewModel()
+        // Загружаем текущую отрасль из аргументов, если она передана
+        loadCurrentIndustryFromArguments()
+    }
+
+    private fun loadCurrentIndustryFromArguments() {
+        arguments?.let { args ->
+            val industryId = args.getInt(FiltersFragment.KEY_CURRENT_INDUSTRY_ID, -1)
+            val industryName = args.getString(FiltersFragment.KEY_CURRENT_INDUSTRY_NAME)
+            if (industryId != -1 && industryName != null) {
+                val currentIndustry = ru.practicum.android.diploma.domain.models.FilterIndustry(
+                    id = industryId,
+                    name = industryName
+                )
+                viewModel.setCurrentIndustry(currentIndustry)
+                // Обновляем состояние после установки текущей отрасли
+                viewModel.resetToSavedIndustry()
+            }
+        }
     }
 
     private fun setupRecyclerView() {
