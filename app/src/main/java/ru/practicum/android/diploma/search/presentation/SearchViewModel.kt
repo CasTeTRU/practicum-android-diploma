@@ -53,7 +53,13 @@ class SearchViewModel(
     fun onQueryChanged(query: String) {
         val current = _searchStatusLiveData.value ?: SearchScreenState()
         if (current.query != query) {
-            updateState { it.copy(query = query, page = 1, canLoadMore = true, error = null) }
+            updateState { it.copy(
+                query = query,
+                page = 1,
+                canLoadMore = true,
+                error = null,
+                isPaginationError = false
+            ) }
             searchDebounce(query)
         }
     }
@@ -68,6 +74,7 @@ class SearchViewModel(
                     isLoading = false,
                     isFetching = false,
                     error = null,
+                    isPaginationError = false,
                     page = 1,
                     canLoadMore = true
                 )
@@ -79,6 +86,7 @@ class SearchViewModel(
             it.copy(
                 isLoading = true,
                 error = null,
+                isPaginationError = false,
                 vacancies = emptyList(),
                 page = 1,
                 canLoadMore = true
@@ -106,7 +114,7 @@ class SearchViewModel(
         if (isCurrentlyLoading || cannotLoadMore || isQueryEmpty) return
 
         val nextPage = cur.page + 1
-        updateState { it.copy(isFetching = true) }
+        updateState { it.copy(isFetching = true, isPaginationError = false) }
 
         viewModelScope.launch {
             val savedFilters = filtersInteractor.getFilterSettings()
@@ -129,6 +137,7 @@ class SearchViewModel(
                 isLoading = false,
                 isFetching = false,
                 error = UiError.NothingFound,
+                isPaginationError = false,
                 page = 1,
                 canLoadMore = false
             )
@@ -140,6 +149,7 @@ class SearchViewModel(
                 isLoading = false,
                 isFetching = false,
                 error = null,
+                isPaginationError = false,
                 page = if (reset) 1 else current.page + 1,
                 canLoadMore = page.vacancies.isNotEmpty()
             )
@@ -161,8 +171,15 @@ class SearchViewModel(
 
             else -> UiError.Unknown(ResponseCodes.IO_EXCEPTION)
         }
+        val current = _searchStatusLiveData.value ?: SearchScreenState()
+        val isPaginationNoInternetError = current.isFetching && uiError == UiError.NoInternet
 
-        updateState { it.copy(isLoading = false, isFetching = false, error = uiError) }
+        updateState { it.copy(
+            isLoading = false,
+            isFetching = false,
+            error = if (isPaginationNoInternetError) null else uiError,
+            isPaginationError = isPaginationNoInternetError
+        ) }
     }
 
     private fun updateState(update: (SearchScreenState) -> SearchScreenState) {
