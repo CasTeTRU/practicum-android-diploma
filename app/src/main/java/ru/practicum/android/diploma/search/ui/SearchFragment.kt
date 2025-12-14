@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -106,6 +107,7 @@ class SearchFragment : Fragment() {
                     )
                     true
                 }
+
                 else -> false
             }
         }
@@ -151,7 +153,9 @@ class SearchFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun render(state: SearchScreenState): Unit = with(binding) {
-        hideAllView()
+        if (!state.isPaginationError) {
+            hideAllView()
+        }
 
         // базовые индикаторы
         progressBar.visibility = if (state.isLoading || state.isFetching) View.VISIBLE else View.GONE
@@ -164,6 +168,10 @@ class SearchFragment : Fragment() {
             renderContent(state.vacancies, state.found)
         } else if (state.error == null) {
             searchScreenCover.visibility = View.VISIBLE
+        }
+
+        if (state.isPaginationError) {
+            Toast.makeText(requireContext(), R.string.error_check_internet_connection, Toast.LENGTH_SHORT).show()
         }
 
         // Ошибки
