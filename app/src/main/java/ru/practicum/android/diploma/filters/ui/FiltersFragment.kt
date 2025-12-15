@@ -56,11 +56,8 @@ class FiltersFragment : Fragment() {
             showContent(state.toParams())
 
             val hasFilters = state.industry != null || state.salary != null || state.onlyWithSalary
+            binding.applyButton.isVisible = hasFilters
             binding.resetButton.isVisible = hasFilters
-        }
-        
-        viewModel.hasChanges.observe(viewLifecycleOwner) { hasChanges ->
-            binding.applyButton.isVisible = hasChanges
         }
     }
 

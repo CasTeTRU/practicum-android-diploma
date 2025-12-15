@@ -13,15 +13,6 @@ class FiltersViewModel(
 ) : ViewModel() {
     private val _filtersState = MutableLiveData<FilterScreenState>(FilterScreenState())
     val filtersState: LiveData<FilterScreenState> = _filtersState
-    
-    private val _hasChanges = MutableLiveData(false)
-    val hasChanges: LiveData<Boolean> = _hasChanges
-    
-    private var appliedFilters: FiltersParameters = FiltersParameters(
-        industry = null,
-        salary = null,
-        onlyWithSalary = false
-    )
 
     init {
         loadSavedFilters()
@@ -30,15 +21,6 @@ class FiltersViewModel(
     fun restorePreviousState() {
         viewModelScope.launch {
             filtersInteractor.restorePreviousState()
-            val savedFilters = filtersInteractor.getFilterSettings()
-            appliedFilters = savedFilters
-            updateState {
-                it.copy(
-                    industry = savedFilters.industry,
-                    salary = savedFilters.salary,
-                    onlyWithSalary = savedFilters.onlyWithSalary
-                )
-            }
         }
     }
 
@@ -64,33 +46,26 @@ class FiltersViewModel(
     fun applyFilters() {
         val state = _filtersState.value ?: return
         viewModelScope.launch {
-            val newFilters = FiltersParameters(
-                industry = state.industry,
-                salary = state.salary,
-                onlyWithSalary = state.onlyWithSalary
+            filtersInteractor.saveFilterSettings(
+                FiltersParameters(
+                    industry = state.industry,
+                    salary = state.salary,
+                    onlyWithSalary = state.onlyWithSalary
+                )
             )
-            filtersInteractor.saveFilterSettings(newFilters)
-            appliedFilters = newFilters
-            checkForChanges()
         }
     }
 
     fun clearSelection() {
+        _filtersState.value = FilterScreenState()
         viewModelScope.launch {
             filtersInteractor.resetFilterSettings()
-            appliedFilters = FiltersParameters(
-                industry = null,
-                salary = null,
-                onlyWithSalary = false
-            )
-            updateState { FilterScreenState() }
         }
     }
 
     fun loadSavedFilters() {
         viewModelScope.launch {
             val savedFilters = filtersInteractor.getFilterSettings()
-            appliedFilters = savedFilters
             updateState {
                 it.copy(
                     industry = savedFilters.industry,
@@ -106,17 +81,6 @@ class FiltersViewModel(
     private inline fun updateState(update: (FilterScreenState) -> FilterScreenState) {
         val current = _filtersState.value ?: FilterScreenState()
         _filtersState.value = update(current)
-        checkForChanges()
-    }
-    
-    private fun checkForChanges() {
-        val current = _filtersState.value ?: FilterScreenState()
-        
-        val hasChanges = current.industry?.id != appliedFilters.industry?.id ||
-                current.salary != appliedFilters.salary ||
-                current.onlyWithSalary != appliedFilters.onlyWithSalary
-        
-        _hasChanges.value = hasChanges
     }
 
     companion object {
