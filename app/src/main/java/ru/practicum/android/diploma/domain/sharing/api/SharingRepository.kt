@@ -1,6 +1,6 @@
-package ru.practicum.android.diploma.domain.sharing
+package ru.practicum.android.diploma.domain.sharing.api
 
-interface SharingInteractor {
+interface SharingRepository {
     fun shareVacancy(url: String)
     fun sendOnEmail(email: String)
     fun call(number: String)
