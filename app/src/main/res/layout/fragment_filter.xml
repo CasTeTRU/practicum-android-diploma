@@ -108,9 +108,10 @@
             android:background="@drawable/bg_search_field"
             android.inputType="number"
             android:digits="0123456789"
+            android:inputType="number"
             android:imeOptions="actionDone"
             android:maxLines="1"
-            android:maxLength="10" />
+            android:maxLength="9" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
