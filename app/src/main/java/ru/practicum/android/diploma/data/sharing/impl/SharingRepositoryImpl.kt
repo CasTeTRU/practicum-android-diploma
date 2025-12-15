@@ -1,8 +1,10 @@
 package ru.practicum.android.diploma.data.sharing.impl
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import ru.practicum.android.diploma.domain.sharing.api.SharingRepository
 
 class SharingRepositoryImpl(private val context: Context) : SharingRepository {
@@ -15,8 +17,8 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         }
         try {
             context.startActivity(intent)
-        } catch (e: Exception) {
-            // В идеале здесь нужно обработать ошибку, например, показать Toast
+        } catch (e: ActivityNotFoundException) {
+            Log.e("SharingRepositoryImpl", "No activity found to handle sharing intent", e)
         }
     }
 
@@ -27,8 +29,8 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         }
         try {
             context.startActivity(intent)
-        } catch (e: Exception) {
-            // В идеале здесь нужно обработать ошибку, например, показать Toast
+        } catch (e: ActivityNotFoundException) {
+            Log.e("SharingRepositoryImpl", "No activity found to handle email intent", e)
         }
     }
 
@@ -39,8 +41,8 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         }
         try {
             context.startActivity(intent)
-        } catch (e: Exception) {
-            // В идеале здесь нужно обработать ошибку, например, показать Toast
+        } catch (e: ActivityNotFoundException) {
+            Log.e("SharingRepositoryImpl", "No activity found to handle dial intent", e)
         }
     }
 }
