@@ -13,10 +13,8 @@ class FiltersViewModel(
 ) : ViewModel() {
     private val _filtersState = MutableLiveData<FilterScreenState>(FilterScreenState())
     val filtersState: LiveData<FilterScreenState> = _filtersState
-    
     private val _hasChanges = MutableLiveData(false)
     val hasChanges: LiveData<Boolean> = _hasChanges
-    
     private var appliedFilters: FiltersParameters = DEFAULT_FILTERS
 
     init {
@@ -92,17 +90,13 @@ class FiltersViewModel(
         _filtersState.value = update(current)
         checkForChanges()
     }
-    
     private fun checkForChanges() {
         val current = _filtersState.value ?: FilterScreenState()
-        
         val hasChanges = current.industry?.id != appliedFilters.industry?.id ||
-                current.salary != appliedFilters.salary ||
-                current.onlyWithSalary != appliedFilters.onlyWithSalary
-        
+            current.salary != appliedFilters.salary ||
+            current.onlyWithSalary != appliedFilters.onlyWithSalary
         _hasChanges.value = hasChanges
     }
-    
     private fun FilterScreenState.toFiltersParameters(): FiltersParameters {
         return FiltersParameters(
             industry = this.industry,
