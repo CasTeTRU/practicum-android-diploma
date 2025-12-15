@@ -92,9 +92,12 @@ class FiltersViewModel(
     }
     private fun checkForChanges() {
         val current = _filtersState.value ?: FilterScreenState()
-        val hasChanges = current.industry?.id != appliedFilters.industry?.id ||
-            current.salary != appliedFilters.salary ||
-            current.onlyWithSalary != appliedFilters.onlyWithSalary
+        val currentIndustryId = current.industry?.id
+        val appliedIndustryId = appliedFilters.industry?.id
+        val industryChanged = currentIndustryId != appliedIndustryId
+        val salaryChanged = current.salary != appliedFilters.salary
+        val onlyWithSalaryChanged = current.onlyWithSalary != appliedFilters.onlyWithSalary
+        val hasChanges = industryChanged || salaryChanged || onlyWithSalaryChanged
         _hasChanges.value = hasChanges
     }
     private fun FilterScreenState.toFiltersParameters(): FiltersParameters {
