@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.data.dto.responses
 
-data class VacancyDetailDTO(
+@Suppress("LongParameterList")
+class VacancyDetailDTO(
     val id: String,
     val name: String,
     val description: String,
