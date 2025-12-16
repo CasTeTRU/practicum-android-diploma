@@ -17,7 +17,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         try {
             context.startActivity(emailIntent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("ExternalNavigatorImpl", "No activity found to handle email intent", e)
+            Log.e(TAG, "No activity found to handle email intent", e)
         }
     }
 
@@ -29,7 +29,7 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
         try {
             context.startActivity(callIntent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("ExternalNavigatorImpl", "No activity found to handle dial intent", e)
+            Log.e(TAG, "No activity found to handle dial intent", e)
         }
     }
 
@@ -44,7 +44,11 @@ class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
             chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(chooser)
         } catch (e: ActivityNotFoundException) {
-            Log.e("ExternalNavigatorImpl", "No activity found to handle sharing intent", e)
+            Log.e(TAG, "No activity found to handle sharing intent", e)
         }
+    }
+
+    companion object {
+        private const val TAG = "ExternalNavigatorImpl"
     }
 }

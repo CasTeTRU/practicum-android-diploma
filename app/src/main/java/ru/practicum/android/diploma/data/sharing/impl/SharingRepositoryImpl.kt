@@ -18,7 +18,7 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("SharingRepositoryImpl", "No activity found to handle sharing intent", e)
+            Log.e(TAG, "No activity found to handle sharing intent", e)
         }
     }
 
@@ -30,7 +30,7 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("SharingRepositoryImpl", "No activity found to handle email intent", e)
+            Log.e(TAG, "No activity found to handle email intent", e)
         }
     }
 
@@ -42,7 +42,11 @@ class SharingRepositoryImpl(private val context: Context) : SharingRepository {
         try {
             context.startActivity(intent)
         } catch (e: ActivityNotFoundException) {
-            Log.e("SharingRepositoryImpl", "No activity found to handle dial intent", e)
+            Log.e(TAG, "No activity found to handle dial intent", e)
         }
+    }
+
+    companion object {
+        private const val TAG = "SharingRepositoryImpl"
     }
 }
