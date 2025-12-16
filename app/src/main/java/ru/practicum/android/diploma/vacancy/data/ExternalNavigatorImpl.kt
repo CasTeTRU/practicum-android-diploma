@@ -1,7 +1,9 @@
 package ru.practicum.android.diploma.vacancy.data
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.net.toUri
 import ru.practicum.android.diploma.R
 import ru.practicum.android.diploma.vacancy.domain.ExternalNavigator
@@ -9,38 +11,44 @@ import ru.practicum.android.diploma.vacancy.domain.ExternalNavigator
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
     override fun emailTo(email: String) {
         val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-            data = "mailto:".toUri()
-            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            data = "mailto:$email".toUri()
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        context.startActivity(
-            Intent.createChooser(emailIntent, context.getString(R.string.application_email)).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        )
+        try {
+            context.startActivity(emailIntent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "No activity found to handle email intent", e)
+        }
     }
 
     override fun callTo(phoneNumber: String) {
-        val sendIntent = Intent(Intent.ACTION_DIAL).apply {
+        val callIntent = Intent(Intent.ACTION_DIAL).apply {
             data = "tel:$phoneNumber".toUri()
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        val chooserIntent =
-            Intent.createChooser(sendIntent, context.getString(R.string.application_call)).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-        context.startActivity(
-            chooserIntent
-        )
+        try {
+            context.startActivity(callIntent)
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "No activity found to handle dial intent", e)
+        }
     }
 
     override fun shareLink(alternateUrl: String) {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_TEXT, alternateUrl)
             type = "text/plain"
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        context.startActivity(sendIntent)
+
+        try {
+            val chooser = Intent.createChooser(shareIntent, context.getString(R.string.share))
+            chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(chooser)
+        } catch (e: ActivityNotFoundException) {
+            Log.e(TAG, "No activity found to handle sharing intent", e)
+        }
     }
 
+    companion object {
+        private const val TAG = "ExternalNavigatorImpl"
+    }
 }
