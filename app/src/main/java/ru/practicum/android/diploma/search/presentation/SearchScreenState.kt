@@ -10,6 +10,7 @@ data class SearchScreenState(
     val isLoading: Boolean = false, // первая / основная загрузка (центр. прогресс)
     val isFetching: Boolean = false, // дозагрузка следующих страниц (spinner)
     val error: UiError? = null,
+    val isPaginationError: Boolean = false,
     val page: Int = 1,
     val canLoadMore: Boolean = true,
     val hasFilters: Boolean = false

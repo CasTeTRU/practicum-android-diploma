@@ -24,6 +24,7 @@
     <string name="two_params">%1$s, %2$s</string>
     <string name="who_worked">Над приложением работали</string>
     <string name="error_no_internet">Нет интернета</string>
+    <string name="error_check_internet_connection">Проверьте подключение к интернету</string>
     <string name="error_server">Ошибка сервера</string>
     <string name="error_nothing_found">Не удалось получить список вакансий</string>
     <string name="empty_vacancy">Таких вакансий нет</string>

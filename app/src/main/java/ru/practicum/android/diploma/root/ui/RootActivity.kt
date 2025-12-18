@@ -1,7 +1,10 @@
 package ru.practicum.android.diploma.root.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import ru.practicum.android.diploma.R
@@ -11,6 +14,9 @@ class RootActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityRootBinding.inflate(layoutInflater)
     }
+
+    // Флаг для отслеживания видимости клавиатуры
+    private var isKeyboardVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,14 +28,28 @@ class RootActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (
-                destination.id == R.id.filtersFragment) {
-                binding.bottomNavigationView.visibility = android.view.View.GONE
-            } else {
-                binding.bottomNavigationView.visibility = android.view.View.VISIBLE
+        // Слушатель для отслеживания видимости клавиатуры
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            if (imeVisible != isKeyboardVisible) {
+                isKeyboardVisible = imeVisible
+                updateBottomNavVisibility(navController.currentDestination?.id ?: 0)
             }
-
+            insets
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            updateBottomNavVisibility(destination.id)
+        }
+    }
+
+    private fun updateBottomNavVisibility(destinationId: Int) {
+        val shouldHide = isKeyboardVisible ||
+            destinationId == R.id.filtersFragment ||
+            destinationId == R.id.filterIndustryFragment
+
+        val visibility = if (shouldHide) View.GONE else View.VISIBLE
+        binding.bottomNavigationView.visibility = visibility
+        binding.menuTopDivider.visibility = visibility
     }
 }

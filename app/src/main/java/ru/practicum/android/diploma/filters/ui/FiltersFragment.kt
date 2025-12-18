@@ -1,6 +1,7 @@
 package ru.practicum.android.diploma.filters.ui
 
 import android.os.Bundle
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ class FiltersFragment : Fragment() {
     private var _binding: FragmentFilterBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModel<FiltersViewModel>()
+    private var salaryTextWatcher: TextWatcher? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,30 +56,53 @@ class FiltersFragment : Fragment() {
             showContent(state.toParams())
 
             val hasFilters = state.industry != null || state.salary != null || state.onlyWithSalary
-            binding.applyButton.isVisible = hasFilters
             binding.resetButton.isVisible = hasFilters
+        }
+        viewModel.hasChanges.observe(viewLifecycleOwner) { hasChanges ->
+            binding.applyButton.isVisible = hasChanges
         }
     }
 
-    private fun showContent(filters: FiltersParameters) {
-        binding.etIndustry.setText(filters.industry?.name ?: "")
-        binding.toFilterIndustry.isVisible = filters.industry == null
-        binding.clearIndustry.isVisible = filters.industry != null
+    private fun showContent(filters: FiltersParameters) = with(binding) {
+        // -------- Industry --------
+        val industryName = filters.industry?.name.orEmpty()
 
-        // Снимаем слушатель, чтобы избежать рекурсивных обновлений
-        binding.expectedSalary.doOnTextChanged { text, _, _, _ -> }
-        if (binding.expectedSalary.text?.toString() ?: "" != filters.salary?.toString() ?: "") {
-            binding.expectedSalary.setText(filters.salary?.toString() ?: "")
+        if (etIndustry.text?.toString() != industryName) {
+            etIndustry.setText(industryName)
         }
-        setupSalaryListener() // Восстанавливаем слушатель
 
-        binding.onlyWithSalaryCheckbox.isChecked = filters.onlyWithSalary
-        binding.clearIcon.isVisible = filters.salary != null
+        toFilterIndustry.isVisible = filters.industry == null
+        clearIndustry.isVisible = filters.industry != null
+
+        // -------- Salary --------
+        val salaryText = filters.salary?.toString().orEmpty()
+        val currentText = expectedSalary.text?.toString().orEmpty()
+
+        if (currentText != salaryText) {
+            expectedSalary.setText(salaryText)
+            expectedSalary.setSelection(salaryText.length)
+        }
+
+        clearIcon.isVisible = filters.salary != null
+
+        // -------- OnlyWithSalary --------
+        if (onlyWithSalaryCheckbox.isChecked != filters.onlyWithSalary) {
+            onlyWithSalaryCheckbox.isChecked = filters.onlyWithSalary
+        }
+
+        clearIcon.isVisible = filters.salary != null
     }
 
     private fun setupIndustryListener() {
         binding.etIndustry.setOnClickListener {
-            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment)
+            val currentState = viewModel.filtersState.value
+            val bundle = Bundle().apply {
+                currentState?.industry?.let { industry ->
+                    putInt(KEY_CURRENT_INDUSTRY_ID, industry.id)
+                    putString(KEY_CURRENT_INDUSTRY_NAME, industry.name)
+                }
+            }
+            findNavController().navigate(R.id.action_filtersFragment_to_filterIndustryFragment, bundle)
         }
         binding.clearIndustry.setOnClickListener {
             viewModel.clearIndustry()
@@ -85,18 +110,13 @@ class FiltersFragment : Fragment() {
     }
 
     private fun setupSalaryListener() {
-        binding.expectedSalary.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateSalary(text.toString().toIntOrNull())
+        salaryTextWatcher = binding.expectedSalary.doOnTextChanged { text, _, _, _ ->
+            viewModel.updateSalary(text?.toString()?.toIntOrNull())
             binding.clearIcon.isVisible = !text.isNullOrEmpty()
         }
 
         binding.expectedSalary.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                binding.expectedSalary.clearFocus()
-                true
-            } else {
-                false
-            }
+            actionId == EditorInfo.IME_ACTION_DONE
         }
 
         binding.clearIcon.setOnClickListener {
@@ -148,10 +168,16 @@ class FiltersFragment : Fragment() {
         const val REQUEST_KEY_INDUSTRY_SELECTED = "industry_selected"
         const val KEY_INDUSTRY_ID = "selected_industry_id"
         const val KEY_INDUSTRY_NAME = "selected_industry_name"
+        const val KEY_CURRENT_INDUSTRY_ID = "current_industry_id"
+        const val KEY_CURRENT_INDUSTRY_NAME = "current_industry_name"
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        salaryTextWatcher?.let {
+            binding.expectedSalary.removeTextChangedListener(it)
+        }
+        salaryTextWatcher = null
         _binding = null
+        super.onDestroyView()
     }
 }
